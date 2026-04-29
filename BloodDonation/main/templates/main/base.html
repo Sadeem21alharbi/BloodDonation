@@ -1,0 +1,195 @@
+<!-- templates/base.html -->
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>{% block title %}إحياء | Ehyaa{% endblock %}</title>
+
+  <meta name="description" content="إحياء تربط المتبرعين بالدم مع المستشفيات في المملكة العربية السعودية" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body class="lang-ar">
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+
+      <!-- Logo -->
+      <a href="{% url 'home' %}" class="nav-logo">
+        <div class="logo-text-wrap">
+          <div class="logo-ar">إحياء</div>
+          <div class="logo-en">Ehyaa Platform</div>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <ul class="nav-links">
+        <li><a href="#home" class="active" data-t="nav_home">الرئيسية</a></li>
+        <li><a href="#about" data-t="nav_about">عن المنصة</a></li>
+        <li><a href="#how-it-works" data-t="nav_how">كيف يعمل</a></li>
+        <li><a href="#faq" data-t="nav_faq">الأسئلة الشائعة</a></li>
+      </ul>
+
+      <!-- Controls -->
+      <div class="nav-controls">
+
+        <!-- Language -->
+        <button class="lang-toggle" id="langToggle">
+          EN
+        </button>
+
+        <!-- Theme -->
+        <button class="nav-btn-icon" id="themeToggle">
+          <span id="themeIcon">🌙</span>
+        </button>
+
+        <!-- Auth -->
+        <div class="nav-auth">
+          <button class="btn btn-outline btn-sm">
+            تسجيل الدخول
+          </button>
+
+          <button class="btn btn-primary btn-sm">
+            إنشاء حساب
+          </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+
+    <a href="#home">الرئيسية</a>
+    <a href="#about">عن المنصة</a>
+    <a href="#how-it-works">كيف يعمل</a>
+    <a href="#faq">الأسئلة الشائعة</a>
+
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" style="margin-bottom:12px; display:inline-flex;">
+          <div class="logo-icon">
+            <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="12" fill="#1a56db"/><path d="M20 8C20 8 11 16.5 11 22.5C11 27.299 15.1 31 20 31C24.9 31 29 27.299 29 22.5C29 16.5 20 8 20 8Z" fill="white"/><path d="M20 13C20 13 14.5 18.5 14.5 22.5C14.5 25.538 16.95 28 20 28C23.05 28 25.5 25.538 25.5 22.5C25.5 18.5 20 13 20 13Z" fill="#e11d48"/><path d="M17 22H23M20 19V25" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div class="logo-text-wrap">
+            <div class="logo-ar">إحياء</div>
+            <div class="logo-en">Ehyaa Platform</div>
+          </div>
+        </a>
+        <p class="footer-desc" data-t="footer_desc">منصة إحياء تربط المتبرعين بالدم مع المستشفيات في المملكة العربية السعودية.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn" aria-label="Twitter">𝕏</a>
+          <a href="#" class="social-btn" aria-label="Instagram">📸</a>
+          <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
+          <a href="#" class="social-btn" aria-label="WhatsApp">💬</a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="footer-col-title" data-t="quick_links">روابط سريعة</h4>
+        <nav class="footer-links">
+          <a href="#home" data-t="nav_home">الرئيسية</a>
+          <a href="#about" data-t="nav_about">عن المنصة</a>
+          <a href="#how-it-works" data-t="nav_how">كيف يعمل</a>
+          <a href="#emergency" data-t="nav_emergency">الطوارئ</a>
+          <a href="#faq" data-t="nav_faq">الأسئلة الشائعة</a>
+        </nav>
+      </div>
+
+      <!-- For Donors -->
+      <div>
+        <h4 class="footer-col-title" data-t="for_donors">للمتبرعين</h4>
+        <nav class="footer-links">
+          <a href="#" data-t="donor_register">تسجيل متبرع</a>
+          <a href="#" data-t="donor_guide">دليل التبرع</a>
+          <a href="#" data-t="eligibility">شروط التبرع</a>
+          <a href="#blood-types" data-t="blood_info">فصائل الدم</a>
+          <a href="#" data-t="hospitals_list">قائمة المستشفيات</a>
+        </nav>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h4 class="footer-col-title" data-t="contact_us">تواصل معنا</h4>
+        <div class="footer-contact">
+          <div class="contact-row">
+            <span class="ci">📍</span>
+            <span data-t="addr">الرياض، المملكة العربية السعودية</span>
+          </div>
+          <div class="contact-row">
+            <span class="ci">📞</span>
+            <span dir="ltr">+966 11 000 0000</span>
+          </div>
+          <div class="contact-row">
+            <span class="ci">✉️</span>
+            <span dir="ltr">info@ehyaa.sa</span>
+          </div>
+          <div class="contact-row">
+            <span class="ci">🕐</span>
+            <span>24/7</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">
+        © 2025 إحياء | Ehyaa. <span data-t="rights">جميع الحقوق محفوظة</span>.
+        <a href="#">Made with ❤️ in Saudi Arabia</a>
+      </p>
+      <div class="footer-bottom-links">
+        <a href="#" data-t="privacy">سياسة الخصوصية</a>
+        <a href="#" data-t="terms">الشروط والأحكام</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <!-- Scroll Top -->
+  <button class="scroll-top" id="scrollTop">
+    ↑
+  </button>
+
+  <!-- JS -->
+  <script src="{% static 'js/script.js' %}"></script>
+
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

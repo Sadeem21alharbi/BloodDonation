@@ -589,3 +589,137 @@ body.lang-ar .scroll-top { left: 28px; }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--surface); }
 ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+/***********************************************************************************/
+
+:root {
+  --deep-blue: #0f4c75;
+  --sky-blue: #3282b8;
+  --light-blue: #bbe1fa;
+  --bg-soft: #f4f9ff;
+  --white: #ffffff;
+  --text-dark: #1b262c;
+  --text-muted: #64748b;
+  --radius: 14px;
+  --shadow: 0 4px 15px rgba(15, 76, 117, 0.1);
+  --transition: all 0.3s ease;
+}
+
+.navbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 15px 0;
+  border-bottom: 1px solid var(--light-blue);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-text-wrap {
+  text-align: right;
+  line-height: 1.2;
+}
+
+.logo-ar {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--deep-blue);
+}
+
+.logo-en {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+  list-style: none;
+  margin: 0;
+}
+
+.nav-links a {
+  color: var(--text-dark);
+  font-weight: 500;
+  transition: var(--transition);
+  font-size: 0.95rem;
+}
+
+.nav-links a:hover, .nav-links a.active {
+  color: var(--sky-blue);
+}
+
+.nav-auth .btn-outline {
+  border: 2px solid var(--sky-blue);
+  color: var(--sky-blue);
+  border-radius: 50px;
+  padding: 8px 20px;
+  margin-left: 10px;
+}
+
+.nav-auth .btn-primary {
+  background: var(--sky-blue);
+  color: white;
+  border-radius: 50px;
+  padding: 8px 20px;
+}
+
+.footer {
+  background: #fdfdfd;
+  padding: 60px 0 30px;
+  border-top: 1px solid var(--light-blue);
+  color: var(--text-dark);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-col-title {
+  color: var(--deep-blue);
+  font-weight: 700;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.footer-links a {
+  display: block;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  transition: var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--sky-blue);
+  padding-right: 5px;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: var(--text-muted);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid var(--light-blue);
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+/* --- تعديلات الهوم لتناسب الـ Base الجديد --- */
+.hero-section {
+  padding: 120px 0 100px !important; /* لتعويض ارتفاع الـ Nav */
+  margin-top: -20px;
+}

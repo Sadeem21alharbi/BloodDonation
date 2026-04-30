@@ -1,9 +1,346 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block title %}
-Ehyaa | Blood Donation Platform
+إحياء | منصة التبرع بالدم
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --deep-blue: #0f4c75;
+        --sky-blue: #3282b8;
+        --light-blue: #bbe1fa;
+        --white: #ffffff;
+        --bg-soft: #f4f9ff;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, var(--deep-blue) 0%, var(--sky-blue) 100%) !important;
+        color: white !important;
+        padding: 160px 0 120px !important; 
+        text-align: center;
+        margin-top: -80px;
+    }
+
+    .hero-title {
+        font-size: 3.2rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: white !important;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        opacity: 0.9;
+        margin-bottom: 40px;
+        color: white !important;
+    }
+
+    .btn-white-rounded {
+        background-color: var(--white) !important;
+        color: var(--deep-blue) !important;
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        display: inline-block;
+        transition: 0.3s;
+    }
+
+    .btn-white-rounded:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .services-area {
+        margin-top: -60px; 
+        padding-bottom: 60px;
+    }
+
+    .service-card {
+        background: var(--white);
+        border-radius: 30px; 
+        padding: 40px 30px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: 0.3s;
+        height: 100%;
+        border: none;
+    }
+
+    .service-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .icon-box-rect {
+        width: 65px;
+        height: 65px;
+        background-color: var(--light-blue);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 1.8rem;
+        color: var(--deep-blue);
+    }
+
+    .importance-section {
+        padding: 80px 0;
+        background-color: var(--white);
+    }
+
+    .importance-card-horizontal {
+        background: var(--bg-soft);
+        border-radius: 20px;
+        padding: 25px 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        border-right: 6px solid var(--sky-blue); 
+        transition: 0.3s;
+        height: 100%;
+    }
+
+    .importance-card-horizontal:hover {
+        background-color: var(--light-blue);
+        transform: translateX(-5px);
+    }
+
+    .icon-circle-blue {
+        min-width: 50px;
+        height: 50px;
+        background-color: var(--sky-blue);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+    }
+    
+    h4, h6 { font-family: 'Tajawal', sans-serif; color: var(--deep-blue); }
+
+    /* --- قسم تحديد نوع المستخدم --- */
+.user-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.selection-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition-slow);
+    position: relative;
+    overflow: hidden;
+}
+
+.selection-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.selection-card .card-icon {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.selection-card h3 {
+    font-size: 1.5rem;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.selection-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+}
+
+.auth-buttons-wrapper {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    max-height: 0;
+    opacity: 0;
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+
+.selection-card.active {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.selection-card.active .auth-buttons-wrapper {
+    max-height: 100px;
+    opacity: 1;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .user-selection-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 {% endblock %}
 
 {% block content %}
+
+<header class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">تبرع بدمك.. وانقذ حياة</h1>
+        <p class="hero-subtitle">نحن هنا لنربط المتبرعين بالمحتاجين بكل سهولة وأمان عبر أحدث التقنيات.</p>
+        <a href="#" class="btn-white-rounded">ابدأ الآن <i class="fas fa-heart ms-2"></i></a>
+    </div>
+</header>
+
+<section class="services-area">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="service-card">
+                    <div class="icon-box-rect"><i class="fas fa-hospital"></i></div><h4 class="fw-bold">مراكز التبرع</h4>
+                    <p class="text-muted small">اكتشف مراكز التبرع المعتمدة والمستشفيات القريبة من موقعك.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-card">
+                    <div class="icon-box-rect"><i class="fas fa-search"></i></div>
+                    <h4 class="fw-bold">البحث عن متبرع</h4>
+                    <p class="text-muted small">البحث في قاعدة بياناتنا الواسعة حسب فصيلة الدم والمدينة.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-card">
+                    <div class="icon-box-rect"><i class="fas fa-ambulance"></i></div>
+                    <h4 class="fw-bold">طلب تبرع طارئ</h4>
+                    <p class="text-muted small">إرسال تنبيهات فورية للمتبرعين القريبين منك في حالات الطوارئ.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="importance-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold" style="color: var(--deep-blue);">لماذا نتبرع بالدم؟</h2>
+            <p class="text-muted">تكمن أهمية التبرع بالدم في الحفاظ على الأرواح وإنقاذ الحالات الحرجة</p>
+            <div style="width: 80px; height: 4px; background: var(--sky-blue); margin: 10px auto; border-radius: 2px;"></div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="importance-card-horizontal">
+                    <div class="icon-circle-blue"><i class="fas fa-car-crash"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1">الطوارئ والحوادث</h6>
+                        <p class="small mb-0 text-muted">حوادث السيارات، الحروق الشديدة، والكوارث التي تتطلب تدخلات جراحية فورية.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="importance-card-horizontal">
+                    <div class="icon-circle-blue"><i class="fas fa-baby"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1">مضاعفات الحمل</h6>
+                        <p class="small mb-0 text-muted">النزيف قبل أو بعد الولادة، وحالات الحمل خارج الرحم التي تهدد حياة الأم.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="importance-card-horizontal">
+                    <div class="icon-circle-blue"><i class="fas fa-user-nurse"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1">فقر الدم الحاد</h6>
+                        <p class="small mb-0 text-muted">نقل الدم للمرضى من جميع الأعمار الذين يعانون من فقر دم حاد يهدد صحتهم.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="importance-card-horizontal">
+                    <div class="icon-circle-blue"><i class="fas fa-dna"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1">اضطرابات الدم الموروثة</h6>
+                        <p class="small mb-0 text-muted">الثلاسيميا، فقر الدم المنجلي، واضطرابات الهيموجلوبين ونخاع العظم.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="importance-card-horizontal">
+                    <div class="icon-circle-blue"><i class="fas fa-virus-slash"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1">مرضى السرطان</h6>
+                        <p class="small mb-0 text-muted">دعم مرضى السرطان أثناء العلاج والأشخاص الذين يعانون من نقص المناعة.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="importance-card-horizontal">
+                    <div class="icon-circle-blue"><i class="fas fa-pills"></i></div><div>
+                        <h6 class="fw-bold mb-1">صناعة الأدوية الحيوية</h6>
+                        <p class="small mb-0 text-muted">استخلاص عوامل التجلط للأشخاص المصابين بالهيموفيليا والمواد الطبية.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="user-type-section section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">انضم إلى منصة إحياء</h2>
+            <p class="section-sub">من فضلك حدد نوع الحساب للبدء في استخدام المنصة</p>
+        </div>
+
+        <div class="user-selection-grid">
+            <div class="selection-card" onclick="toggleAuthOptions('donor')">
+                <div class="card-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <h3>متبرع بالدم</h3>
+                <p>ساهم في إنقاذ الأرواح وتابع سجل تبرعاتك</p>
+                
+                <div id="donor-auth" class="auth-buttons-wrapper">
+                    <a href="{% url 'donor:login' %}" class="btn btn-primary btn-sm">تسجيل دخول</a>
+                    <a href="{% url 'donor:register' %}" class="btn btn-outline btn-sm">إنشاء حساب</a>
+                </div>
+            </div>
+
+            <div class="selection-card" onclick="toggleAuthOptions('hospital')">
+                <div class="card-icon">
+                    <i class="fas fa-hospital"></i>
+                </div>
+                <h3>مستشفى / مركز طبي</h3>
+                <p>إدارة طلبات الدم والوصول للمتبرعين بسرعة</p>
+                
+                <div id="hospital-auth" class="auth-buttons-wrapper">
+                    <a href="{% url 'hospital:login' %}" class="btn btn-primary btn-sm">تسجيل دخول</a>
+                    <a href="{% url 'hospital:register' %}" class="btn btn-outline btn-sm">إنشاء حساب</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}

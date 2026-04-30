@@ -19,6 +19,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.register),
-    path('', include('main.urls')), 
+    path('admin/', admin.site.urls),
+    path('', include('main.urls')), # تطبيق الصفحة الرئيسية
+    path('donor/', include('donor.urls')), # ربط تطبيق المتبرع
+    path('hospital/', include('hospital.urls')), # ربط تطبيق المستشفى
 ]

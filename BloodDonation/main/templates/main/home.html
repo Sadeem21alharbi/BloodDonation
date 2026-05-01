@@ -314,30 +314,25 @@
         </div>
 
         <div class="user-selection-grid">
-            <div class="selection-card" onclick="toggleAuthOptions('donor')">
-                <div class="card-icon">
-                    <i class="fas fa-hand-holding-heart"></i>
+            <!-- الكرت الأول: متبرع بالدم -->
+            <!-- جعلنا الرابط يحيط بكل المحتوى ليكون الكرت كاملاً قابلاً للضغط -->
+            <a href="{% url 'donor:login' %}" class="selection-card-link" style="text-decoration: none; color: inherit;">
+                <div class="selection-card">
+                    <div class="card-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3>متبرع بالدم</h3>
+                    <p>ساهم في إنقاذ الأرواح وتابع سجل تبرعاتك</p>
                 </div>
-                <h3>متبرع بالدم</h3>
-                <p>ساهم في إنقاذ الأرواح وتابع سجل تبرعاتك</p>
-                
-                <div id="donor-auth" class="auth-buttons-wrapper">
-                    <a href="{% url 'donor:login' %}" class="btn btn-primary btn-sm">تسجيل دخول</a>
-                    <a href="{% url 'donor:register' %}" class="btn btn-outline btn-sm">إنشاء حساب</a>
-                </div>
-            </div>
+            </a>
 
-            <div class="selection-card" onclick="toggleAuthOptions('hospital')">
+            <!-- الكرت الثاني: مستشفى -->
+            <div class="selection-card" onclick="toggleAuthOptions('hospital')" style="cursor: pointer;">
                 <div class="card-icon">
                     <i class="fas fa-hospital"></i>
                 </div>
                 <h3>مستشفى / مركز طبي</h3>
                 <p>إدارة طلبات الدم والوصول للمتبرعين بسرعة</p>
-                
-                <div id="hospital-auth" class="auth-buttons-wrapper">
-                    <a href="{% url 'hospital:login' %}" class="btn btn-primary btn-sm">تسجيل دخول</a>
-                    <a href="{% url 'hospital:register' %}" class="btn btn-outline btn-sm">إنشاء حساب</a>
-                </div>
             </div>
         </div>
     </div>

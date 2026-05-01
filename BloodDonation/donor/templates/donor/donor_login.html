@@ -1,0 +1,186 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #1a56db 0%, #3f83f8 100%);
+        --accent-red: #ef4444;
+        --text-dark: #1f2937;
+        --bg-light: #f9fafb;
+    }
+
+    body {
+        background-color: var(--bg-light);
+        font-family: 'Tajawal', sans-serif;
+    }
+
+    .login-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        direction: rtl;
+    }
+
+    .login-card {
+        background: white;
+        width: 100%;
+        max-width: 450px;
+        padding: 40px;
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        border: 1px solid #f3f4f6;
+        transition: transform 0.3s ease;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .login-header .logo-icon {
+        width: 70px;
+        height: 70px;
+        background: #fff5f5;
+        color: var(--accent-red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        border-radius: 50%;
+        margin: 0 auto 15px;
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.1);
+    }
+
+    .login-header h2 {
+        color: var(--text-dark);
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .login-header p {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #4b5563;
+        font-size: 0.9rem;
+    }
+
+    .form-control, input[type="text"], input[type="password"] {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 12px;
+        font-family: 'Tajawal', sans-serif;
+        transition: all 0.3s ease;
+        background: #fcfcfc;
+    }
+
+    .form-control:focus, input:focus {
+        outline: none;
+        border-color: #3f83f8;
+        box-shadow: 0 0 0 4px rgba(63, 131, 248, 0.1);
+        background: white;
+    }
+
+    .btn-login {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.3s ease, transform 0.2s ease;
+        margin-top: 10px;
+    }
+
+    .btn-login:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #f3f4f6;
+    }
+
+    .auth-footer p {
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    .auth-footer a {
+        color: #1a56db;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+
+    .errorlist {
+        list-style: none;
+        padding: 0;
+        color: var(--accent-red);
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="logo-icon">
+                <i class="fas fa-heartbeat"></i>
+            </div>
+            <h2>عودة حميدة، بطلنا!</h2>
+            <p>سجل دخولك لمتابعة سجل عطاءاتك في إحياء</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="errorlist">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">اسم المستخدم</label>{{ form.username }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">كلمة المرور</label>
+                {{ form.password }}
+            </div>
+
+            <a href="{% url 'donor:donor_home' %}" class="btn-login text-decoration-none d-inline-block text-center">
+    تسجيل الدخول <i class="fas fa-sign-in-alt ms-2"></i>
+</a>
+        </form>
+
+        <div class="auth-footer">
+            <p>أول مرة هنا؟ <a href="{% url 'donor:register' %}">أنشئ حساب متبرع الآن</a></p>
+            <p class="mt-2"><a href="{% url 'home' %}" class="text-muted small">العودة للرئيسية</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow p-4" style="border-radius: 20px;">
+                <h2 class="text-center mb-4">تعديل الملف الشخصي</h2>
+                
+                <!-- أهم نقطة لرفع الصور: enctype="multipart/form-data" -->
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="text-center mb-4">
+                        {% if user.donorprofile.image %}
+                            <img src="{{ user.donorprofile.image.url }}" class="rounded-circle border" width="150" height="150" style="object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light rounded-circle d-inline-block p-5 border">
+                                <i class="fas fa-user fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>الاسم الأول</label>
+                            {{ u_form.first_name }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>الاسم الأخير</label>
+                            {{ u_form.last_name }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        {% for field in p_form %}
+                        <div class="col-md-6 mb-3">
+                            <label>{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mt-3" style="background: var(--primary-gradient); border: none; border-radius: 10px;">حفظ التغييرات</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

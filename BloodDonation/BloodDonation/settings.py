@@ -121,3 +121,8 @@ STATIC_URL = 'static/'
 
 # أخبري Django أن يستخدم رابط تسجيل الدخول الخاص بتطبيقك
 LOGIN_URL = 'donor:login'
+
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

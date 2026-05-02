@@ -2,7 +2,6 @@
 
 {% block content %}
 <style>
-    /* الهوية البصرية لمنصة إحياء */
     :root {
         --primary-gradient: linear-gradient(135deg, #1a56db 0%, #3f83f8 100%);
         --accent-red: #ef4444;
@@ -50,7 +49,6 @@
         margin-bottom: 5px;
     }
 
-    /* تنسيق فورم Django */
     form p {
         margin-bottom: 20px;
     }
@@ -63,7 +61,6 @@
         font-size: 0.9rem;
     }
 
-    /* استهداف جميع أنواع المدخلات لضمان التناسق */
     input[type="text"], 
     input[type="password"], 
     input[type="email"],
@@ -140,28 +137,28 @@
             <i class="fas fa-user-plus"></i>
             <h2>انضم لأبطال إحياء</h2>
             <p class="text-muted">خطوة بسيطة منك.. حياة جديدة لغيرك</p>
-        </div>
-
-        <form method="POST">
-            {% csrf_token %}
+            </div>
             
-            {% if form.errors %}
+            <form method="POST">
+                {% csrf_token %}
+            
+                {% if form.errors %}
                 <div class="alert alert-danger" style="border-radius: 12px; font-size: 0.9rem;">
                     يرجى تصحيح الأخطاء أدناه للمتابعة.
                 </div>
-            {% endif %}
-
-            <!-- عرض حقول الفورم -->
-            {{ form.as_p }}
-
-            <a href="{% url 'donor:login' %}" class="btn-register text-decoration-none d-block text-center">
-    تسجيل الدخول <i class="fas fa-sign-in-alt ms-2"></i>
-</a>
-        </form>
-
-        <div class="register-footer">
-            <p>لديك حساب بالفعل؟ <a href="{% url 'donor:login' %}">سجل دخولك هنا</a></p>
-        </div>
-    </div>
-</div>
-{% endblock %}
+                {% endif %}
+            
+                {{ form.as_p }}
+            
+                <button type="submit" class="btn-register w-100 border-0">
+                    إنشاء حساب جديد <i class="fas fa-user-plus ms-2"></i>
+                </button>
+            
+            </form>
+            
+            <div class="register-footer">
+                <p>لديك حساب بالفعل؟ <a href="{% url 'donor:login' %}">سجل دخولك هنا</a></p>
+            </div>
+            </div>
+            </div>
+            {% endblock %}

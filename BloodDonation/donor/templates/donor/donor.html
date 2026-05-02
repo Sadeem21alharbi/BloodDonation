@@ -5,7 +5,7 @@
         --primary-gradient: linear-gradient(135deg, #1a56db 0%, #3f83f8 100%);
         --glass-bg: rgba(255, 255, 255, 0.95);
         --text-dark: #1f2937;
-        --accent-red: #ef4444;
+        --accent-red: #d2d2d2;
     }
 
     body {
@@ -165,53 +165,72 @@
             </div>
         </div>
     </div>
-
-    <!-- Mazaia & Levels -->
-    <div class="row">
-        <div class="col-md-8">
-            <div class="perks-section">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">مستوى العطاء: <span style="color: #1a56db;">{{ profile.get_level_display }}</span></h4>
-                    <!-- عرض التقدم بالنسبة المئوية -->
-                    <span>{{ profile.points }} / 1000 نقطة للفل التالي</span>
-                </div>
-                <div class="progress-bar-container">
-                    <!-- حساب عرض الشريط ديناميكياً باستخدام الـ CSS Inline -->
-                <div class="progress-fill" style="width: {{ profile.calculate_progress }}%;"></div>
-                </div>
-                <p class="text-muted small">بقي لك {{ profile.points_needed }} نقطة للحصول على وسام "المنقذ المتميز".</p>
-            </div>
-
-            <div class="donation-history">
-                <h4>سجل التبرعات الأخير</h4>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>التاريخ</th>
-                            <th>الموقع</th>
-                            <th>الكمية</th>
-                            <th>الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- حلقة تكرار لعرض سجل التبرعات الفعلي -->
-                        {% for donation in donations %}
-                        <tr>
-                            <td>{{ donation.date|date:"Y/m/d" }}</td>
-                            <td>{{ donation.hospital_name }}</td>
-                            <td>{{ donation.amount }}ml</td>
-                            <td><span class="status-badge status-completed">{{ donation.status }}</span></td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" class="text-center">لا توجد سجلات تبرع سابقة حتى الآن.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+<!-- Mazaia & Levels -->
+<div class="row">
+    <!-- كارد المزايا (المكان الذي حددتيه بالمربع الأحمر) -->
+    <div class="col-md-4">
+        <div class="perks-section h-100" style="background: white; border-radius: 20px; padding: 25px; border-top: 5px solid #1a56db;">
+            <h4 class="mb-4">مزايا رتبة <span style="color: #1a56db;">{{ profile.current_level }}</span></h4>
+            <ul class="list-unstyled">
+                {% for perk in profile.get_perks %}
+                <li class="mb-3 d-flex align-items-center">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    <span style="font-size: 0.95rem;">{{ perk }}</span>
+                </li>
+                {% empty %}
+                <li class="text-muted small">ابدأ أول عملية تبرع لفتح المزايا!</li>
+                {% endfor %}
+            </ul>
+            <div class="mt-3 p-2 bg-light rounded text-center">
+                <small class="text-muted">كل تبرع = 200 نقطة</small>
             </div>
         </div>
+    </div>
 
-        <div class="col-md-4">
-            <!-- القسم الثابت للمزايا يمكن تركه كما هو أو جعله ديناميكياً لاحقاً -->
+    <!-- قسم مستوى العطاء وشريط التقدم -->
+    <div class="col-md-8">
+        <div class="perks-section mb-4" style="background: white; border-radius: 20px; padding: 25px;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">مستوى العطاء:</h4>
+                <span class="fw-bold">{{ profile.points }} / 1000 <small class="text-muted">نقطة للمستوى القادم</small></span>
+            </div>
+            
+            <div class="progress-bar-container" style="height: 12px; background: #e5e7eb; border-radius: 10px; margin: 20px 0; overflow: hidden;">
+                <!-- شريط التقدم يتغير عرضه بناءً على النقاط -->
+                <div class="progress-fill" style="height: 100%; background: var(--primary-gradient); width: {{ profile.calculate_progress }}%; transition: width 0.5s ease;"></div>
+            </div>
+            
+            <p class="text-muted small">بقي لك {{ profile.points_needed }} نقطة للحصول على مستوى <b>{{ profile.next_level_name|default:"القادم" }}</b>.</p>
+        </div>
+
+        <!-- سجل التبرعات -->
+        <div class="donation-history" style="background: white; border-radius: 20px; padding: 25px;">
+            <h4 class="mb-3">سجل التبرعات الأخير</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>الموقع</th>
+                        <th>الكمية</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for donation in donations %}
+                    <tr>
+                        <td>{{ donation.date|date:"Y/m/d" }}</td>
+                        <td>{{ donation.hospital_name }}</td>
+                        <td>{{ donation.amount }}ml</td>
+                        <td><span class="status-badge status-completed">{{ donation.status }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">لا توجد سجلات تبرع سابقة حتى الآن.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

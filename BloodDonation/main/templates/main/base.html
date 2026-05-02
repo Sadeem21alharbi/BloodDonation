@@ -24,63 +24,70 @@
 
 <body class="lang-ar">
 
-  <!-- NAVBAR -->
-  <nav class="navbar" id="navbar">
-    <div class="container nav-inner">
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="container nav-inner">
 
-      <!-- Logo -->
-      <a href="{% url 'home' %}" class="nav-logo">
-        <div class="logo-text-wrap">
-          <div class="logo-ar">إحياء</div>
-          <div class="logo-en">Ehyaa Platform</div>
-        </div>
-      </a>
+    <!-- Logo -->
+    <a href="{% url 'main:home' %}" class="nav-logo">
+      <div class="logo-text-wrap">
+        <div class="logo-ar">إحياء</div>
+        <div class="logo-en">Ehyaa Platform</div>
+      </div>
+    </a>
 
-      <!-- Desktop Nav -->
-      <ul class="nav-links">
-        <li><a href="#home" class="active" data-t="nav_home">الرئيسية</a></li>
-        <li><a href="#about" data-t="nav_about">عن المنصة</a></li>
-        <li><a href="#how-it-works" data-t="nav_how">كيف يعمل</a></li>
-        <li><a href="#faq" data-t="nav_faq">الأسئلة الشائعة</a></li>
-      </ul>
+    <!-- Desktop Nav -->
+    <ul class="nav-links">
+      <li><a href="{% url 'main:home' %}" class="active">الرئيسية</a></li>
+      <li><a href="#about">عن المنصة</a></li>
+      {% if user.is_authenticated %}
+        {% if user.hospital_profile %} 
+          <li><a href="{% url 'hospital:requests' %}">طلبات الدم</a></li>
+        {% else %}
+        {% endif %}
+      {% endif %}
+    </ul>
 
-      <!-- Controls -->
-      <div class="nav-controls">
+    <!-- Controls -->
+    <div class="nav-controls">
+      <button class="lang-toggle" id="langToggle">EN</button>
+      <button class="nav-btn-icon" id="themeToggle"><span id="themeIcon">🌙</span></button>
 
-        <!-- Language -->
-        <button class="lang-toggle" id="langToggle">
-          EN
-        </button>
+      <!-- Auth Logic Dynamic -->
+      <div class="nav-auth">
+        {% if user.is_authenticated %}
+          
+          <div class="user-profile-nav" style="display: flex; align-items: center; gap: 12px;">
+            <div class="text-end d-none d-md-block">
+              <div style="font-weight: bold; font-size: 0.9rem;">{{ user.first_name }}</div>
+              <small style="color: var(--primary-color); font-size: 0.75rem;">
+                {% if user.hospital_profile %} مستشفى {% else %} متبرع {% endif %}
+              </small>
+            </div>
 
-        <!-- Theme -->
-        <button class="nav-btn-icon" id="themeToggle">
-          <span id="themeIcon">🌙</span>
-        </button>
+            <!-- تعديل الرابط هنا ليوجه للبروفايل مباشرة عند الضغط على الأيقونة -->
+            <a href="{% if user.hospital_profile %}{% url 'hospital:profile' %}{% else %}{% url 'donor:profile' %}{% endif %}" class="nav-profile-link" title="الملف الشخصي">
+              {% if user.donorprofile.image %}
+                <img src="{{ user.donorprofile.image.url }}" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd;">
+              {% elif user.hospital_profile.logo %}
+                <img src="{{ user.hospital_profile.logo.url }}" alt="Hospital Logo" style="width: 40px; height: 40px; border-radius: 8px; object-fit: contain;">
+              {% else %}
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">👤</div>
+              {% endif %}
+            </a>
+            
+          </div>
 
-        <!-- Auth -->
-        <div class="nav-auth">
-          <button class="btn btn-outline btn-sm">
-            تسجيل الدخول
-          </button>
-
-          <button class="btn btn-primary btn-sm">
-            إنشاء حساب
-          </button>
-        </div>
-
-        <!-- Mobile Menu -->
-        <button class="mobile-menu-btn" id="mobileMenuBtn">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
+        {% else %}
+          <a href="{% url 'donor:donor_login' %}" class="btn btn-outline btn-sm">تسجيل الدخول</a>
+          <a href="{% url 'donor:donor_register' %}" class="btn btn-primary btn-sm">إنشاء حساب</a>
+        {% endif %}
       </div>
 
+      <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
     </div>
-    
-  </nav>
-
+  </div>
+</nav>
   <!-- Mobile Nav -->
   <div class="mobile-nav" id="mobileNav">
 

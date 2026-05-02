@@ -1,0 +1,1069 @@
+{% extends 'hospital/base.html' %}
+
+{% block title %}Hospital Dashboard | Ehyaa{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block page_subtitle %}Welcome back to Ehyaa Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =========================================================
+   DASHBOARD COMPONENTS
+========================================================= */
+
+.main{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+/* Alert */
+.alert-strip{
+    background:linear-gradient(135deg,#fef2f2,#fff);
+    border:1px solid #fecaca;
+    border-radius:18px;
+    padding:18px 22px;
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+    box-shadow:var(--shadow-card);
+}
+
+.alert-icon{
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    background:#fee2e2;
+    color:#dc2626;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.alert-icon svg{
+    width:22px;
+    height:22px;
+}
+
+.alert-text{
+    flex:1;
+}
+
+.alert-text strong{
+    display:block;
+    margin-bottom:4px;
+    font-size:14px;
+}
+
+.alert-text p{
+    color:var(--text-muted);
+    font-size:13px;
+}
+
+.alert-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+/* Welcome */
+.welcome-banner{
+    background:var(--primary-gradient);
+    border-radius:24px;
+    padding:32px;
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    overflow:hidden;
+    position:relative;
+}
+
+.welcome-greeting{
+    font-size:14px;
+    opacity:.9;
+    margin-bottom:10px;
+}
+
+.welcome-title{
+    font-size:32px;
+    font-weight:800;
+    line-height:1.2;
+    margin-bottom:12px;
+}
+
+.welcome-desc{
+    max-width:620px;
+    line-height:1.7;
+    opacity:.92;
+}
+
+.welcome-actions{
+    margin-top:22px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.welcome-rings{
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.welcome-rings-inner{
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    background:rgba(255,255,255,.14);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.welcome-icon{
+    font-size:54px;
+}
+
+/* Sections */
+.section-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:14px;
+}
+
+.section-sub{
+    color:var(--text-muted);
+    font-size:12px;
+    margin-top:4px;
+}
+
+/* Stats */
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.stat-card{
+    background:var(--bg-card);
+    border-radius:20px;
+    padding:22px;
+    border:1px solid var(--border-card);
+    box-shadow:var(--shadow-card);
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.stat-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.stat-icon{
+    width:52px;
+    height:52px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+}
+
+.stat-icon svg{
+    width:24px;
+    height:24px;
+}
+
+.stat-icon.blue{background:#2563eb;}
+.stat-icon.gold{background:#f59e0b;}
+.stat-icon.green{background:#10b981;}
+.stat-icon.red{background:#ef4444;}
+.stat-icon.teal{background:#14b8a6;}
+
+.stat-value{
+    font-size:30px;
+    font-weight:800;
+}
+
+.stat-label{
+    color:var(--text-muted);
+    margin-top:4px;
+}
+
+.stat-trend{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.stat-trend svg{
+    width:14px;
+    height:14px;
+}
+
+.stat-trend.up{color:#16a34a;}
+.stat-trend.down{color:#dc2626;}
+
+.stat-bar{
+    height:8px;
+    background:var(--bg-page);
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.stat-bar-fill{
+    height:100%;
+    border-radius:999px;
+}
+
+.stat-bar-fill.blue{background:#2563eb;width:78%;}
+.stat-bar-fill.gold{background:#f59e0b;width:45%;}
+.stat-bar-fill.green{background:#10b981;width:66%;}
+.stat-bar-fill.red{background:#ef4444;width:82%;}
+.stat-bar-fill.teal{background:#14b8a6;width:58%;}
+
+/* Grid */
+.content-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:22px;
+}
+
+/* Cards */
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    margin-bottom:18px;
+}
+
+.card-title{
+    font-size:17px;
+    font-weight:700;
+}
+
+.card-sub{
+    color:var(--text-muted);
+    font-size:12px;
+    margin-top:3px;
+}
+
+.card-footer{
+    margin-top:20px;
+    padding-top:18px;
+    border-top:1px solid var(--border-light);
+}
+
+/* Buttons */
+.btn{
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+    transition:.2s;
+}
+
+.btn-sm{
+    padding:9px 14px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.btn-primary{
+    background:var(--primary-gradient);
+    color:#fff;
+}
+
+.btn-outline{
+    background:transparent;
+    border:1px solid var(--border-light);
+    color:var(--text-dark);
+}
+
+.btn-white{
+    background:rgba(255,255,255,.12);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.2);
+}
+
+.btn-white-solid{
+    background:#fff;
+    color:#1d4ed8;
+}
+
+.btn-danger-soft{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+/* Filters */
+.filter-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+}
+
+.filter-chip{
+    padding:8px 12px;
+    border-radius:999px;
+    background:var(--bg-page);
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.filter-chip.active{
+    background:var(--primary-gradient);
+    color:#fff;
+}
+
+.filter-right{
+    display:flex;
+    gap:10px;
+}
+
+.filter-select{
+    padding:10px 14px;
+    border-radius:12px;
+    border:1px solid var(--border-light);
+    background:var(--bg-card);
+    color:var(--text-dark);
+}
+
+/* Blood badge */
+.blood-badge,
+.blood-pill{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:#fff;
+    padding:8px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* Status */
+.status-badge{
+    display:inline-flex;
+    align-items:center;
+    border-radius:999px;
+    padding:6px 10px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.status-badge.pending{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.status-badge.completed,
+.status-badge.accepted{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.status-badge.rejected{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.status-badge.inprog{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+/* Donors */
+.donor-list{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.donor-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+}
+
+.donor-avatar{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-weight:700;
+    flex-shrink:0;
+}
+
+.donor-avatar.a{background:#2563eb;}
+.donor-avatar.b{background:#7c3aed;}
+.donor-avatar.c{background:#14b8a6;}
+.donor-avatar.d{background:#f59e0b;}
+.donor-avatar.e{background:#ef4444;}
+
+.donor-info{
+    flex:1;
+}
+
+.donor-name{
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+.donor-meta{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text-muted);
+    font-size:12px;
+}
+
+.donor-meta-dot{
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:var(--text-light);
+}
+
+/* Notifications */
+.notif-panel{
+    background:var(--bg-card);
+    border-radius:20px;
+    border:1px solid var(--border-card);
+    overflow:hidden;
+    box-shadow:var(--shadow-card);
+}
+
+.notif-item{
+    display:flex;
+    gap:14px;
+    padding:16px 18px;
+    border-top:1px solid var(--border-light);
+}
+
+.notif-item.unread{
+    background:rgba(37,99,235,.03);
+}
+
+.notif-icon-wrap{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.notif-icon-wrap svg{
+    width:20px;
+    height:20px;
+}
+
+.ni-red{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.ni-blue{
+    background:#dbeafe;
+    color:#2563eb;
+}
+
+.ni-green{
+    background:#dcfce7;
+    color:#16a34a;
+}
+
+.notif-content{
+    flex:1;
+}
+
+.notif-title{
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+.notif-body{
+    color:var(--text-muted);
+    font-size:13px;
+    line-height:1.5;
+}
+
+.notif-time{
+    margin-top:6px;
+    font-size:11px;
+    color:var(--text-light);
+}
+
+/* Responsive */
+@media (max-width:1100px){
+    .content-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media (max-width:768px){
+
+    .alert-strip,
+    .welcome-banner,
+    .section-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .welcome-title{
+        font-size:24px;
+    }
+
+    .welcome-rings{
+        width:120px;
+        height:120px;
+    }
+
+    .welcome-rings-inner{
+        width:90px;
+        height:90px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <main class="main">
+
+    <!-- Emergency Alert -->
+    <div class="alert-strip">
+      <div class="alert-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+      <div class="alert-text">
+        <strong>🚨 Emergency: 3 Critical Requests Need Immediate Donors</strong>
+        <p>Blood types O−, AB+ and B− are critically low. Urgent donor outreach required.</p>
+      </div>
+      <div class="alert-actions">
+        <button class="btn btn-sm btn-danger-soft">View Emergency Requests</button>
+        <button class="btn btn-sm btn-outline">Dismiss</button>
+      </div>
+    </div>
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <div class="welcome-text">
+        <div class="welcome-greeting">Good morning, King Khalid Hospital 👋</div>
+        <div class="welcome-title">Manage Your Blood Donation Platform</div>
+        <div class="welcome-desc">Monitor donation requests, track donor responses, and help save lives across the Kingdom.</div>
+        <div class="welcome-actions">
+          <button class="btn btn-white-solid btn-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Create New Request
+          </button>
+          <button class="btn btn-white btn-sm">View All Requests</button>
+        </div>
+      </div>
+      <div class="welcome-visual">
+        <div class="welcome-rings">
+          <div class="welcome-rings-inner">
+            <div class="welcome-icon">🩸</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div>
+      <div class="section-header">
+        <div>
+          <div class="section-title">Overview Statistics</div>
+          <div class="section-sub">Updated just now · May 2025</div>
+        </div>
+        <button class="btn btn-outline btn-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14">
+            <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+          </svg>
+          Refresh
+        </button>
+      </div>
+      <div class="stats-grid" style="margin-top:14px">
+
+        <div class="stat-card blue">
+          <div class="stat-top">
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M9 11H5a2 2 0 00-2 2v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 00-2-2h-4M12 2v13"/>
+              </svg>
+            </div>
+            <span class="stat-trend up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              +12%
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">84</div>
+            <div class="stat-label">Total Requests</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill blue"></div></div>
+        </div>
+
+        <div class="stat-card gold">
+          <div class="stat-top">
+            <div class="stat-icon gold">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <span class="stat-trend up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              +4
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">23</div>
+            <div class="stat-label">Open Requests</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill gold"></div></div>
+        </div>
+
+        <div class="stat-card blue">
+          <div class="stat-top">
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <span class="stat-trend up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              Active
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">18</div>
+            <div class="stat-label">In Progress</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill blue"></div></div>
+        </div>
+
+        <div class="stat-card green">
+          <div class="stat-top">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="stat-trend up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              +8%
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">43</div>
+            <div class="stat-label">Completed</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill green"></div></div>
+        </div>
+
+        <div class="stat-card teal">
+          <div class="stat-top">
+            <div class="stat-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+            </div>
+            <span class="stat-trend up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              +22
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">317</div>
+            <div class="stat-label">Total Donors</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill teal"></div></div>
+        </div>
+
+        <div class="stat-card red">
+          <div class="stat-top">
+            <div class="stat-icon red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M12 2C8 6 4 9.5 4 13a8 8 0 0016 0c0-3.5-4-7-8-11z"/>
+              </svg>
+            </div>
+            <span class="stat-trend down">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              −5%
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">1,248</div>
+            <div class="stat-label">Blood Units Received</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill red"></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Donation Requests Table + Donor Responses -->
+    <div class="content-grid">
+
+      <!-- Donation Requests Table -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Recent Donation Requests</div>
+            <div class="card-sub">Showing 6 of 84 total requests</div>
+          </div>
+          <button class="btn btn-primary btn-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            New Request
+          </button>
+        </div>
+
+        <div class="filter-bar">
+          <div class="filter-chip active"><span class="filter-dot all"></span>All (84)</div>
+          <div class="filter-chip"><span class="filter-dot pending"></span>Pending (23)</div>
+          <div class="filter-chip"><span class="filter-dot prog"></span>In Progress (18)</div>
+          <div class="filter-chip"><span class="filter-dot done"></span>Completed (43)</div>
+          <div class="filter-right">
+            <select class="filter-select">
+              <option>All Blood Types</option>
+              <option>A+</option><option>A−</option>
+              <option>B+</option><option>B−</option>
+              <option>AB+</option><option>AB−</option>
+              <option>O+</option><option>O−</option>
+            </select>
+            <select class="filter-select">
+              <option>All Urgency</option>
+              <option>High</option><option>Medium</option><option>Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>Blood Type</th>
+                <th>Urgency</th>
+                <th>Status</th>
+                <th>Responses</th>
+                <th>Units</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="req-id">#REQ-0841</div>
+                  <div class="req-type">Emergency Case</div>
+                </td>
+                <td><div class="blood-badge">O−</div></td>
+                <td><span class="urgency high">🔴 High</span></td>
+                <td><span class="status-badge inprog">In Progress</span></td>
+                <td><span class="resp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>8</span></td>
+                <td style="font-weight:700">4</td>
+                <td class="text-muted text-small">May 1, 2025</td>
+                <td>
+                  <div class="action-group">
+                    <div class="act-btn" title="View">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <div class="act-btn" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </div>
+                    <div class="act-btn danger" title="Delete">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="req-id">#REQ-0840</div>
+                  <div class="req-type">Blood Bank Refill</div>
+                </td>
+                <td><div class="blood-badge ab">AB+</div></td>
+                <td><span class="urgency medium">🟡 Medium</span></td>
+                <td><span class="status-badge pending">Pending</span></td>
+                <td><span class="resp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>3</span></td>
+                <td style="font-weight:700">10</td>
+                <td class="text-muted text-small">Apr 29, 2025</td>
+                <td>
+                  <div class="action-group">
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                    <div class="act-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="req-id">#REQ-0839</div>
+                  <div class="req-type">Emergency Case</div>
+                </td>
+                <td><div class="blood-badge b">B−</div></td>
+                <td><span class="urgency high">🔴 High</span></td>
+                <td><span class="status-badge accepted">Accepted</span></td>
+                <td><span class="resp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>12</span></td>
+                <td style="font-weight:700">6</td>
+                <td class="text-muted text-small">Apr 28, 2025</td>
+                <td>
+                  <div class="action-group">
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                    <div class="act-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="req-id">#REQ-0838</div>
+                  <div class="req-type">Blood Bank Refill</div>
+                </td>
+                <td><div class="blood-badge o">A+</div></td>
+                <td><span class="urgency low">🟢 Low</span></td>
+                <td><span class="status-badge completed">Completed</span></td>
+                <td><span class="resp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>21</span></td>
+                <td style="font-weight:700">15</td>
+                <td class="text-muted text-small">Apr 25, 2025</td>
+                <td>
+                  <div class="action-group">
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                    <div class="act-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="req-id">#REQ-0837</div>
+                  <div class="req-type">Emergency Case</div>
+                </td>
+                <td><div class="blood-badge">O+</div></td>
+                <td><span class="urgency medium">🟡 Medium</span></td>
+                <td><span class="status-badge rejected">Rejected</span></td>
+                <td><span class="resp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>2</span></td>
+                <td style="font-weight:700">8</td>
+                <td class="text-muted text-small">Apr 22, 2025</td>
+                <td>
+                  <div class="action-group">
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                    <div class="act-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-footer">
+          <button class="btn btn-outline btn-sm">View All 84 Requests →</button>
+        </div>
+      </div>
+
+      <!-- Right column: Donor Responses + Notifications -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+
+        <!-- Donor Responses -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Recent Donor Responses</div>
+              <div class="card-sub">5 new this week</div>
+            </div>
+            <span class="nav-badge" style="background:var(--ehyaa-primary);color:#fff;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700">+5</span>
+          </div>
+          <div class="card-body">
+            <div class="donor-list">
+
+              <div class="donor-item">
+                <div class="donor-avatar a">AK</div>
+                <div class="donor-info">
+                  <div class="donor-name">Ahmed Al-Khalidi</div>
+                  <div class="donor-meta">
+                    <span>#REQ-0841</span>
+                    <span class="donor-meta-dot"></span>
+                    <span>+966 50 123 4567</span>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                  <div class="blood-pill">O−</div>
+                  <span class="status-badge inprog" style="font-size:10.5px;padding:3px 8px">In Progress</span>
+                </div>
+              </div>
+
+              <div class="donor-item">
+                <div class="donor-avatar b">SM</div>
+                <div class="donor-info">
+                  <div class="donor-name">Sara Al-Mutairi</div>
+                  <div class="donor-meta">
+                    <span>#REQ-0840</span>
+                    <span class="donor-meta-dot"></span>
+                    <span>+966 55 987 6543</span>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                  <div class="blood-pill" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)">AB+</div>
+                  <span class="status-badge pending" style="font-size:10.5px;padding:3px 8px">Pending</span>
+                </div>
+              </div>
+
+              <div class="donor-item">
+                <div class="donor-avatar c">FA</div>
+                <div class="donor-info">
+                  <div class="donor-name">Fahad Al-Anazi</div>
+                  <div class="donor-meta">
+                    <span>#REQ-0839</span>
+                    <span class="donor-meta-dot"></span>
+                    <span>+966 54 321 0987</span>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                  <div class="blood-pill" style="background:linear-gradient(135deg,#0DADA8,#0a8885)">B−</div>
+                  <span class="status-badge accepted" style="font-size:10.5px;padding:3px 8px">Accepted</span>
+                </div>
+              </div>
+
+              <div class="donor-item">
+                <div class="donor-avatar d">NQ</div>
+                <div class="donor-info">
+                  <div class="donor-name">Noura Al-Qahtani</div>
+                  <div class="donor-meta">
+                    <span>#REQ-0838</span>
+                    <span class="donor-meta-dot"></span>
+                    <span>+966 56 456 7890</span>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                  <div class="blood-pill" style="background:linear-gradient(135deg,#F59E0B,#D97706)">A+</div>
+                  <span class="status-badge completed" style="font-size:10.5px;padding:3px 8px">Completed</span>
+                </div>
+              </div>
+
+              <div class="donor-item">
+                <div class="donor-avatar e">MZ</div>
+                <div class="donor-info">
+                  <div class="donor-name">Mohammed Al-Zahrani</div>
+                  <div class="donor-meta">
+                    <span>#REQ-0841</span>
+                    <span class="donor-meta-dot"></span>
+                    <span>+966 58 654 3210</span>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+                  <div class="blood-pill">O+</div>
+                  <span class="status-badge rejected" style="font-size:10.5px;padding:3px 8px">Rejected</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-outline btn-sm">View All Responses →</button>
+          </div>
+        </div>
+
+        <!-- Notifications Panel -->
+        <div class="notif-panel">
+          <div class="card-header" style="padding:14px 18px 12px">
+            <div>
+              <div class="card-title">Notifications</div>
+              <div class="card-sub">3 unread</div>
+            </div>
+            <button class="btn btn-outline btn-sm">Mark all read</button>
+          </div>
+
+          <div class="notif-item unread">
+            <div class="notif-icon-wrap ni-red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>
+            </div>
+            <div class="notif-content">
+              <div class="notif-title">🚨 Emergency Request Submitted</div>
+              <div class="notif-body">Request #REQ-0841 needs O− blood urgently (4 units)</div>
+              <div class="notif-time">2 minutes ago</div>
+            </div>
+            <div class="notif-dot-indicator"></div>
+          </div>
+
+          <div class="notif-item unread">
+            <div class="notif-icon-wrap ni-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+            <div class="notif-content">
+              <div class="notif-title">New Donor Response</div>
+              <div class="notif-body">Ahmed Al-Khalidi responded to request #REQ-0841</div>
+              <div class="notif-time">18 minutes ago</div>
+            </div>
+            <div class="notif-dot-indicator"></div>
+          </div>
+
+          <div class="notif-item unread">
+            <div class="notif-icon-wrap ni-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="notif-content">
+              <div class="notif-title">Request Completed ✓</div>
+              <div class="notif-body">Request #REQ-0838 fulfilled — 15 units received</div>
+              <div class="notif-time">1 hour ago</div>
+            </div>
+            <div class="notif-dot-indicator"></div>
+          </div>
+
+          <div class="notif-item">
+            <div class="notif-icon-wrap ni-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div class="notif-content">
+              <div class="notif-title">Profile Updated</div>
+              <div class="notif-body">Hospital contact details were successfully updated</div>
+              <div class="notif-time">Yesterday, 4:35 PM</div>
+            </div>
+            <div class="notif-dot-indicator read"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+  </main>
+</div>
+
+
+
+{% endblock %}

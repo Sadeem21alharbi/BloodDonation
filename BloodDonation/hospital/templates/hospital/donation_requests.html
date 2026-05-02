@@ -1,0 +1,424 @@
+{% extends 'hospital/base.html' %}
+
+{% block title %}Hospital Dashboard | Ehyaa{% endblock %}
+
+{% block page_title %}Dashboard - Donation Requests{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* =========================
+   ICONS FIX
+========================= */
+
+/* Stat Icons */
+.stat-icon{
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+}
+
+.stat-icon svg{
+  width: 22px;
+  height: 22px;
+
+  stroke-width: 2.1;
+}
+
+/* Trend Arrow */
+.stat-trend svg{
+  width: 14px;
+  height: 14px;
+}
+
+/* Table Response Icon */
+.resp-pill svg{
+  width: 15px;
+  height: 15px;
+
+  flex-shrink: 0;
+}
+
+/* Action Buttons */
+.action-group{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.act-btn{
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  transition: .2s ease;
+}
+
+.act-btn svg{
+  width: 16px;
+  height: 16px;
+
+  stroke-width: 2;
+}
+
+/* Better Hover */
+.act-btn:hover{
+  transform: translateY(-2px);
+}
+
+/* Header Buttons Icons */
+.btn svg{
+  width: 15px;
+  height: 15px;
+
+  flex-shrink: 0;
+}
+
+/* Filter dots */
+.filter-dot{
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+}
+
+/* Mobile */
+@media (max-width: 768px){
+
+  .stat-icon{
+    width: 40px;
+    height: 40px;
+  }
+
+  .stat-icon svg{
+    width: 18px;
+    height: 18px;
+  }
+
+  .act-btn{
+    width: 30px;
+    height: 30px;
+  }
+
+  .act-btn svg{
+    width: 14px;
+    height: 14px;
+  }
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Donation Requests Page</h1>
+
+    <!-- Stats Grid -->
+    <div>
+      <div class="section-header">
+        <div>
+          <div class="section-title">Overview Statistics</div>
+          <div class="section-sub">Updated just now · May 2025</div>
+        </div>
+        <button class="btn btn-outline btn-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14">
+            <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+          </svg>
+          Refresh
+        </button>
+      </div>
+      <div class="stats-grid" style="margin-top:14px">
+
+        <div class="stat-card blue">
+          <div class="stat-top">
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M9 11H5a2 2 0 00-2 2v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 00-2-2h-4M12 2v13"/>
+              </svg>
+            </div>
+            <span class="stat-trend up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              +12%
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">84</div>
+            <div class="stat-label">Total Requests</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill blue"></div></div>
+        </div>
+
+        <div class="stat-card gold">
+          <div class="stat-top">
+            <div class="stat-icon gold">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <span class="stat-trend up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              +4
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">23</div>
+            <div class="stat-label">Open Requests</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill gold"></div></div>
+        </div>
+
+        <div class="stat-card blue">
+          <div class="stat-top">
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <span class="stat-trend up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              Active
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">18</div>
+            <div class="stat-label">In Progress</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill blue"></div></div>
+        </div>
+
+        <div class="stat-card green">
+          <div class="stat-top">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="stat-trend up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              +8%
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">43</div>
+            <div class="stat-label">Completed</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill green"></div></div>
+        </div>
+
+        <div class="stat-card teal">
+          <div class="stat-top">
+            <div class="stat-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+            </div>
+            <span class="stat-trend up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              +22
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">317</div>
+            <div class="stat-label">Total Donors</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill teal"></div></div>
+        </div>
+
+        <div class="stat-card red">
+          <div class="stat-top">
+            <div class="stat-icon red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M12 2C8 6 4 9.5 4 13a8 8 0 0016 0c0-3.5-4-7-8-11z"/>
+              </svg>
+            </div>
+            <span class="stat-trend down">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              −5%
+            </span>
+          </div>
+          <div>
+            <div class="stat-value">1,248</div>
+            <div class="stat-label">Blood Units Received</div>
+          </div>
+          <div class="stat-bar"><div class="stat-bar-fill red"></div></div>
+        </div>
+
+      </div>
+    </div>
+
+   <!-- Donation Requests Table + Donor Responses -->
+    <div class="content-grid">
+
+      <!-- Donation Requests Table -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Recent Donation Requests</div>
+            <div class="card-sub">Showing 6 of 84 total requests</div>
+          </div>
+          <button class="btn btn-primary btn-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            New Request
+          </button>
+        </div>
+
+        <div class="filter-bar">
+          <div class="filter-chip active"><span class="filter-dot all"></span>All (84)</div>
+          <div class="filter-chip"><span class="filter-dot pending"></span>Pending (23)</div>
+          <div class="filter-chip"><span class="filter-dot prog"></span>In Progress (18)</div>
+          <div class="filter-chip"><span class="filter-dot done"></span>Completed (43)</div>
+          <div class="filter-right">
+            <select class="filter-select">
+              <option>All Blood Types</option>
+              <option>A+</option><option>A−</option>
+              <option>B+</option><option>B−</option>
+              <option>AB+</option><option>AB−</option>
+              <option>O+</option><option>O−</option>
+            </select>
+            <select class="filter-select">
+              <option>All Urgency</option>
+              <option>High</option><option>Medium</option><option>Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>Blood Type</th>
+                <th>Urgency</th>
+                <th>Status</th>
+                <th>Responses</th>
+                <th>Units</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="req-id">#REQ-0841</div>
+                  <div class="req-type">Emergency Case</div>
+                </td>
+                <td><div class="blood-badge">O−</div></td>
+                <td><span class="urgency high">🔴 High</span></td>
+                <td><span class="status-badge inprog">In Progress</span></td>
+                <td><span class="resp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>8</span></td>
+                <td style="font-weight:700">4</td>
+                <td class="text-muted text-small">May 1, 2025</td>
+                <td>
+                  <div class="action-group">
+                    <div class="act-btn" title="View">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <div class="act-btn" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </div>
+                    <div class="act-btn danger" title="Delete">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="req-id">#REQ-0840</div>
+                  <div class="req-type">Blood Bank Refill</div>
+                </td>
+                <td><div class="blood-badge ab">AB+</div></td>
+                <td><span class="urgency medium">🟡 Medium</span></td>
+                <td><span class="status-badge pending">Pending</span></td>
+                <td><span class="resp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>3</span></td>
+                <td style="font-weight:700">10</td>
+                <td class="text-muted text-small">Apr 29, 2025</td>
+                <td>
+                  <div class="action-group">
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                    <div class="act-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="req-id">#REQ-0839</div>
+                  <div class="req-type">Emergency Case</div>
+                </td>
+                <td><div class="blood-badge b">B−</div></td>
+                <td><span class="urgency high">🔴 High</span></td>
+                <td><span class="status-badge accepted">Accepted</span></td>
+                <td><span class="resp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>12</span></td>
+                <td style="font-weight:700">6</td>
+                <td class="text-muted text-small">Apr 28, 2025</td>
+                <td>
+                  <div class="action-group">
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                    <div class="act-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="req-id">#REQ-0838</div>
+                  <div class="req-type">Blood Bank Refill</div>
+                </td>
+                <td><div class="blood-badge o">A+</div></td>
+                <td><span class="urgency low">🟢 Low</span></td>
+                <td><span class="status-badge completed">Completed</span></td>
+                <td><span class="resp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>21</span></td>
+                <td style="font-weight:700">15</td>
+                <td class="text-muted text-small">Apr 25, 2025</td>
+                <td>
+                  <div class="action-group">
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                    <div class="act-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="req-id">#REQ-0837</div>
+                  <div class="req-type">Emergency Case</div>
+                </td>
+                <td><div class="blood-badge">O+</div></td>
+                <td><span class="urgency medium">🟡 Medium</span></td>
+                <td><span class="status-badge rejected">Rejected</span></td>
+                <td><span class="resp-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>2</span></td>
+                <td style="font-weight:700">8</td>
+                <td class="text-muted text-small">Apr 22, 2025</td>
+                <td>
+                  <div class="action-group">
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                    <div class="act-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-footer">
+          <button class="btn btn-outline btn-sm">View All 84 Requests →</button>
+        </div>
+      </div>
+
+
+{% endblock %}

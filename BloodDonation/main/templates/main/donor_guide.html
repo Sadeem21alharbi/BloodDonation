@@ -1,0 +1,229 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %} الدليل الشامل للتبرع | إحياء {% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-blue: #1a56db;
+        --sky-light: #e0f2fe;
+        --soft-red: #ff7675;
+        --soft-green: #55efc4;
+        --soft-purple: #a29bfe;
+    }
+
+    body {
+        font-family: 'Tajawal', sans-serif;
+        background-color: #fcfdfe;
+        direction: rtl;
+    }
+
+    /* هيدر متناسق مع "من نحن" */
+    .guide-hero {
+        padding: 140px 0 100px;
+        background-color: var(--sky-light);
+        color: var(--primary-blue);
+        text-align: center;
+        border-bottom-left-radius: 50% 20%;
+        border-bottom-right-radius: 50% 20%;
+        margin-top: -100px;
+    }
+
+    .guide-hero h1 { font-size: 4rem; font-weight: 900; margin-bottom: 15px; }
+
+    /* نظام التبويبات التفاعلي */
+    .tabs-container {
+        max-width: 1100px;
+        margin: -60px auto 80px;
+        padding: 0 20px;
+    }
+
+    .tabs-nav {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 40px;
+        background: white;
+        padding: 10px;
+        border-radius: 50px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    }
+
+    .tab-btn {
+        border: none;
+        background: transparent;
+        padding: 15px 35px;
+        border-radius: 40px;
+        font-weight: 700;
+        color: #636e72;
+        transition: 0.4s;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .tab-btn i { font-size: 1.2rem; }
+
+    .tab-btn.active {
+        background: var(--primary-blue);
+        color: white;
+        box-shadow: 0 10px 20px rgba(26, 86, 219, 0.2);
+    }
+
+    /* محتوى التبويبات */
+    .tab-panel {
+        display: none;
+        animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tab-panel.active { display: block; }
+
+    /* كروت المعلومات */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .info-card {
+        background: white;
+        padding: 40px;
+        border-radius: 35px;
+        border: 1px solid rgba(0,0,0,0.03);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+        transition: 0.4s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .info-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+
+    .info-card i { font-size: 2.5rem; margin-bottom: 20px; display: block; }
+
+    /* تصميم خاص لفصائل الدم */
+    .blood-badge {
+        width: 70px; height: 70px;
+        background: var(--soft-red);
+        color: white;
+        border-radius: 20px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.8rem; font-weight: 900;
+        margin-bottom: 20px;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+        .tabs-nav { flex-direction: column; border-radius: 25px; }
+        .guide-hero h1 { font-size: 2.5rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="guide-hero">
+    <div class="container">
+        <span class="badge rounded-pill bg-white text-primary px-4 py-2 mb-3 fw-bold shadow-sm">دليل الأبطال</span>
+        <h1>دليل المتبرع الشامل</h1>
+        <p class="lead opacity-80">كل ما تريد معرفته عن العطاء في مكان واحد</p>
+    </div>
+</header>
+
+<div class="tabs-container">
+    <!-- قائمة التنقل بين التبويبات -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="openTab(event, 'guide')">
+            <i class="fas fa-book-open"></i> دليل التبرع
+        </button>
+        <button class="tab-btn" onclick="openTab(event, 'terms')">
+            <i class="fas fa-clipboard-check"></i> شروط التبرع
+        </button>
+        <button class="tab-btn" onclick="openTab(event, 'blood')">
+            <i class="fas fa-tint"></i> فصائل الدم
+        </button>
+    </div>
+
+    <!-- محتوى دليل التبرع --><div id="guide" class="tab-panel active">
+        <div class="info-grid">
+            <div class="info-card">
+                <i class="fas fa-utensils" style="color: var(--soft-purple);"></i>
+                <h4 class="fw-bold">قبل التبرع</h4>
+                <p class="text-muted">احرص على أخذ قسط كافٍ من النوم، وتناول وجبة صحية خفيفة، واشرب الكثير من السوائل غير المحلاة.</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-user-shield" style="color: var(--soft-green);"></i>
+                <h4 class="fw-bold">أثناء التبرع</h4>
+                <p class="text-muted">استرخِ تماماً، العملية تستغرق من 5 إلى 10 دقائق فقط، وطاقمنا الطبي بجانبك طوال الوقت لضمان راحتك.</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa- some-sparkles" style="color: var(--soft-red);"></i>
+                <h4 class="fw-bold">بعد التبرع</h4>
+                <p class="text-muted">ارتح لمدة 10 دقائق، وتناول الوجبة الخفيفة المقدمة لك، وتجنب المجهود البدني الشاق لبقية اليوم.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- محتوى شروط التبرع -->
+    <div id="terms" class="tab-panel">
+        <div class="info-grid">
+            <div class="info-card" style="border-right: 5px solid var(--primary-blue);">
+                <h4 class="fw-bold">العمر والوزن</h4>
+                <p class="text-muted">يجب أن يتراوح العمر بين 18-65 عاماً، وألا يقل الوزن عن 50 كجم.</p>
+            </div>
+            <div class="info-card" style="border-right: 5px solid var(--soft-green);">
+                <h4 class="fw-bold">الحالة الصحية</h4>
+                <p class="text-muted">أن يكون المتبرع خالياً من الأمراض المعدية (مثل التهاب الكبد، الإيدز) ولا يعاني من أنيميا حادة.</p>
+            </div>
+            <div class="info-card" style="border-right: 5px solid var(--soft-red);">
+                <h4 class="fw-bold">المدة الزمنية</h4>
+                <p class="text-muted">يجب أن يفصل بين كل تبرع بالدم الكامل والآخر مدة لا تقل عن 8 أسابيع (56 يوماً).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- محتوى فصائل الدم -->
+    <div id="blood" class="tab-panel">
+        <div class="info-grid">
+            <div class="info-card text-center">
+                <div class="blood-badge mx-auto">O-</div>
+                <h4 class="fw-bold">المتبرع العام</h4>
+                <p class="text-muted">فصيلتك نادرة ومنقذة، حيث يمكن لجميع الفصائل استقبال دمك في حالات الطوارئ.</p>
+            </div>
+            <div class="info-card text-center">
+                <div class="blood-badge mx-auto" style="background: var(--primary-blue);">AB+</div>
+                <h4 class="fw-bold">المستقبل العام</h4>
+                <p class="text-muted">فصيلتك مميزة جداً، حيث يمكنك استقبال الدم من جميع الفصائل الأخرى بأمان.</p>
+            </div>
+            <div class="info-card text-center">
+                <div class="blood-badge mx-auto" style="background: var(--soft-purple);">A / B</div>
+                <h4 class="fw-bold">الفصائل المتوافقة</h4>
+                <p class="text-muted">نظامنا الذكي يخبرك بدقة من يستطيع استقبال دمك ومن يمكنك التبرع له بناءً على فصيلتك.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabContent, tabBtns;
+        
+        tabContent = document.getElementsByClassName("tab-panel");
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].classList.remove("active");
+        }
+
+        tabBtns = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tabBtns.length; i++) {
+            tabBtns[i].classList.remove("active");
+        }
+
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+</script>
+{% endblock %}

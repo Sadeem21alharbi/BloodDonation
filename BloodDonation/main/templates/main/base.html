@@ -1,5 +1,4 @@
 <!-- templates/base.html -->
-
 {% load static %}
 
 <!DOCTYPE html>
@@ -19,6 +18,30 @@
   
   <!-- Phosphor Icons -->
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
+
+  <style>
+    /* التعديل لمنع الخطوط تحت النصوص في الروابط بالكامل */
+    a, 
+    .nav-links a, 
+    .mobile-nav a, 
+    .footer-links a, 
+    .footer-bottom-links a, 
+    .nav-logo {
+      text-decoration: none !important;
+    }
+
+    /* تحسين شكل الروابط عند تمرير الماوس */
+    .nav-links a:hover, 
+    .footer-links a:hover {
+      text-decoration: none !important;
+      opacity: 0.8;
+    }
+
+    /* تأكيد الخط العام للمنصة */
+    body {
+      font-family: 'Tajawal', sans-serif !important;
+    }
+  </style>
 
   {% block extra_css %}{% endblock %}
 </head>
@@ -40,20 +63,15 @@
     <!-- Desktop Nav -->
     <ul class="nav-links">
       <li><a href="{% url 'main:home' %}" class="active">الرئيسية</a></li>
-      <li><a href="#about">عن المنصة</a></li>
-      <li><a href="#">كيف يعمل</a></li>
+      <li><a href="{% url 'main:about' %}">عن المنصة</a></li>
+      <li><a href="{% url 'main:works' %}">كيف يعمل</a></li>
+      <li><a href="{% url 'main:faq' %}"> الأسئلة الشائعة </a></li>
       <li><a href="{% url 'main:home' %}#join">أنضم إلينا</a></li>
-      {% if user.is_authenticated %}
-        {% if user.hospital_profile %} 
-          <li><a href="{% url 'hospital:requests' %}">طلبات الدم</a></li>
-        {% endif %}
-      {% endif %}
     </ul>
 
     <!-- Controls -->
     <div class="nav-controls">
       <button class="lang-toggle" id="langToggle">EN</button>
-
       <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -63,9 +81,10 @@
   <!-- Mobile Nav -->
   <div class="mobile-nav" id="mobileNav">
     <a href="{% url 'main:home' %}">الرئيسية</a>
-    <a href="#about">عن المنصة</a>
-    <a href="#how-it-works">كيف يعمل</a>
-    <a href="#faq">الأسئلة الشائعة</a>
+    <a href="{% url 'main:about' %}">عن المنصة</a>
+    <a href="{% url 'main:works' %}">كيف يعمل</a>
+    <a href="{% url 'main:faq' %}">الأسئلة الشائعة</a>
+    <a href="{% url 'main:home' %}#join">أنضم إلينا</a>
   </div>
 
   <!-- PAGE CONTENT -->
@@ -90,23 +109,16 @@
           </div>
         </a>
         <p class="footer-desc" data-t="footer_desc">منصة إحياء تربط المتبرعين بالدم مع المستشفيات في المملكة العربية السعودية.</p>
-        <div class="footer-socials">
-          <a href="#" class="social-btn" aria-label="Twitter">𝕏</a>
-          <a href="#" class="social-btn" aria-label="Instagram">📸</a>
-          <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
-          <a href="#" class="social-btn" aria-label="WhatsApp">💬</a>
-        </div>
       </div>
 
       <!-- Quick Links -->
       <div>
         <h4 class="footer-col-title" data-t="quick_links">روابط سريعة</h4>
         <nav class="footer-links">
-          <a href="#home" data-t="nav_home">الرئيسية</a>
-          <a href="#about" data-t="nav_about">عن المنصة</a>
-          <a href="#how-it-works" data-t="nav_how">كيف يعمل</a>
-          <a href="#emergency" data-t="nav_emergency">الطوارئ</a>
-          <a href="#faq" data-t="nav_faq">الأسئلة الشائعة</a>
+          <a href="#" data-t="nav_home">الرئيسية</a>
+          <a href="{% url 'main:about' %}" data-t="nav_about">عن المنصة</a><a href="{% url 'main:works' %}" data-t="nav_how">كيف يعمل</a>
+          <a href="{% url 'main:faq' %}" data-t="nav_faq">الأسئلة الشائعة</a>
+          <a href="{% url 'main:home' %}#join">أنضم إلينا</a>
         </nav>
       </div>
 
@@ -115,10 +127,9 @@
         <h4 class="footer-col-title" data-t="for_donors">للمتبرعين</h4>
         <nav class="footer-links">
           <a href="{% url 'donor:register' %}" data-t="donor_register">تسجيل متبرع</a>
-          <a href="#" data-t="donor_guide">دليل التبرع</a>
-          <a href="#" data-t="eligibility">شروط التبرع</a>
-          <a href="#blood-types" data-t="blood_info">فصائل الدم</a>
-          <a href="#" data-t="hospitals_list">قائمة المستشفيات</a>
+          <a href="{% url 'main:guide' %}#guide" data-t="donor_guide">دليل التبرع</a>
+          <a href="{% url 'main:guide' %}#terms" data-t="eligibility">شروط التبرع</a>
+          <a href="{% url 'main:guide' %}#blood" data-t="blood_info">فصائل الدم</a>
         </nav>
       </div>
 
@@ -149,11 +160,11 @@
     <div class="footer-bottom">
       <p class="footer-copy">
         © 2025 إحياء | Ehyaa.<span data-t="rights">جميع الحقوق محفوظة</span>.
-        <a href="#">Made with ❤️ in Saudi Arabia</a>
+        <a href="#" style="text-decoration:none;">Made with ❤️ in Saudi Arabia</a>
       </p>
       <div class="footer-bottom-links">
-        <a href="#" data-t="privacy">سياسة الخصوصية</a>
-        <a href="#" data-t="terms">الشروط والأحكام</a>
+        <a href="{% url 'main:privacy' %}" data-t="privacy">سياسة الخصوصية</a>
+        <a href="{% url 'main:terms' %}" data-t="terms">الشروط والأحكام</a>
       </div>
     </div>
   </div>

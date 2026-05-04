@@ -8,7 +8,10 @@ urlpatterns = [
     path('login/', views.donor_login, name='login'),
     path('register/', views.donor_register, name='register'),
     path('donor/profile/', views.donor_profile, name='profile'),
-     path('available-requests/', views.available_requests, name='available_requests'),
-     path('donation-history/', views.donation_history, name='donation_history'),
+    path('available-requests/', views.available_requests, name='available_requests'),
+    path('donation-history/', views.donation_history, name='donation_history'),
+    path('journey/', views.journey_view, name='journey'),
+    path('leaderboard/', views.leaderboard_view, name='leaderboard'),
+    path('impact/', views.impact_view, name='impact'),
 ]
 

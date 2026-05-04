@@ -1,0 +1,290 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --ihya-blue: #1a56db; /* اللون الأزرق للخطوط */
+        --ihya-dark: #0d47a1;
+        --ihya-light: #f1f7fe;
+        --sky-light: #e0f2fe; /* اللون السماوي للهيدر */
+        --glass-white: rgba(255, 255, 255, 0.85);
+    }
+
+    body {
+        background-color: #ffffff;
+        font-family: 'Tajawal', sans-serif;
+        direction: rtl;
+        overflow-x: hidden;
+    }
+
+    /* هيدر الصفحة - تم تعديله ليطابق صفحة works.html */
+    .about-hero {
+        padding: 140px 0 100px;
+        background-color: var(--sky-light); /* اللون السماوي الفاتح */
+        color: var(--ihya-blue); /* الخط باللون الأزرق */
+        text-align: center;
+        /* تصميم نصف دائرة من الأسفل */
+        border-bottom-left-radius: 50% 20%;
+        border-bottom-right-radius: 50% 20%;
+        position: relative;
+        margin-top: -100px; /* لضمان التداخل مع النافبار */
+    }
+
+    .about-hero h1 {
+        font-size: 4rem;
+        font-weight: 900;
+        color: var(--ihya-blue); /* الخط باللون الأزرق */
+        letter-spacing: -1px;
+        margin-bottom: 20px;
+    }
+
+    .about-hero p.lead {
+        color: var(--ihya-blue); /* الخط باللون الأزرق */
+        opacity: 0.8;
+    }
+
+    /* قسم الرؤية والقيم - كروت زجاجية */
+    .vision-section {
+        padding: 80px 0;
+        margin-top: -50px; /* ليتداخل مع الهيدر */
+    }
+
+    .modern-info-card {
+        background: var(--glass-white);
+        backdrop-filter: blur(10px);
+        padding: 45px 35px;
+        border-radius: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.08);
+        height: 100%;
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-align: center;
+    }
+
+    .modern-info-card:hover {
+        transform: translateY(-15px);
+        background: white;
+        box-shadow: 0 35px 60px rgba(26, 115, 232, 0.15);
+    }
+
+    .icon-box {
+        width: 80px; height: 80px;
+        background: var(--ihya-blue);
+        color: white;
+        border-radius: 25px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 25px;
+        transform: rotate(-10deg);
+        transition: 0.4s;
+    }
+
+    .modern-info-card:hover .icon-box {
+        transform: rotate(0deg) scale(1.1);
+    }
+
+    /* قسم الأرقام - تصميم فلويد */
+    .stats-container {
+        padding: 60px 0;
+    }
+
+    .stat-circle {
+        padding: 30px;
+        border-radius: 30px;
+        background: var(--ihya-light);
+        transition: 0.3s;
+    }
+
+    .stat-circle h2 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: var(--ihya-blue);
+    }
+
+    /* قسم الفريق */
+    .team-section {
+        padding: 100px 0;
+        background: #fcfdfe;
+    }
+
+    .team-grid {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+
+    .modern-team-card {
+        width: 320px;
+        background: white;
+        border-radius: 45px;
+        padding: 40px 20px;
+        text-align: center;
+        border: 1px solid #f0f0f0;
+        position: relative;
+        transition: 0.5s;
+    }
+
+    .modern-team-card:hover {
+        border-color: var(--ihya-blue);
+        box-shadow: 0 30px 60px rgba(26, 115, 232, 0.1);
+    }
+
+    .img-frame {
+        width: 160px; height: 160px;
+        margin: 0 auto 25px;
+        position: relative;
+    }
+
+    .img-frame img {
+        width: 100%; height: 100%;
+        border-radius: 50px; 
+        object-fit: cover;
+        position: relative;
+        z-index: 2;
+        border: 6px solid white;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .img-frame::after {
+        content: '';
+        position: absolute;
+        width: 100%; height: 100%;
+        background: var(--ihya-blue);
+        top: 15px; left: -15px;
+        border-radius: 50px;
+        z-index: 1;
+        opacity: 0.2;
+        transition: 0.4s;
+    }
+
+    .role-badge {
+        display: inline-block;
+        padding: 6px 18px;background: #eef4ff;
+        color: var(--ihya-blue);
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    /* أنيميشن الظهور */
+    .reveal {
+        opacity:0;
+        transform: translateY(40px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        .about-hero h1 { font-size: 2.5rem; }
+        .about-hero { border-bottom-left-radius: 50% 10%; border-bottom-right-radius: 50% 10%; }
+        .team-grid { gap: 20px; }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <div class="reveal show">
+            <span class="badge rounded-pill bg-white text-primary px-4 py-2 mb-3 fw-bold shadow-sm">قصة إحياء</span>
+            <h1>من نحن؟</h1>
+            <p class="lead mx-auto" style="max-width: 700px;">
+                نحن فريق طموح يسخّر التكنولوجيا لخدمة الإنسانية، نسعى لجعل التبرع بالدم ثقافة مجتمعية سهلة المنال لكل فرد في وطننا الغالي.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Vision & Mission Section -->
+<section class="vision-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-6 reveal">
+                <div class="modern-info-card">
+                    <div class="icon-box"><i class="fas fa-rocket"></i></div>
+                    <h3 class="fw-bold mb-3">رؤية المنصة</h3>
+                    <p class="text-muted lh-lg">نسعى للريادة في التحول الرقمي للخدمات الصحية التطوعية، لنكون المرجع الأول والموثوق لكل متبرع ومحتاج في المملكة.</p>
+                </div>
+            </div>
+            <div class="col-md-6 reveal">
+                <div class="modern-info-card">
+                    <div class="icon-box" style="background: #34a853;"><i class="fas fa-heart"></i></div>
+                    <h3 class="fw-bold mb-3">قيمنا الإنسانية</h3>
+                    <p class="text-muted lh-lg">الشفافية، السرعة، والأمان هي الركائز التي بنينا عليها "إحياء" لضمان حفظ كرامة المتبرع وسلامة المستفيد.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="stats-container container text-center">
+    <div class="row g-4 reveal">
+        <div class="col-md-4">
+            <div class="stat-circle">
+                <h2>+2k</h2>
+                <span class="fw-bold text-muted">متبرع بطل</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-circle" style="background: #e6f4ea;">
+                <h2 style="color: #34a853;">100%</h2>
+                <span class="fw-bold text-muted">أمان وخصوصية</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-circle">
+                <h2>24/7</h2>
+                <span class="fw-bold text-muted">دعم فني وتنبيهات</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="team-section">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <h2 class="fw-bold" style="font-size: 2.5rem;">خلف هذا العمل</h2>
+            <p class="text-muted">مبدعات سعوديات يدمجن الشغف بالكود</p>
+        </div>
+        
+        <div class="team-grid">
+            <div class="modern-team-card reveal">
+                <div class="img-frame">
+                    <img src="https://ui-avatars.com/api/?name=Sadeem+Alharbi&background=1a73e8&color=fff&size=200" alt="سديم الحربي">
+                </div>
+                <div class="role-badge">UI/UX Designer</div>
+                <h4 class="fw-bold mb-2">سديم الحربي</h4>
+                <p class="text-muted small px-3">صاحبة اللمسة الجمالية التي تجعل تجربة المستخدم سهلة وممتعة.</p>
+            </div>
+
+            <div class="modern-team-card reveal">
+                <div class="img-frame">
+                    <img src="https://ui-avatars.com/api/?name=Araa+Almarhabi&background=0d47a1&color=fff&size=200" alt="آراء المرحبي">
+                </div><div class="role-badge" style="background: #e8f5e9; color: #2e7d32;"> Full-Stack Developer</div>
+                <h4 class="fw-bold mb-2">آراء المرحبي</h4>
+                <p class="text-muted small px-3">العقل المدبر خلف البنية التحتية والمنطق البرمجي للمنصة.</p>
+            </div> 
+        </div>
+    </div>
+</section>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+{% endblock %}

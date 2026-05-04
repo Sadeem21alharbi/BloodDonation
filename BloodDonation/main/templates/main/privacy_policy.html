@@ -1,0 +1,79 @@
+{% extends 'main/base.html' %}
+{% block title %} سياسة الخصوصية | منصة إحياء {% endblock %}
+
+{% block extra_css %}
+<style>
+    :root { --primary-blue: #1a56db; --sky-light: #e0f2fe; }
+    body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; direction: rtl; }
+    
+    .legal-hero {
+        padding: 140px 0 100px;
+        background-color: var(--sky-light);
+        color: var(--primary-blue);
+        text-align: center;
+        border-bottom-left-radius: 50% 20%;
+        border-bottom-right-radius: 50% 20%;
+        margin-top: -100px;
+    }
+    .legal-hero h1 { font-size: 3.5rem; font-weight: 900; }
+
+    .legal-content {
+        max-width: 900px;
+        margin: -50px auto 100px;
+        background: white;
+        padding: 60px;
+        border-radius: 40px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+        line-height: 1.8;
+    }
+    .legal-section { margin-bottom: 40px; }
+    .legal-section h3 {
+        color: var(--primary-blue);
+        font-weight: 800;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .legal-section h3::before {
+        content: "";
+        width: 8px; height: 25px;
+        background: var(--primary-blue);
+        border-radius: 10px;
+    }
+    .legal-section p { color: #4b5563; font-size: 1.1rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="legal-hero">
+    <div class="container">
+        <h1>سياسة الخصوصية</h1>
+        <p class="lead">التزامنا بحماية بياناتك وخصوصيتك</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="legal-content">
+        <div class="legal-section">
+            <h3>جمع المعلومات</h3>
+            <p>نحن في منصة إحياء نجمع المعلومات الضرورية فقط لضمان سلامة عملية التبرع، وتشمل الاسم، فصيلة الدم، ومعلومات التواصل، والتاريخ الطبي ذو الصلة بالتبرع.</p>
+        </div>
+
+        <div class="legal-section">
+            <h3>استخدام البيانات</h3>
+            <p>تُستخدم بياناتك حصرياً لتنسيق عمليات التبرع بينك وبين المنشآت الصحية المعتمدة، ولإرسال تنبيهات الحالات العاجلة التي تتوافق مع فصيلتك.</p>
+        </div>
+
+        <div class="legal-section">
+            <h3>حماية البيانات</h3>
+            <p>نطبق أعلى معايير التشفير والأمن السيبراني لحماية بياناتك من الوصول غير المصرح به، ولا يتم مشاركتها مع أي أطراف ثالثة خارج النطاق الطبي المعتمد.</p>
+        </div>
+
+        <div class="legal-section">
+            <h3>حقوق المستخدم</h3>
+            <p>يحق لك في أي وقت مراجعة بياناتك، تعديلها، أو طلب حذف حسابك نهائياً من المنصة وسنقوم بتنفيذ ذلك فوراً وفق الأنظمة المتبعة.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

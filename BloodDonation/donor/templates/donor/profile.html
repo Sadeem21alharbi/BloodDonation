@@ -1,49 +1,203 @@
 {% extends 'main/base.html' %}
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow p-4" style="border-radius: 20px;">
-                <h2 class="text-center mb-4">تعديل الملف الشخصي</h2>
-                
-                <!-- أهم نقطة لرفع الصور: enctype="multipart/form-data" -->
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    
-                    <div class="text-center mb-4">
+
+<style>
+    .profile-card {
+        background: white;
+        border-radius: 30px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        margin-top: 100px;
+        direction: rtl;
+    }
+    .section-title {
+        border-right: 5px solid #3282b8;
+        padding-right: 15px;
+        margin-bottom: 30px;
+        color: #0f4c75;
+        font-weight: bold;
+        text-align: right;
+    }
+    .form-row-custom {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        direction: rtl;
+    }
+    .form-row-custom label {
+        width: 180px;
+        text-align: right;
+        margin-left: 20px;
+        font-weight: 600;
+        color: #333;
+    }
+    .form-row-custom input, .form-row-custom select {
+        flex: 1;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+        padding: 12px;
+        background-color: #f9f9f9;
+        text-align: right;
+    }
+    
+    /* التعديل الجديد لتوسيط الصورة */
+    .image-column-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* توسيط أفقي */
+        justify-content: flex-start;
+        text-align: center;
+    }
+
+    #image-preview {
+        width: 180px;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #eee;
+        margin: 0 auto; /* يضمن التوسيط داخل الـ wrapper */
+    }
+
+    .profile-img-wrapper {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 15px;
+    }
+
+    .hidden-input { display: none; }
+    .hidden-section { display: none; }
+
+</style>
+{% if messages %}
+            <div class="container mt-3" style="direction: rtl;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert" style="border-radius: 15px;">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="float: left;"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+<div class="container mb-5">
+    <div class="profile-card">
+        <h2 class="text-center mb-5">تعديل الملف الشخصي</h2>
+
+        <form method="POST" enctype="multipart/form-data" id="main-form">
+            {% csrf_token %}
+            
+            <div class="row">
+                <!-- الجزء الأيسر: الصورة (تم تعديل الكلاس هنا للتوسيط) -->
+                <div class="col-md-4 image-column-center">
+                    <div class="profile-img-wrapper">
                         {% if user.donorprofile.image %}
-                            <img src="{{ user.donorprofile.image.url }}" class="rounded-circle border" width="150" height="150" style="object-fit: cover;">
+                            <img src="{{ user.donorprofile.image.url }}" id="image-preview">
                         {% else %}
-                            <div class="bg-light rounded-circle d-inline-block p-5 border">
-                                <i class="fas fa-user fa-3x text-muted"></i>
+                            <div id="image-preview" class="bg-light d-flex align-items-center justify-content-center">
+                                <i class="fas fa-user fa-5x text-muted"></i>
                             </div>
                         {% endif %}
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label>الاسم الأول</label>
-                            {{ u_form.first_name }}
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label>الاسم الأخير</label>
-                            {{ u_form.last_name }}
-                        </div>
+                    
+                    <div class="image-action-text">
+                        <label for="image-upload" style="cursor: pointer; color: #3282b8; font-weight: bold; display: block; margin-bottom: 5px;">
+                            تعديل الصورة الشخصية
+                        </label>
+                        <input type="file" name="image" id="image-upload" class="hidden-input" accept="image/*">
+                        <p onclick="clearImage()" style="cursor: pointer; color: red; font-size: 0.9rem; margin: 0;">حذف</p>
                     </div>
+                </div>
 
-                    <div class="row">
-                        {% for field in p_form %}
-                        <div class="col-md-6 mb-3">
-                            <label>{{ field.label }}</label>
-                            {{ field }}
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100 mt-3" style="background: var(--primary-gradient); border: none; border-radius: 10px;">حفظ التغييرات</button>
-                </form>
+                <!-- الجزء الأيمن: المعلومات الشخصية -->
+                <div class="col-md-8">
+                    <h4 class="section-title">المعلومات الشخصية</h4>
+                    <div class="form-row-custom"> <label>الاسم الأول</label> {{ u_form.first_name }} </div>
+                    <div class="form-row-custom"> <label>الاسم الأخير</label> {{ u_form.last_name }} </div>
+                    <div class="form-row-custom"> <label>رقم الهوية</label> {{ p_form.id_number }} </div>
+                    <div class="form-row-custom"> <label>رقم الجوال</label> {{ p_form.phone_number }} </div>
+                    <div class="form-row-custom"> <label>الجنسية</label> {{ p_form.nationality }} </div>
+                    <div class="form-row-custom"> <label>المدينة</label> {{ p_form.city }} </div>
+                    <div class="form-row-custom"> <label>الجنس</label> {{ p_form.gender }} </div><div class="form-row-custom"> <label>الحالة الاجتماعية</label> {{ p_form.marital_status }} </div>
+                    <div class="form-row-custom"> <label>تاريخ الميلاد</label> {{ p_form.date_of_birth }} </div>
+                </div>
             </div>
-        </div>
+
+            <hr class="my-5">
+
+            <!-- القسم السفلي: المعلومات الصحية -->
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <h4 class="section-title">المعلومات الصحية</h4>
+                    <div class="form-row-custom"> <label>فصيلة الدم</label> {{ p_form.blood_type }} </div>
+                    <div class="form-row-custom"> <label>الوزن (كجم)</label> {{ p_form.weight }} </div>
+                    
+                    <div class="form-row-custom">
+                        <label>هل تعاني من أمراض مزمنة؟</label>
+                        {{ p_form.has_chronic }}
+                    </div>
+                    <div class="form-row-custom hidden-section" id="chronic_div">
+                        <label>نوع المرض</label>
+                        {{ p_form.chronic_disease_type }}
+                    </div>
+
+                    <div class="form-row-custom">
+                        <label>هل تتناول أي أدوية؟</label>
+                        {{ p_form.takes_meds }}
+                    </div>
+                    <div class="form-row-custom hidden-section" id="meds_div">
+                        <label>نوع الدواء</label>
+                        {{ p_form.medication_type }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- أزرار التحكم -->
+            <div class="text-center mt-5">
+                <button type="submit" class="btn btn-primary px-5 py-2 mx-2" style="border-radius: 50px; background-color: #0f4c75; border: none;">حفظ</button>
+                <button type="button" onclick="window.location.reload()" class="btn btn-outline-danger px-5 py-2 mx-2" style="border-radius: 50px;">إلغاء التعديلات</button>
+            </div>
+            <!-- كود عرض التنبيهات -->
+        
+        </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('image-upload').addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const preview = document.getElementById('image-preview');
+                if(preview.tagName === 'IMG') {
+                    preview.src = event.target.result;
+                } else {
+                    // في حال كان هناك أيقونة، يتم استبدال الـ div بـ img
+                    const newImg = document.createElement('img');
+                    newImg.id = 'image-preview';
+                    newImg.src = event.target.result;
+                    preview.parentNode.replaceChild(newImg, preview);
+                }
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    function clearImage() {
+        document.getElementById('image-upload').value = "";
+        alert("سيتم حذف الصورة عند ضغط حفظ");
+    }
+
+    const chronicSelect = document.querySelector('select[name="has_chronic"]');
+    const medsSelect = document.querySelector('select[name="takes_meds"]');
+    
+    function toggleHealthFields() {
+        if(chronicSelect) document.getElementById('chronic_div').style.display = (chronicSelect.value === 'yes') ? 'flex' : 'none';
+        if(medsSelect) document.getElementById('meds_div').style.display = (medsSelect.value === 'yes') ? 'flex' : 'none';
+    }
+
+    if(chronicSelect) chronicSelect.addEventListener('change', toggleHealthFields);
+    if(medsSelect) medsSelect.addEventListener('change', toggleHealthFields);
+    
+    window.onload = toggleHealthFields;
+</script>
+
 {% endblock %}

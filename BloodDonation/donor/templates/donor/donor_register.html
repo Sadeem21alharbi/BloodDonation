@@ -3,13 +3,15 @@
 {% block content %}
 <style>
     :root {
-        --primary-gradient: linear-gradient(135deg, #1a56db 0%, #3f83f8 100%);
+        --primary-blue: #1a56db;
+        --secondary-blue: #3f83f8;
         --accent-red: #ef4444;
-        --glass-bg: rgba(255, 255, 255, 0.9);
+        --text-dark: #1f2937;
+        --bg-light: #f9fafb;
     }
 
     body {
-        background: #f3f4f6;
+        background-color: var(--bg-light);
         font-family: 'Tajawal', sans-serif;
     }
 
@@ -18,68 +20,72 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 40px 20px;
+        padding: 30px 20px;
         direction: rtl;
     }
 
     .register-card {
         background: white;
         width: 100%;
-        max-width: 550px;
-        padding: 40px;
-        border-radius: 25px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e5e7eb;
+        /* تم تصغير الحجم هنا ليكون أكثر أناقة وتوازناً */
+        max-width: 650px; 
+        padding: 50px 40px;
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+        border: 1px solid #f0f0f0;
     }
 
     .register-header {
         text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .register-header i {
-        font-size: 2.5rem;
-        color: var(--accent-red);
-        margin-bottom: 15px;
+        margin-bottom: 35px;
     }
 
     .register-header h2 {
-        color: #1f2937;
+        color: var(--text-dark);
         font-weight: 800;
-        margin-bottom: 5px;
+        font-size: 1.8rem; /* تصغير حجم الخط قليلاً ليتناسب مع الكرت */
+        margin-bottom: 10px;
     }
 
-    form p {
-        margin-bottom: 20px;
+    .register-header p {
+        color: #6b7280;
+        font-size: 1rem;
     }
 
-    form label {
+    .auth-form {
+        width: 100%;
+    }
+
+    .auth-form p {
+        margin-bottom: 18px;
+    }
+
+    .auth-form label {
         display: block;
         margin-bottom: 8px;
-        font-weight: 600;
-        color: #4b5563;
+        font-weight: 700;
+        color: var(--text-dark);
         font-size: 0.9rem;
+        text-align: right;
     }
 
-    input[type="text"], 
-    input[type="password"], 
-    input[type="email"],
-    input[type="number"],
-    select {
+    .auth-form input, .auth-form select {
         width: 100%;
-        padding: 12px 15px;
-        border: 1.5px solid #e5e7eb;
+        padding: 12px 18px;
+        border: 1.5px solid #edf2f7;
         border-radius: 12px;
         font-family: 'Tajawal', sans-serif;
-        background: #f9fafb;
+        background: #fcfcfc;
+        font-size: 0.95rem;
         transition: all 0.3s ease;
+        text-align: right;
     }
 
-    input:focus {
+    .auth-form input:focus {
         outline: none;
-        border-color: #3f83f8;
+        border-color: var(--secondary-blue);
         background: white;
-        box-shadow: 0 0 0 4px rgba(63, 131, 248, 0.1);
+        box-shadow: 0 0 0 4px rgba(63, 131, 248, 0.05);
     }
 
     .helptext {
@@ -87,78 +93,87 @@
         font-size: 0.8rem;
         color: #9ca3af;
         margin-top: 5px;
+        line-height: 1.4;
     }
 
     .btn-register {
-        background: var(--primary-gradient);
+        background: var(--primary-blue);
         color: white;
         border: none;
         width: 100%;
-        padding: 15px;
+        padding: 14px;
         border-radius: 12px;
         font-size: 1.1rem;
         font-weight: 700;
         cursor: pointer;
-        transition: transform 0.2s ease;
-        margin-top: 10px;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     }
 
     .btn-register:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(26, 86, 219, 0.2);
+        background: #1e429f;
+        transform: translateY(-1px);
     }
 
     .register-footer {
         text-align: center;
-        margin-top: 25px;
-        padding-top: 20px;
+        margin-top: 30px;
+        padding-top: 25px;
         border-top: 1px solid #f3f4f6;
     }
 
-    .register-footer a {
-        color: #1a56db;
-        text-decoration: none;
-        font-weight: 700;
+    .register-footer p {
+        color: #6b7280;
+        font-size: 0.95rem;
     }
 
-    /* رسائل الخطأ */
+    .logo-icon {
+        color: var(--accent-red);
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+        display: block;
+    }
+
     .errorlist {
+        list-style: none;
+        padding: 0;
         color: var(--accent-red);
         font-size: 0.85rem;
-        padding: 0;
-        list-style: none;
-        margin-bottom: 10px;
     }
 </style>
 
 <div class="register-wrapper">
     <div class="register-card">
         <div class="register-header">
-            <i class="fas fa-user-plus"></i>
+            <i class="fas fa-user-plus logo-icon"></i>
             <h2>انضم لأبطال إحياء</h2>
-            <p class="text-muted">خطوة بسيطة منك.. حياة جديدة لغيرك</p>
-            </div>
-            
+            <p>خطوة بسيطة منك.. حياة جديدة لغيرك</p>
+        </div>
+
+        <div class="auth-form">
             <form method="POST">
                 {% csrf_token %}
             
                 {% if form.errors %}
-                <div class="alert alert-danger" style="border-radius: 12px; font-size: 0.9rem;">
-                    يرجى تصحيح الأخطاء أدناه للمتابعة.
+                <div class="alert alert-danger text-center mb-4" style="border-radius: 12px; padding: 10px; font-size: 0.9rem;">
+                    يرجى مراجعة البيانات المدخلة
                 </div>
                 {% endif %}
             
                 {{ form.as_p }}
             
-                <button type="submit" class="btn-register w-100 border-0">
-                    إنشاء حساب جديد <i class="fas fa-user-plus ms-2"></i>
+                <button type="submit" class="btn-register">
+                    إنشاء حساب جديد <i class="fas fa-user-plus"></i>
                 </button>
-            
-            </form>
-            
-            <div class="register-footer">
-                <p>لديك حساب بالفعل؟ <a href="{% url 'donor:login' %}">سجل دخولك هنا</a></p>
+            </form><div class="register-footer">
+                <p>لديك حساب بالفعل؟ <a href="{% url 'donor:login' %}" style="color: var(--primary-blue); font-weight: 800; text-decoration: none;">سجل دخولك هنا</a></p>
+                <p class="mt-2"><a href="/" class="text-muted small">العودة للرئيسية</a></p>
             </div>
-            </div>
-            </div>
-            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

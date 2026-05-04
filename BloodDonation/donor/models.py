@@ -12,14 +12,13 @@ class DonorProfile(models.Model):
         ('W', 'أرمل/ة')
     ]
 
-    # --- الحقول الإجبارية (المهمة جداً) ---
+    # --- الحقول الإجبارية ---
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # فصيلة الدم والنقاط أساسية لعمل النظام
     blood_type = models.CharField(max_length=5, default="O+", verbose_name="فصيلة الدم")
     points = models.IntegerField(default=0, verbose_name="نقاط العطاء")
     total_donations = models.IntegerField(default=0, verbose_name="إجمالي التبرعات")
 
-    # --- الحقول الاختيارية (تقبل خانات فارغة لتجنب أخطاء الـ Migrate) ---
+    # --- الحقول الشخصية ---
     id_number = models.CharField(max_length=10, null=True, blank=True, verbose_name="رقم الهوية")
     nationality = models.CharField(max_length=50, null=True, blank=True, verbose_name="الجنسية")
     phone_number = models.CharField(max_length=15, null=True, blank=True, verbose_name="رقم الجوال")
@@ -29,9 +28,13 @@ class DonorProfile(models.Model):
     date_of_birth = models.DateField(null=True, blank=True, verbose_name="تاريخ الميلاد")
     image = models.ImageField(upload_to='donor_profiles/', null=True, blank=True, verbose_name="الصورة الشخصية")
     
-    # الوزن اختياري برمجياً لكن عليه فحص (Validator) عند الإدخال
+    # --- الحقول الصحية (تمت إضافة الحقول الناقصة هنا) ---
     weight = models.FloatField(null=True, blank=True, validators=[MinValueValidator(50)], verbose_name="الوزن")
     
+    # الحقول المطلوبة لحل خطأ السيرفر:
+    chronic_disease_type = models.CharField(max_length=255, null=True, blank=True, verbose_name="نوع المرض المزمن")
+    medication_type = models.CharField(max_length=255, null=True, blank=True, verbose_name="نوع الدواء")
+
     lives_saved = models.IntegerField(default=0, verbose_name="أرواح ساهمت بإنقاذها")
     next_donation_date = models.DateField(null=True, blank=True, verbose_name="موعد التبرع القادم")
 
@@ -70,3 +73,5 @@ class DonorProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.current_level}"
+    
+

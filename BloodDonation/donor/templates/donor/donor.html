@@ -1,237 +1,237 @@
-<!-- Donor Dashboard by Sdeem -->
-
-{% extends 'main/base.html' %}
+<!-- Donor Dashboard Ultra-Interactive by Sdeem -->
+{% extends 'donor/base_donor.html' %}
 {% block content %}
 <style>
     :root {
-        --primary-gradient: linear-gradient(135deg, #1a56db 0%, #3f83f8 100%);
-        --glass-bg: rgba(255, 255, 255, 0.95);
-        --text-dark: #1f2937;
-        --accent-red: #d2d2d2;
+        --primary-blue: #1a56db;
+        --royal-blue: #063970;
+        --soft-bg: #f3f4f6; /* خلفية أغمق قليلاً لتبرز الكروت */
     }
 
     body {
-        background: #f3f4f6;
+        background: var(--soft-bg);
         font-family: 'Tajawal', sans-serif;
+        color: #1e293b;
     }
 
-    .dashboard-container {
-        padding: 40px 0;
-        direction: rtl;
-    }
+    .dashboard-container { padding: 40px 0; direction: rtl; }
 
-    /* الترحيب بالمتبرع */
+    /* هيدر تفاعلي مع مسافة سفلية */
     .welcome-header {
-        background: var(--primary-gradient);
+        background: linear-gradient(135deg, #1a56db 0%, #00d4ff 100%);
         color: white;
-        padding: 30px;
-        border-radius: 20px;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 25px rgba(26, 86, 219, 0.2);
+        padding: 40px;
+        border-radius: 30px;
+        margin-bottom: 40px; /* مسافة كبيرة بعد الهيدر */
+        box-shadow: 0 20px 40px rgba(26, 86, 219, 0.15);
     }
 
-    /* بطاقات المزايا والإحصائيات */
-    .stats-grid {
+    /* نظام المربعات المتباعدة */
+    .stats-grid-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
+        gap: 30px; /* زيادة الفراغات بين المربعات */
+        margin-bottom: 40px; /* مسافة بعد قسم الإحصائيات */
     }
 
-    .stat-card {
+    .mini-stat-card {
         background: white;
-        padding: 20px;
-        border-radius: 15px;
+        border-radius: 25px;
+        padding: 30px;
         text-align: center;
-        border-bottom: 4px solid #1a56db;
-        transition: transform 0.3s ease;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        border: none;
     }
 
-    .stat-card:hover {
-        transform: translateY(-5px);
-    }
+    .mini-stat-card:hover { transform: translateY(-8px); }
 
-    .stat-card i {
-        font-size: 2rem;
-        color: #1a56db;
+    /* منطق ألوان الشارات الديناميكي */
+    .badge-icon-box {
+        font-size: 2.5rem;
+        padding: 15px;
+        border-radius: 20px;
+        display: inline-block;
         margin-bottom: 10px;
     }
 
-    .stat-card h4 { color: #6b7280; font-size: 0.9rem; }
-    .stat-card .value { font-size: 1.5rem; font-weight: bold; color: var(--text-dark); }
+    /* إذا كانت الرتبة برونز */
+    .badge-bronze { color: #cd7f32; background: #fdf2e9; }
+    /* إذا كانت الرتبة فضة */
+    .badge-silver { color: #a8a8a8; background: #f5f5f5; }
+    /* إذا كانت الرتبة ذهب */
+    .badge-gold { color: #fbc02d; background: #fff9c4; }
 
-    /* نظام النقاط والمزايا */
-    .perks-section {
+    /* شريط المستوى الملون واللامع */
+    .level-card {
         background: white;
-        border-radius: 20px;
-        padding: 25px;
-        margin-bottom: 30px;
+        border-radius: 30px;
+        padding: 35px;
+        margin-bottom: 30px; /* مسافة سفلية */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     }
 
-    .progress-bar-container {
-        height: 12px;
-        background: #e5e7eb;
-        border-radius: 10px;
-        margin: 20px 0;
+    .custom-progress {
+        height: 20px;
+        background: #edf2f7;
+        border-radius: 50px;
+        margin: 25px 0;
         overflow: hidden;
+        position: relative;
     }
 
-    .progress-fill {
+    .progress-bar-fill {
         height: 100%;
-        background: var(--primary-gradient);
-        width: 65%; /* يتم تغييره برمجياً */
-        border-radius: 10px;
+        background: linear-gradient(90deg, #ff4b2b 0%, #ffb300 40%, #00d4ff 75%, #1a56db 100%);
+        background-size: 800px;
+        border-radius: 50px;
+        transition: width 2s ease-in-out;
     }
 
-    /* جدول سجل التبرعات */
+    .progress-bar-fill::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
     .donation-history {
         background: white;
-        border-radius: 20px;
-        padding: 25px;
-        overflow-x: auto;
+        border-radius: 30px;
+        padding: 35px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     }
 
-    .table {
-        width: 100%;
-        margin-top: 15px;
-    }
-
-    .table th { border: none; color: #6b7280; font-weight: 500; }
-    .status-badge {
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-    }
-    .status-completed { background: #dcfce7; color: #166534; }
-
-    /* ميزة خيالية: بطاقة الفصيلة */
-    .blood-type-badge {
-        background: var(--accent-red);
+    .btn-action {
+        background: var(--primary-blue);
         color: white;
-        width: 60px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-size: 1.2rem;
-        font-weight: bold;
-        margin: 0 auto 10px;
-        box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+        border-radius: 15px;
+        padding: 12px 28px;
+        text-decoration: none;
+        transition: 0.3s;
     }
 </style>
+
 <div class="container dashboard-container">
-    <!-- Header -->
-    <div class="welcome-header d-flex justify-content-between align-items-center">
+    <!-- 1. الهيدر -->
+    <div class="welcome-header d-flex flex-column flex-md-row justify-content-between align-items-center">
         <div>
-            <h2>أهلاً بك يا بطل، {{ request.user.username }}! 👋</h2>
-            <p class="mb-0">شكراً لكونك جزءاً من إنقاذ الأرواح اليوم.</p>
+            <h2>أهلاً بك، {{ user.first_name|default:user.username }}! ✨</h2>
+            <p class="quote-box mb-0">"وَمَنْ أَحْيَاهَا فَكَأَنَّمَا أَحْيَا النَّاسَ جَمِيعًا"</p>
         </div>
-        <div class="text-center">
-            <!-- جلب فصيلة الدم من قاعدة البيانات -->
-            <div class="blood-type-badge">{{ profile.blood_type }}</div>
-            <small>فصيلتك</small>
+        <br>
+        <div class="mt-4 mt-md-0">
+            <a href="{% url 'donor:available_requests' %}" class="btn-action shadow-lg"><i class="fas fa-plus-circle ms-2"></i> حجز موعد تبرع</a>
         </div>
     </div>
 
-    <!-- Stats -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <i class="fas fa-tint"></i>
-            <h4>إجمالي التبرعات</h4>
-            <!-- جلب إجمالي التبرعات -->
-            <div class="value">{{ profile.total_donations }} مرة</div>
+    <!-- 2. الإحصائيات (مربعات متباعدة) -->
+    <div class="stats-grid-container">
+        <div class="mini-stat-card">
+            <i class="fas fa-hand-holding-heart" style="color: #ef4444;"></i>
+            <div class="stat-label mt-2">تبرعاتك</div><div class="stat-value">{{ user.donorprofile.total_donations|default:"0" }}</div>
+            <div class="stat-desc text-muted">مهمة إنسانية</div>
         </div>
-        <div class="stat-card">
-            <i class="fas fa-star"></i>
-            <h4>نقاط العطاء</h4>
-            <!-- جلب النقاط -->
-            <div class="value">{{ profile.points|default:"0" }}</div>
+        <div class="mini-stat-card">
+            <i class="fas fa-star" style="color: #f59e0b;"></i>
+            <div class="stat-label mt-2">نقاطك</div>
+            <div class="stat-value">{{ user.donorprofile.points|default:"0" }}</div>
+            <div class="stat-desc text-muted">نقطة فخر</div>
         </div>
-        <div class="stat-card">
-            <i class="fas fa-users"></i>
-            <h4>أرواح ساهمت بإنقاذها</h4>
-            <!-- حساب الأرواح (مثلاً كل تبرع ينقذ 3) أو جلبها مباشرة -->
-            <div class="value">{{ profile.lives_saved }}</div>
+        <div class="mini-stat-card">
+            <i class="fas fa-heartbeat" style="color: #10b981;"></i>
+            <div class="stat-label mt-2">أرواح أُنقذت</div>
+            <div class="stat-value text-success">{{ user.donorprofile.lives_saved|default:"0" }}</div>
+            <div class="stat-desc text-muted">بفضل عطائك</div>
         </div>
-        <div class="stat-card">
-            <i class="fas fa-calendar-check"></i>
-            <h4>موعد التبرع القادم</h4>
-            <div class="value" style="font-size: 1.1rem; color: #16a34a;">
-                <!-- التحقق من الموعد القادم -->
-                {% if profile.next_donation_date %}
-                    {{ profile.next_donation_date }}
+        <div class="mini-stat-card">
+            <i class="fas fa-calendar-alt" style="color: #3b82f6;"></i>
+            <div class="stat-label mt-2">الموعد القادم</div>
+            <div class="stat-value" style="font-size: 1.1rem;">
+                {% if user.donorprofile.next_donation_date %}
+                    {{ user.donorprofile.next_donation_date|date:"j M" }}
                 {% else %}
-                    متاح الآن!
+                    متاح الآن
                 {% endif %}
             </div>
-        </div>
-    </div>
-<!-- Mazaia & Levels -->
-<div class="row">
-    <!-- كارد المزايا (المكان الذي حددتيه بالمربع الأحمر) -->
-    <div class="col-md-4">
-        <div class="perks-section h-100" style="background: white; border-radius: 20px; padding: 25px; border-top: 5px solid #1a56db;">
-            <h4 class="mb-4">مزايا رتبة <span style="color: #1a56db;">{{ profile.current_level }}</span></h4>
-            <ul class="list-unstyled">
-                {% for perk in profile.get_perks %}
-                <li class="mb-3 d-flex align-items-center">
-                    <i class="fas fa-check-circle text-success me-2"></i>
-                    <span style="font-size: 0.95rem;">{{ perk }}</span>
-                </li>
-                {% empty %}
-                <li class="text-muted small">ابدأ أول عملية تبرع لفتح المزايا!</li>
-                {% endfor %}
-            </ul>
-            <div class="mt-3 p-2 bg-light rounded text-center">
-                <small class="text-muted">كل تبرع = 200 نقطة</small>
-            </div>
+            <div class="stat-desc text-muted">نحن بانتظارك</div>
         </div>
     </div>
 
-    <!-- قسم مستوى العطاء وشريط التقدم -->
-    <div class="col-md-8">
-        <div class="perks-section mb-4" style="background: white; border-radius: 20px; padding: 25px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">مستوى العطاء:</h4>
-                <span class="fw-bold">{{ profile.points }} / 1000 <small class="text-muted">نقطة للمستوى القادم</small></span>
+    <div class="row g-5"> <!-- g-5 تعطي فراغ كبير بين العمودين -->
+        <!-- 3. كرت الرتبة والتقدم -->
+        <div class="col-lg-5">
+            <div class="level-card h-100">
+                <div class="d-flex align-items-center mb-4">
+                    <!-- أيقونة تتغير بناء على الرتبة -->
+                    <div class="badge-icon-box 
+                        {% if user.donorprofile.current_level == 'برونز' %}badge-bronze
+                        {% elif user.donorprofile.current_level == 'فضة' %}badge-silver
+                        {% else %}badge-gold{% endif %}">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div class="ms-3 mr-3" style="margin-right: 15px;">
+                        <h4 class="mb-0">رتبة: {{ user.donorprofile.current_level|default:"برونز" }}</h4>
+                        <p class="text-muted small mb-0">تستحق كل التقدير!</p>
+                    </div>
+                </div>
+
+                <h6 class="mb-0">مستوى التقدم للعطاء:</h6>
+                <div class="custom-progress">
+                    <div class="progress-bar-fill" style="width: {{ user.donorprofile.calculate_progress|default:'90' }}%;"></div>
+                </div>
+                
+                <div class="d-flex justify-content-between text-muted small mb-4">
+                    <span>{{ user.donorprofile.points|default:"0" }} نقطة</span>
+                    <span>1000 نقطة (الرتبة الذهبية)</span>
+                </div>
+
+                <div class="bg-light p-4 rounded-4 shadow-sm">
+                    <h6 class="text-primary mb-3"><i class="fas fa-gift ms-2"></i> مزايا رتبتك الحالية:</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2 small"><i class="fas fa-check-circle text-success ms-2"></i> أولوية في حجز المواعيد</li>
+                        <li class="small"><i class="fas fa-check-circle text-success ms-2"></i> تقارير صحية مجانية</li>
+                    </ul>
+                </div>
             </div>
-            
-            <div class="progress-bar-container" style="height: 12px; background: #e5e7eb; border-radius: 10px; margin: 20px 0; overflow: hidden;">
-                <!-- شريط التقدم يتغير عرضه بناءً على النقاط -->
-                <div class="progress-fill" style="height: 100%; background: var(--primary-gradient); width: {{ profile.calculate_progress }}%; transition: width 0.5s ease;"></div>
-            </div>
-            
-            <p class="text-muted small">بقي لك {{ profile.points_needed }} نقطة للحصول على مستوى <b>{{ profile.next_level_name|default:"القادم" }}</b>.</p>
         </div>
 
-        <!-- سجل التبرعات -->
-        <div class="donation-history" style="background: white; border-radius: 20px; padding: 25px;">
-            <h4 class="mb-3">سجل التبرعات الأخير</h4>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>التاريخ</th>
-                        <th>الموقع</th>
-                        <th>الكمية</th>
-                        <th>الحالة</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for donation in donations %}
-                    <tr>
-                        <td>{{ donation.date|date:"Y/m/d" }}</td>
-                        <td>{{ donation.hospital_name }}</td>
-                        <td>{{ donation.amount }}ml</td>
-                        <td><span class="status-badge status-completed">{{ donation.status }}</span></td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4" class="text-center text-muted">لا توجد سجلات تبرع سابقة حتى الآن.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <!-- 4. سجل التبرعات -->
+        <div class="col-lg-7">
+            <div class="donation-history h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0"><i class="fas fa-history ms-2 text-primary"></i> آخر التبرعات</h4>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>التاريخ</th>
+                                <th>الموقع</th><th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for donation in donations %}
+                            <tr>
+                                <td>{{ donation.date|date:"Y/m/d" }}</td>
+                                <td>{{ donation.hospital_name }}</td>
+                                <td><span class="badge bg-success rounded-pill px-3">مكتمل</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-5 text-muted">لا توجد سجلات حالياً.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

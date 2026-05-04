@@ -1,0 +1,128 @@
+<!-- donor/templates/donor/base_donor.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light" data-lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}إحياء · لوحة المتبرع{% endblock %}</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" /> <!-- نستخدم نفس ملف التنسيق للفخامة -->
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+<div class="hd-shell">
+
+  <!-- ══════════ SIDEBAR (نسخة المتبرع) ══════════ -->
+  <aside class="hd-sidebar" id="hdSidebar">
+    <div class="hd-brand">
+      <a href="#" class="hd-brand-inner">
+        <div class="hd-brand-logo">
+           <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="12" fill="#1a56db"/><path d="M20 8C20 8 11 16.5 11 22.5C11 27.3 15.1 31 20 31C24.9 31 29 27.3 29 22.5C29 16.5 20 8 20 8Z" fill="white"/></svg>
+        </div>
+        <div class="hd-brand-text">
+          <span class="hd-brand-ar">إحياء</span>
+          <span class="hd-brand-en">Donor Panel</span>
+        </div>
+      </a>
+      <button class="hd-sidebar-close" id="hdSidebarClose"><i class="fas fa-times"></i></button>
+    </div>
+
+    <nav class="hd-nav">
+      <!-- قائمة الخيارات الجانبية -->
+<div class="hd-nav-section">
+
+    <!-- 1. لوحة التحكم -->
+    <a href="{% url 'donor:donor_home' %}" class="hd-nav-item {% if request.resolver_match.url_name == 'donor_home' %}active{% endif %}">
+        <span class="hd-nav-icon"><i class="fas fa-home"></i></span>
+        <span class="hd-nav-text">لوحة التحكم</span>
+    </a>
+
+    <!-- 2. ملفي الشخصي -->
+    <a href="{% url 'donor:profile' %}" class="hd-nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+        <span class="hd-nav-icon"><i class="fas fa-user-circle"></i></span>
+        <span class="hd-nav-text">ملفي الشخصي</span>
+    </a>
+
+    <!-- 3. طلبات التبرع المتاحة -->
+    <a href="{% url 'donor:available_requests' %}" class="hd-nav-item {% if request.resolver_match.url_name == 'available_requests' %}active{% endif %}">
+        <span class="hd-nav-icon"><i class="fas fa-hand-holding-heart"></i></span>
+        <span class="hd-nav-text">طلبات التبرع المتاحة</span>
+    </a>
+
+    <!-- 4. سجل التبرعات -->
+    <a href="{% url 'donor:donation_history' %}" class="hd-nav-item {% if request.resolver_match.url_name == 'donation_history' %}active{% endif %}">
+        <span class="hd-nav-icon"><i class="fas fa-history"></i></span>
+        <span class="hd-nav-text">سجل التبرعات</span>
+    </a>
+
+</div>
+    </nav>
+
+    <!-- Sidebar Footer (بيانات المتبرع) -->
+    <div class="hd-sidebar-footer">
+      <div class="hd-sidebar-user">
+        <div class="hd-user-avatar">
+          {% if request.user.donorprofile.image %}
+            <img src="{{ request.user.donorprofile.image.url }}" style="border-radius: 50%;" />
+          {% else %}
+            <div style="background:#1a56db; color:white; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">{{ request.user.username|slice:":1" }}</div>
+          {% endif %}
+        </div>
+        <div class="hd-user-info">
+          <span class="hd-user-name">{{ request.user.first_name|default:request.user.username }}</span>
+          <span class="hd-user-role">متبرع</span>
+        </div>
+      </div>
+      <!-- استبدلي رابط الخروج القديم بهذا الكود -->
+<form id="logout-form" action="{% url 'logout' %}?next={% url 'donor:donor_home' %}" method="post" style="display: none;">
+    {% csrf_token %}
+</form>
+
+<a href="javascript:void(0)" onclick="document.getElementById('logout-form').submit();" class="hd-nav-item hd-nav-logout">
+    <span class="hd-nav-icon"><i class="fas fa-sign-out-alt"></i></span>
+    <span class="hd-nav-text">خروج</span>
+</a>
+    </div>
+  </aside>
+
+  <div class="hd-main-col">
+    <header class="hd-topbar">
+      <button class="hd-hamburger" id="hdHamburger"><span></span><span></span><span></span></button>
+      <div class="hd-topbar-title">
+        <h1 class="hd-page-title">{% block page_title %}لوحة المتبرع{% endblock %}</h1>
+      </div>
+      
+      <div class="hd-topbar-actions">
+          <!-- أيقونة التنبيهات -->
+          <button class="hd-icon-btn"><i class="fas fa-bell"></i></button>
+          
+          <!-- صورة المتبرع الصغيرة في الزاوية -->
+          <div class="hd-avatar">
+              {% if request.user.donorprofile.image %}
+                <img src="{{ request.user.donorprofile.image.url }}" />
+              {% else %}
+                <i class="fas fa-user"></i>
+              {% endif %}</div>
+      </div>
+    </header>
+
+    <main class="hd-content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+<!-- Scripts (نفس سكربتات زميلتك لتعمل القائمة الجانبية) -->
+<script>
+    const hamburger = document.getElementById('hdHamburger');
+    const sidebar = document.getElementById('hdSidebar');
+    hamburger.addEventListener('click', () => sidebar.classList.toggle('open'));
+    // أضيفي بقية جافاسكريبت زميلتك هنا لضمان عمل القوائم
+</script>
+</body>
+</html>

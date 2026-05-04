@@ -75,3 +75,16 @@ class DonorProfile(models.Model):
         return f"{self.user.username} - {self.current_level}"
     
 
+# donor/models.py
+from django.db import models
+from django.contrib.auth.models import User
+
+class DonationRecord(models.Model):
+    donor = models.ForeignKey(User, on_delete=models.CASCADE)
+    hospital_name = models.CharField(max_length=255)
+    date = models.DateField()
+    units = models.IntegerField(default=1)
+    certificate = models.FileField(upload_to='certificates/', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.donor.username} - {self.hospital_name}"

@@ -83,3 +83,11 @@ def donor_logout(request):
     logout(request)
     messages.info(request, 'تم تسجيل الخروج بنجاح.')
     return redirect('main:home')
+
+def available_requests(request):
+    # حالياً سنقوم فقط بفتح الصفحة، لاحقاً سنجلب البيانات من قاعدة البيانات
+    return render(request, 'donor/available_requests.html')
+
+def donation_history(request):
+    # حالياً سنقوم فقط بفتح الصفحة
+    return render(request, 'donor/donation_history.html')

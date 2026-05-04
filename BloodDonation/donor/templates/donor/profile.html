@@ -1,202 +1,304 @@
-{% extends 'main/base.html' %}
+{% extends 'donor/base_donor.html' %}
 {% block content %}
 
 <style>
-    .profile-card {
+    :root {
+        --primary-blue: #1a56db;
+        --secondary-bg: #f8fafc;
+        --text-dark: #1e293b;
+        --text-muted: #64748b;
+        --danger: #e11d48;
+    }
+
+    .profile-master-card {
         background: white;
-        border-radius: 30px;
+        border-radius: 24px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.02);
         padding: 40px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        margin-top: 100px;
+        margin: 20px auto;
+        animation: fadeIn 0.6s ease-out;
         direction: rtl;
     }
-    .section-title {
-        border-right: 5px solid #3282b8;
-        padding-right: 15px;
-        margin-bottom: 30px;
-        color: #0f4c75;
-        font-weight: bold;
-        text-align: right;
-    }
-    .form-row-custom {
+
+    .header-section {
+        border-bottom: 2px solid #f1f5f9;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        direction: rtl;
     }
-    .form-row-custom label {
-        width: 180px;
-        text-align: right;
-        margin-left: 20px;
-        font-weight: 600;
-        color: #333;
+
+    .header-section h2 {
+        color: var(--text-dark);
+        font-weight: 800;
+        margin: 0;
     }
-    .form-row-custom input, .form-row-custom select {
-        flex: 1;
-        border-radius: 12px;
-        border: 1px solid #e0e0e0;
-        padding: 12px;
-        background-color: #f9f9f9;
-        text-align: right;
-    }
-    
-    /* التعديل الجديد لتوسيط الصورة */
-    .image-column-center {
+
+    /* منطقة الصورة الشخصية المحدثة بإحداثياتك الجديدة */
+    .avatar-upload-wrapper {
+        position: relative;
+        width: 150px;
+        margin: 0 auto 30px;
         display: flex;
         flex-direction: column;
-        align-items: center; /* توسيط أفقي */
-        justify-content: flex-start;
-        text-align: center;
+        align-items: center;
+        justify-content: center;
     }
 
-    #image-preview {
-        width: 180px;
-        height: 180px;
-        object-fit: cover;
+    .avatar-preview {
+        width: 150px;
+        height: 150px;
         border-radius: 50%;
-        border: 2px solid #eee;
-        margin: 0 auto; /* يضمن التوسيط داخل الـ wrapper */
+        border: 4px solid white;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        object-fit: cover;
+        background: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
     }
 
-    .profile-img-wrapper {
-        width: 180px;
-        height: 180px;
-        margin-bottom: 15px;
+    .edit-badge {
+        position: absolute;
+        bottom: 30px; /* الإحداثية التي اعتمدتيها وزبطت معك */
+        right: 15px;  /* الإحداثية التي اعتمدتيها وزبطت معك */
+        background: var(--primary-blue);
+        color: white;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.3s;
+        border: 3px solid white; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        z-index: 10;
     }
+
+    .edit-badge:hover { transform: scale(1.1); background: #063970; }
+
+    .field-group {
+        background: var(--secondary-bg);
+        padding: 25px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+    }
+
+    .group-title {
+        color: var(--primary-blue);
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .custom-form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .input-box {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .input-box label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+
+    .input-box input, 
+    .input-box select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        outline: none;
+        transition: 0.3s;
+        background: white;
+        text-align: right;
+    }
+
+    .input-box input:focus {
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 4px rgba(26, 86, 219, 0.1);
+    }
+
+    .btn-save {
+        background: var(--primary-blue);
+        color: white;
+        padding: 15px 60px;
+        border-radius: 15px;
+        border: none;
+        font-weight: 700;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .btn-save:hover { background: #1e40af; transform: translateY(-2px); }
 
     .hidden-input { display: none; }
-    .hidden-section { display: none; }
 
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
-{% if messages %}
-            <div class="container mt-3" style="direction: rtl;">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert" style="border-radius: 15px;">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="float: left;"></button>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-<div class="container mb-5">
-    <div class="profile-card">
-        <h2 class="text-center mb-5">تعديل الملف الشخصي</h2>
 
-        <form method="POST" enctype="multipart/form-data" id="main-form">
+<div class="container">
+    <div class="profile-master-card">
+        <div class="header-section">
+            <h2>تعديل الملف الشخصي</h2>
+            <i class="fas fa-user-circle fa-2x text-primary" style="opacity: 0.3;"></i>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" id="profileForm">
             {% csrf_token %}
             
-            <div class="row">
-                <!-- الجزء الأيسر: الصورة (تم تعديل الكلاس هنا للتوسيط) -->
-                <div class="col-md-4 image-column-center">
-                    <div class="profile-img-wrapper">
-                        {% if user.donorprofile.image %}
-                            <img src="{{ user.donorprofile.image.url }}" id="image-preview">
-                        {% else %}
-                            <div id="image-preview" class="bg-light d-flex align-items-center justify-content-center">
-                                <i class="fas fa-user fa-5x text-muted"></i>
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="image-action-text">
-                        <label for="image-upload" style="cursor: pointer; color: #3282b8; font-weight: bold; display: block; margin-bottom: 5px;">
-                            تعديل الصورة الشخصية
-                        </label>
-                        <input type="file" name="image" id="image-upload" class="hidden-input" accept="image/*">
-                        <p onclick="clearImage()" style="cursor: pointer; color: red; font-size: 0.9rem; margin: 0;">حذف</p>
-                    </div>
+            <!-- قسم الصورة الشخصية -->
+            <div class="avatar-upload-wrapper">
+                <div id="avatar-container">{% if user.donorprofile.image %}
+                        <img src="{{ user.donorprofile.image.url }}" id="image-preview" class="avatar-preview">
+                    {% else %}
+                        <div id="image-preview" class="avatar-preview">
+                            <i class="fas fa-user fa-4x text-muted"></i>
+                        </div>
+                    {% endif %}
                 </div>
-
-                <!-- الجزء الأيمن: المعلومات الشخصية -->
-                <div class="col-md-8">
-                    <h4 class="section-title">المعلومات الشخصية</h4>
-                    <div class="form-row-custom"> <label>الاسم الأول</label> {{ u_form.first_name }} </div>
-                    <div class="form-row-custom"> <label>الاسم الأخير</label> {{ u_form.last_name }} </div>
-                    <div class="form-row-custom"> <label>رقم الهوية</label> {{ p_form.id_number }} </div>
-                    <div class="form-row-custom"> <label>رقم الجوال</label> {{ p_form.phone_number }} </div>
-                    <div class="form-row-custom"> <label>الجنسية</label> {{ p_form.nationality }} </div>
-                    <div class="form-row-custom"> <label>المدينة</label> {{ p_form.city }} </div>
-                    <div class="form-row-custom"> <label>الجنس</label> {{ p_form.gender }} </div><div class="form-row-custom"> <label>الحالة الاجتماعية</label> {{ p_form.marital_status }} </div>
-                    <div class="form-row-custom"> <label>تاريخ الميلاد</label> {{ p_form.date_of_birth }} </div>
+                <label for="image-upload" class="edit-badge">
+                    <i class="fas fa-camera"></i>
+                </label>
+                <input type="file" name="image" id="image-upload" class="hidden-input" accept="image/*">
+                <input type="checkbox" name="image-clear" id="image-clear-id" class="hidden-input">
+                <div class="text-center mt-3">
+                    <span onclick="clearImage()" style="color: var(--danger); cursor: pointer; font-size: 0.85rem; font-weight: 600;">
+                        <i class="fas fa-trash-alt ms-1"></i> حذف الصورة
+                    </span>
                 </div>
             </div>
 
-            <hr class="my-5">
+            <!-- البيانات الأساسية المستمدة من صورة الكود image_74.png -->
+            <div class="field-group">
+                <div class="group-title">
+                    <i class="fas fa-id-card"></i> البيانات الشخصية
+                </div>
+                <div class="custom-form-grid">
+                    <div class="input-box"><label>الاسم الأول</label> {{ u_form.first_name }}</div>
+                    <div class="input-box"><label>الاسم الأخير</label> {{ u_form.last_name }}</div>
+                    <div class="input-box"><label>رقم الهوية</label> {{ p_form.id_number }}</div>
+                    <div class="input-box"><label>الجنسية</label> {{ p_form.nationality }}</div>
+                    <div class="input-box"><label>رقم الجوال</label> {{ p_form.phone_number }}</div>
+                    <div class="input-box"><label>تاريخ الميلاد</label> {{ p_form.date_of_birth }}</div>
+                </div>
+            </div>
 
-            <!-- القسم السفلي: المعلومات الصحية -->
-            <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <h4 class="section-title">المعلومات الصحية</h4>
-                    <div class="form-row-custom"> <label>فصيلة الدم</label> {{ p_form.blood_type }} </div>
-                    <div class="form-row-custom"> <label>الوزن (كجم)</label> {{ p_form.weight }} </div>
-                    
-                    <div class="form-row-custom">
-                        <label>هل تعاني من أمراض مزمنة؟</label>
-                        {{ p_form.has_chronic }}
-                    </div>
-                    <div class="form-row-custom hidden-section" id="chronic_div">
-                        <label>نوع المرض</label>
-                        {{ p_form.chronic_disease_type }}
-                    </div>
+            <!-- التفاصيل الاجتماعية والجغرافية -->
+            <div class="field-group">
+                <div class="group-title">
+                    <i class="fas fa-map-marker-alt"></i> التفاصيل الاجتماعية
+                </div>
+                <div class="custom-form-grid">
+                    <div class="input-box"><label>المدينة</label> {{ p_form.city }}</div>
+                    <div class="input-box"><label>الجنس</label> {{ p_form.gender }}</div>
+                    <div class="input-box"><label>الحالة الاجتماعية</label> {{ p_form.marital_status }}</div>
+                </div>
+            </div>
 
-                    <div class="form-row-custom">
-                        <label>هل تتناول أي أدوية؟</label>
-                        {{ p_form.takes_meds }}
+            <!-- الملف الصحي المستمد من صورة الكود image_74.png -->
+            <div class="field-group">
+                <div class="group-title">
+                    <i class="fas fa-heartbeat"></i> الملف الصحي
+                </div>
+                <div class="custom-form-grid">
+                    <div class="input-box"><label>فصيلة الدم</label> {{ p_form.blood_type }}</div>
+                    <div class="input-box"><label>الوزن (كجم)</label> {{ p_form.weight }}</div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="input-box">
+                            <label>هل تعاني من أمراض مزمنة؟</label>
+                            {{ p_form.has_chronic }}
+                        </div>
+                        <div id="chronic_div" class="input-box mt-3" style="display:none;">
+                            <label>نوع المرض</label>
+                            {{ p_form.chronic_disease_type }}
+                        </div>
                     </div>
-                    <div class="form-row-custom hidden-section" id="meds_div">
-                        <label>نوع الدواء</label>
-                        {{ p_form.medication_type }}
+                    <div class="col-md-6">
+                        <div class="input-box">
+                            <label>هل تتناول أي أدوية؟</label>
+                            {{ p_form.takes_meds }}
+                        </div>
+                        <div id="meds_div" class="input-box mt-3" style="display:none;">
+                            <label>نوع الدواء</label>{{ p_form.medication_type }}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- أزرار التحكم -->
             <div class="text-center mt-5">
-                <button type="submit" class="btn btn-primary px-5 py-2 mx-2" style="border-radius: 50px; background-color: #0f4c75; border: none;">حفظ</button>
-                <button type="button" onclick="window.location.reload()" class="btn btn-outline-danger px-5 py-2 mx-2" style="border-radius: 50px;">إلغاء التعديلات</button>
+                <button type="submit" class="btn-save shadow-sm">حفظ التغييرات</button>
             </div>
-            <!-- كود عرض التنبيهات -->
-        
         </form>
     </div>
 </div>
 
 <script>
+    // معاينة الصورة المختارة
     document.getElementById('image-upload').addEventListener('change', function(e) {
         if (e.target.files && e.target.files[0]) {
             const reader = new FileReader();
             reader.onload = function(event) {
                 const preview = document.getElementById('image-preview');
-                if(preview.tagName === 'IMG') {
-                    preview.src = event.target.result;
-                } else {
-                    // في حال كان هناك أيقونة، يتم استبدال الـ div بـ img
+                if(preview.tagName !== 'IMG') {
                     const newImg = document.createElement('img');
                     newImg.id = 'image-preview';
                     newImg.src = event.target.result;
+                    newImg.className = 'avatar-preview';
                     preview.parentNode.replaceChild(newImg, preview);
+                } else {
+                    preview.src = event.target.result;
                 }
             };
             reader.readAsDataURL(e.target.files[0]);
+            document.getElementById('image-clear-id').checked = false;
         }
     });
 
+    // حذف الصورة
     function clearImage() {
+        const preview = document.getElementById('image-preview');
+        preview.outerHTML = '<div id="image-preview" class="avatar-preview"><i class="fas fa-user fa-4x text-muted"></i></div>';
+        document.getElementById('image-clear-id').checked = true;
         document.getElementById('image-upload').value = "";
-        alert("سيتم حذف الصورة عند ضغط حفظ");
     }
 
-    const chronicSelect = document.querySelector('select[name="has_chronic"]');
-    const medsSelect = document.querySelector('select[name="takes_meds"]');
-    
+    // إدارة الحقول الصحية
     function toggleHealthFields() {
-        if(chronicSelect) document.getElementById('chronic_div').style.display = (chronicSelect.value === 'yes') ? 'flex' : 'none';
-        if(medsSelect) document.getElementById('meds_div').style.display = (medsSelect.value === 'yes') ? 'flex' : 'none';
+        const chronicSelect = document.querySelector('[name="has_chronic"]');
+        const medsSelect = document.querySelector('[name="takes_meds"]');
+        
+        if(chronicSelect) {
+            const showChronic = chronicSelect.value === 'True' || chronicSelect.value === 'yes';
+            document.getElementById('chronic_div').style.display = showChronic ? 'flex' : 'none';
+        }
+        if(medsSelect) {
+            const showMeds = medsSelect.value === 'True' || medsSelect.value === 'yes';
+            document.getElementById('meds_div').style.display = showMeds ? 'flex' : 'none';
+        }
     }
 
-    if(chronicSelect) chronicSelect.addEventListener('change', toggleHealthFields);
-    if(medsSelect) medsSelect.addEventListener('change', toggleHealthFields);
-    
+    document.querySelectorAll('[name="has_chronic"], [name="takes_meds"]').forEach(el => {
+        el.addEventListener('change', toggleHealthFields);
+    });
+
     window.onload = toggleHealthFields;
 </script>
 

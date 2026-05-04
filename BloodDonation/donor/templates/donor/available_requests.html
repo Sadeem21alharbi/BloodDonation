@@ -1,0 +1,127 @@
+{% extends "donor/base_donor.html" %}
+{% load static %}
+
+{% block page_title %}طلبات التبرع المتاحة{% endblock %}
+
+{% block content %}
+<div class="requests-container" style="animation: fadeIn 0.8s ease-in-out; direction: rtl;">
+    
+    <!-- رسالة تحفيزية علوية -->
+    <div class="hero-alert" style="background: linear-gradient(135deg, #fff5f5 0%, #feb2b2 100%); padding: 25px; border-radius: 20px; margin-bottom: 30px; border-right: 6px solid #e53e3e; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+            <h2 style="color: #9b2c2c; margin: 0; font-size: 1.4rem;">كن بطلاً اليوم! 🩸</h2>
+            <p style="color: #c53030; margin: 5px 0 0 0;">هناك عدة حالات في منطقتك تحتاج لمتبرعين بشكل عاجل.</p>
+        </div>
+        <i class="fas fa-heartbeat" style="font-size: 3rem; color: #e53e3e; opacity: 0.8;"></i>
+    </div>
+
+    <!-- قسم الفلاتر المضاف حديثاً -->
+    <div class="filters-card" style="background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 35px; border: 1px solid #edf2f7;">
+        <form method="GET" class="row g-3 align-items-end">
+            <!-- فلتر المدينة -->
+            <div class="col-md-3">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #4a5568; font-size: 0.9rem;">
+                    <i class="fas fa-map-marker-alt" style="color: #1a56db; margin-left: 5px;"></i> المدينة
+                </label>
+                <select name="city" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; outline: none; font-size: 0.9rem;">
+                    <option value="">كل المدن</option>
+                    <option value="الرياض">الرياض</option>
+                    <option value="جدة">جدة</option>
+                    <option value="الدمام">الدمام</option>
+                    <option value="الخبر">الخبر</option>
+                    <option value="تبوك">تبوك</option>
+                </select>
+            </div>
+
+            <!-- فلتر فصيلة الدم -->
+            <div class="col-md-3">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #4a5568; font-size: 0.9rem;">
+                    <i class="fas fa-tint" style="color: #e11d48; margin-left: 5px;"></i> فصيلة الدم
+                </label>
+                <select name="blood_type" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; outline: none; font-size: 0.9rem;">
+                    <option value="">كل الفصائل</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                </select>
+            </div>
+
+            <!-- فلتر الحالة الطارئة -->
+            <div class="col-md-3">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #4a5568; font-size: 0.9rem;">
+                    <i class="fas fa-exclamation-triangle" style="color: #ecc94b; margin-left: 5px;"></i> الحالة
+                </label>
+                <select name="emergency" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; outline: none; font-size: 0.9rem;">
+                    <option value="">جميع الحالات</option>
+                    <option value="urgent">حالة عاجلة جداً</option>
+                    <option value="normal">حالة مستقرة</option>
+                </select>
+            </div>
+
+            <!-- زر التصفية -->
+            <div class="col-md-3">
+                <button type="submit" style="width: 100%; background: #1a56db; color: white; border: none; padding: 13px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-filter"></i>
+                    <span>تصفية النتائج</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- شبكة الطلبات -->
+    <div class="requests-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px;">
+        
+        <!-- حلقة التكرار (Django Loop) -->
+        {% for donation in requests %}
+        <div class="request-card" style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border: 1px solid #edf2f7; transition: transform 0.3s ease;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                <div style="width: 60px; height: 60px; background: #e11d48; color: white; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);">
+                    <span style="font-size: 1.2rem;">{{ donation.blood_type }}</span>
+                </div>
+                {% if donation.is_emergency %}
+                <span style="background: #fff5f5; color: #e53e3e; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid #feb2b2;">حالة عاجلة جداً</span>
+                {% else %}
+                <span style="background: #f0fff4; color: #38a169; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid #c6f6d5;">حالة مستقرة</span>
+                {% endif %}
+            </div>
+
+            <h3 style="font-size: 1.1rem; color: #2d3748; margin-bottom: 8px;">{{ donation.hospital_name }}</h3>
+            <p style="color: #718096; font-size: 0.85rem; margin-bottom: 15px;"><i class="fas fa-map-marker-alt" style="margin-left: 5px;"></i> {{ donation.city }} - {{ donation.address_detail }}</p>
+            
+            <div style="background: #f7fafc; border-radius: 12px; padding: 12px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #4a5568;">
+                    <span>الكمية المطلوبة:</span>
+                    <span style="font-weight: bold;">{{ donation.units_needed }} وحدات</span>
+                </div>
+                <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 10px; margin-top: 8px; overflow: hidden;">
+                    <!-- شريط تقدم افتراضي (يمكنكِ حساب النسبة برمجياً) -->
+                    <div style="width: 60%; height: 100%; background: #1a56db;"></div>
+                </div>
+            </div>
+
+            <button style="width: 100%; background: #1a56db; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <span>أنا مستعد للتبرع</span>
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: #718096;">
+            <i class="fas fa-search fa-3x mb-3" style="opacity: 0.3;"></i>
+            <p>لا توجد طلبات تبرع تطابق خيارات التصفية حالياً.</p>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<style>
+    .request-card:hover { transform: translateY(-10px); border-color: #1a56db; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+    select:focus { border-color: #1a56db !important; background: white !important; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+{% endblock %}

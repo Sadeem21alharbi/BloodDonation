@@ -54,31 +54,6 @@
     <div class="nav-controls">
       <button class="lang-toggle" id="langToggle">EN</button>
 
-      <!-- Auth Logic Dynamic -->
-      <div class="nav-auth" style="display: flex; align-items: center; gap: 15px;">
-        {% if user.is_authenticated %}
-            <!-- حالة المستخدم المسجل: تظهر صورته الشخصية وتنقله للملف الشخصي -->
-            <a href="{% if user.hospital_profile %}{% url 'hospital:profile' %}{% else %}{% url 'donor:profile' %}{% endif %}" class="nav-profile-link" title="الملف الشخصي">
-              {% if user.donorprofile.image %}
-                <img src="{{ user.donorprofile.image.url }}" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #1a56db;">
-              {% elif user.hospital_profile.logo %}
-                <img src="{{ user.hospital_profile.logo.url }}" alt="Hospital Logo" style="width: 40px; height: 40px; border-radius: 8px; object-fit: contain;">
-              {% else %}
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 2px solid #ddd;">👤</div>
-              {% endif %}
-            </a>
-        {% else %}
-            <!-- حالة الزائر: تظهر صورة افتراضية وعند الضغط تظهر الرسالة المطلوبة -->
-            <a href="javascript:void(0);" onclick="guestProfileAlert()" class="nav-profile-link" title="تعديل الملف الشخصي">
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 2px solid #ccc; filter: grayscale(100%);">
-                    <i class="fa-solid fa-user-slash" style="font-size: 1rem; color: #888;"></i>
-                </div>
-            </a>
-            <a href="{% url 'donor:donor_login' %}" class="btn btn-outline btn-sm d-none d-md-inline-block">تسجيل الدخول</a>
-            <a href="{% url 'donor:donor_register' %}" class="btn btn-primary btn-sm d-none d-md-inline-block">إنشاء حساب</a>
-        {% endif %}
-      </div>
-
       <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
     </div>
   </div>

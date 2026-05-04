@@ -1,0 +1,60 @@
+{% extends "donor/base_donor.html" %}
+{% load static %}
+
+{% block page_title %}سجل تبرعاتي{% endblock %}
+
+{% block content %}
+<div class="history-container" style="max-width: 900px; margin: 0 auto; animation: fadeIn 0.8s ease;">
+    
+    <!-- ملخص الإنجازات -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px;">
+        <div style="background: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+            <div style="color: #1a56db; font-size: 2rem; margin-bottom: 5px; font-weight: 800;">12</div>
+            <div style="color: #718096; font-size: 0.8rem;">إجمالي الوحدات</div>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+            <div style="color: #e11d48; font-size: 2rem; margin-bottom: 5px; font-weight: 800;">36</div>
+            <div style="color: #718096; font-size: 0.8rem;">أرواح ساهمت في إنقاذها</div>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+            <div style="color: #059669; font-size: 2rem; margin-bottom: 5px; font-weight: 800;">O+</div>
+            <div style="color: #718096; font-size: 0.8rem;">فصيلة دمك</div>
+        </div>
+    </div>
+
+    <!-- التايم لاين -->
+    <div class="timeline" style="position: relative; padding: 20px 0;">
+        <div style="position: absolute; right: 30px; top: 0; bottom: 0; width: 2px; background: #e2e8f0;"></div>
+
+        <!-- تبرع واحد -->
+        <div class="timeline-item" style="position: relative; margin-bottom: 30px; padding-right: 60px;">
+            <div style="position: absolute; right: 21px; top: 0; width: 20px; height: 20px; background: #1a56db; border: 4px solid white; border-radius: 50%; z-index: 2; box-shadow: 0 0 0 3px #bfdbfe;"></div>
+            
+            <div style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span style="color: #1a56db; font-size: 0.8rem; font-weight: bold;">15 مايو 2024</span>
+                    <h4 style="margin: 5px 0; color: #2d3748;">مستشفى دلة - الرياض</h4>
+                    <span style="color: #718096; font-size: 0.85rem;">تم بنجاح تبرع بوحدة واحدة</span>
+                </div>
+                <div style="text-align: center;">
+                    <span style="background: #ecfdf5; color: #059669; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">مكتمل</span>
+                    <br>
+                    <a href="#" style="color: #1a56db; font-size: 0.75rem; text-decoration: none; display: block; margin-top: 10px;">تحميل الشهادة <i class="fas fa-download"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبرع آخر -->
+        <div class="timeline-item" style="position: relative; margin-bottom: 30px; padding-right: 60px;">
+            <div style="position: absolute; right: 21px; top: 0; width: 20px; height: 20px; background: #cbd5e0; border: 4px solid white; border-radius: 50%; z-index: 2;"></div>
+            
+            <div style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); opacity: 0.8;">
+                <span style="color: #718096; font-size: 0.8rem; font-weight: bold;">10 يناير 2024</span>
+                <h4 style="margin: 5px 0; color: #2d3748;">مدينة الملك فهد الطبية</h4>
+                <span style="color: #718096; font-size: 0.85rem;">تبرع دوري</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

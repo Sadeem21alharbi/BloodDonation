@@ -1,160 +1,1392 @@
 {% extends 'hospital/base.html' %}
 
+{% block title %}Analytics & Insights | Ehyaa{% endblock %}
+
+{% block page_title %}Analytics & Insights{% endblock %}
+
+{% block page_subtitle %}Monitor donation performance, request activity, and donor engagement{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =========================================================
+   ANALYTICS PAGE — Ehyaa Design System
+========================================================= */
+
+/* ---- Buttons ---- */
+.btn {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  transition: all .18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.btn svg       { width: 15px; height: 15px; flex-shrink: 0; }
+.btn-sm        { padding: 9px 16px;  border-radius: 999px; font-size: 12.5px; }
+.btn-md        { padding: 11px 22px; border-radius: 999px; font-size: 13.5px; }
+.btn-primary   { background: var(--primary-gradient); color: #fff; box-shadow: 0 2px 8px rgba(37,99,235,.25); }
+.btn-primary:hover { box-shadow: 0 4px 16px rgba(37,99,235,.35); transform: translateY(-1px); }
+.btn-outline   { background: transparent; border: 1px solid var(--border-card); color: var(--text-body); }
+.btn-outline:hover { background: var(--bg-page); }
+.btn-soft-blue { background: rgba(37,99,235,.08); color: var(--primary); }
+.btn-soft-blue:hover { background: rgba(37,99,235,.14); }
+
+/* ---- Page Header ---- */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+.page-header-title {
+  font-size: 26px; font-weight: 800;
+  color: var(--text-dark); line-height: 1.2;
+}
+.page-header-sub {
+  color: var(--text-muted); font-size: 13px;
+  margin-top: 5px;
+  display: flex; align-items: center; gap: 8px;
+}
+.page-header-sub .hdot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--text-light); display: inline-block;
+}
+.page-header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ---- Date Range Tabs ---- */
+.range-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-page);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 4px;
+}
+.range-tab {
+  padding: 7px 14px;
+  border-radius: 9px;
+  font-size: 12px; font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.range-tab.active {
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.range-tab:hover:not(.active) { color: var(--text-dark); }
+
+/* =========================================================
+   MINI STAT CARDS
+========================================================= */
+.mini-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.mini-stat {
+  background: var(--bg-card);
+  border-radius: 18px;
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-card);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all .2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.mini-stat:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+
+.mini-stat-accent {
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  border-radius: 4px 0 0 4px;
+}
+.accent-blue   { background: linear-gradient(180deg, #2563eb, #1d4ed8); }
+.accent-green  { background: linear-gradient(180deg, #10b981, #059669); }
+.accent-amber  { background: linear-gradient(180deg, #f59e0b, #d97706); }
+.accent-red    { background: linear-gradient(180deg, #ef4444, #dc2626); }
+.accent-teal   { background: linear-gradient(180deg, #14b8a6, #0d9488); }
+.accent-violet { background: linear-gradient(180deg, #8b5cf6, #7c3aed); }
+
+.mini-stat-top { display: flex; align-items: center; justify-content: space-between; }
+
+.mini-stat-icon {
+  width: 42px; height: 42px;
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+}
+.mini-stat-icon svg { width: 19px; height: 19px; }
+.msi-blue   { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+.msi-green  { background: linear-gradient(135deg, #10b981, #059669); }
+.msi-amber  { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.msi-red    { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.msi-teal   { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+.msi-violet { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+.mini-trend {
+  display: flex; align-items: center; gap: 3px;
+  font-size: 11px; font-weight: 700;
+  padding: 3px 8px; border-radius: 999px;
+}
+.mini-trend svg { width: 11px; height: 11px; }
+.mt-up   { background: #dcfce7; color: #16a34a; }
+.mt-down { background: #fee2e2; color: #dc2626; }
+.mt-neu  { background: #f1f5f9; color: #64748b; }
+
+.mini-stat-value {
+  font-size: 26px; font-weight: 800;
+  color: var(--text-dark); line-height: 1;
+}
+.mini-stat-label {
+  font-size: 12px; color: var(--text-muted);
+  font-weight: 600; margin-top: 3px;
+}
+
+/* =========================================================
+   ANALYTICS GRID
+========================================================= */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 22px;
+  margin-bottom: 24px;
+}
+.analytics-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 22px;
+  margin-bottom: 24px;
+}
+
+/* =========================================================
+   CARD BASE
+========================================================= */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-card);
+}
+.card-head {
+  padding: 20px 24px 0;
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+  margin-bottom: 18px; flex-wrap: wrap;
+}
+.card-title { font-size: 15px; font-weight: 800; color: var(--text-dark); }
+.card-sub   { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+.card-body  { padding: 0 24px 24px; }
+.card-foot  {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border-light);
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+
+/* =========================================================
+   BAR CHART
+========================================================= */
+.bar-chart-wrap { padding: 0 24px 24px; }
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 180px;
+  padding-bottom: 32px;
+  position: relative;
+}
+
+/* Horizontal grid lines */
+.bar-chart::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 32px 0;
+  background-image:
+    linear-gradient(var(--border-light) 1px, transparent 1px);
+  background-size: 100% 25%;
+  pointer-events: none;
+}
+
+.bar-month {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.bar-group {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  width: 100%;
+  justify-content: center;
+  flex: 1;
+}
+
+.bar {
+  border-radius: 6px 6px 0 0;
+  width: 28%;
+  min-height: 4px;
+  transition: filter .2s, transform .2s;
+  cursor: pointer;
+  position: relative;
+}
+
+.bar:hover { filter: brightness(1.1); transform: scaleY(1.03); transform-origin: bottom; }
+
+.bar-requests  { background: linear-gradient(180deg, #60a5fa, #2563eb); }
+.bar-completed { background: linear-gradient(180deg, #34d399, #059669); }
+
+/* Tooltip on hover */
+.bar::after {
+  content: attr(data-val);
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%; transform: translateX(-50%);
+  background: #0f172a; color: #fff;
+  font-size: 10px; font-weight: 700;
+  padding: 3px 7px; border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity .15s;
+}
+.bar:hover::after { opacity: 1; }
+
+.bar-label {
+  font-size: 11px; font-weight: 700;
+  color: var(--text-muted);
+  position: absolute;
+  bottom: 4px;
+  left: 50%; transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.chart-legend {
+  display: flex; gap: 20px;
+  padding: 0 24px 20px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; color: var(--text-muted);
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 3px;
+}
+.ld-blue  { background: #2563eb; }
+.ld-green { background: #059669; }
+.ld-amber { background: #f59e0b; }
+.ld-red   { background: #ef4444; }
+.ld-teal  { background: #14b8a6; }
+.ld-violet { background: #8b5cf6; }
+
+/* Y-axis labels */
+.chart-y-labels {
+  position: absolute;
+  left: -36px; top: 0; bottom: 32px;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.y-label { font-size: 10px; color: var(--text-light); font-weight: 600; }
+
+/* =========================================================
+   DONUT CHART
+========================================================= */
+.donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px 24px;
+  flex-wrap: wrap;
+}
+
+.donut-chart-container {
+  position: relative;
+  flex-shrink: 0;
+  width: 140px; height: 140px;
+}
+
+.donut-svg { width: 140px; height: 140px; transform: rotate(-90deg); }
+
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.donut-pct   { font-size: 26px; font-weight: 800; color: var(--text-dark); line-height: 1; }
+.donut-sub   { font-size: 10px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+
+.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+.donut-legend-item {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 10px;
+}
+.donut-legend-left { display: flex; align-items: center; gap: 8px; }
+.donut-legend-dot {
+  width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0;
+}
+.donut-legend-label { font-size: 12.5px; font-weight: 600; color: var(--text-body); }
+.donut-legend-right { display: flex; flex-direction: column; align-items: flex-end; }
+.donut-legend-val   { font-size: 13.5px; font-weight: 800; color: var(--text-dark); }
+.donut-legend-pct   { font-size: 10px; font-weight: 600; color: var(--text-muted); }
+
+/* Donut segment animation */
+.donut-ring {
+  transition: stroke-dashoffset 1s ease;
+}
+
+/* =========================================================
+   BLOOD UNITS PROGRESS
+========================================================= */
+.blood-progress-wrap { padding: 0 24px 24px; display: flex; flex-direction: column; gap: 14px; }
+
+.blood-type-row {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.blood-type-header {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 8px;
+}
+.blood-type-left { display: flex; align-items: center; gap: 8px; }
+.blood-badge-sm {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 3px 9px; border-radius: 999px;
+  font-size: 11px; font-weight: 800; color: #fff;
+  min-width: 36px;
+}
+.bb-red    { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.bb-blue   { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+.bb-teal   { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+.bb-violet { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.bb-amber  { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.bb-green  { background: linear-gradient(135deg, #10b981, #059669); }
+.bb-pink   { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+.blood-type-name { font-size: 12.5px; font-weight: 700; color: var(--text-dark); }
+.blood-type-units { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+
+.blood-progress-bar {
+  height: 8px; background: var(--bg-page);
+  border-radius: 999px; overflow: hidden;
+}
+.blood-progress-fill {
+  height: 100%; border-radius: 999px;
+  transition: width 1.2s ease;
+}
+.bpf-red    { background: linear-gradient(90deg, #ef4444, #fca5a5); }
+.bpf-blue   { background: linear-gradient(90deg, #2563eb, #93c5fd); }
+.bpf-teal   { background: linear-gradient(90deg, #14b8a6, #5eead4); }
+.bpf-violet { background: linear-gradient(90deg, #8b5cf6, #c4b5fd); }
+.bpf-amber  { background: linear-gradient(90deg, #f59e0b, #fcd34d); }
+.bpf-green  { background: linear-gradient(90deg, #10b981, #6ee7b7); }
+.bpf-pink   { background: linear-gradient(90deg, #ec4899, #f9a8d4); }
+
+/* =========================================================
+   LINE / SPARKLINE CHART
+========================================================= */
+.sparkline-wrap { padding: 0 24px 24px; }
+
+.sparkline-svg {
+  width: 100%;
+  height: 80px;
+  overflow: visible;
+}
+
+/* =========================================================
+   RECENT ACTIVITY TABLE
+========================================================= */
+.analytics-table-wrap { overflow-x: auto; padding: 0 24px 24px; }
+
+.analytics-table {
+  width: 100%; border-collapse: collapse;
+}
+
+.analytics-table thead tr { border-bottom: 2px solid var(--bg-page); }
+.analytics-table th {
+  padding: 10px 14px;
+  text-align: left; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em;
+  color: var(--text-light); white-space: nowrap;
+}
+.analytics-table tbody tr {
+  border-bottom: 1px solid var(--border-light);
+  transition: background .15s;
+}
+.analytics-table tbody tr:hover { background: rgba(37,99,235,.025); }
+.analytics-table tbody tr:last-child { border-bottom: none; }
+.analytics-table td {
+  padding: 12px 14px; font-size: 13px; vertical-align: middle;
+}
+
+/* Rank badge */
+.rank-badge {
+  width: 26px; height: 26px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff;
+}
+.rank-1 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); }
+.rank-3 { background: linear-gradient(135deg, #cd7c3f, #a0522d); }
+.rank-n { background: var(--bg-page); color: var(--text-muted); }
+
+/* Change pill */
+.change-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 999px;
+  font-size: 11px; font-weight: 700;
+}
+.change-pill svg { width: 11px; height: 11px; }
+.cp-up   { background: #dcfce7; color: #16a34a; }
+.cp-down { background: #fee2e2; color: #dc2626; }
+.cp-neu  { background: #f1f5f9; color: #64748b; }
+
+/* =========================================================
+   SUMMARY INSIGHT CARDS
+========================================================= */
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  padding: 0 24px 24px;
+}
+
+.insight-item {
+  background: var(--bg-page);
+  border-radius: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-card);
+  display: flex; align-items: flex-start; gap: 12px;
+  transition: all .15s;
+}
+.insight-item:hover {
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(37,99,235,.08);
+}
+.insight-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.insight-icon svg { width: 16px; height: 16px; }
+.ii-blue   { background: rgba(37,99,235,.1); color: #2563eb; }
+.ii-green  { background: rgba(16,185,129,.1); color: #059669; }
+.ii-amber  { background: rgba(245,158,11,.1); color: #d97706; }
+.ii-red    { background: rgba(239,68,68,.1);  color: #dc2626; }
+.ii-teal   { background: rgba(20,184,166,.1); color: #0d9488; }
+.ii-violet { background: rgba(139,92,246,.1); color: #7c3aed; }
+
+.insight-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
+.insight-value { font-size: 15px; font-weight: 800; color: var(--text-dark); }
+.insight-sub   { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 1100px) {
+  .analytics-grid   { grid-template-columns: 1fr; }
+  .analytics-grid-3 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .page-header      { flex-direction: column; align-items: flex-start; }
+  .mini-stats-grid  { grid-template-columns: repeat(2, 1fr); }
+  .analytics-grid-3 { grid-template-columns: 1fr; }
+  .donut-wrap       { flex-direction: column; align-items: center; }
+}
+@media (max-width: 480px) {
+  .mini-stats-grid  { grid-template-columns: 1fr; }
+  .page-header-title { font-size: 20px; }
+  .range-tabs        { flex-wrap: wrap; }
+}
+
+/* ---- CSS Animations ---- */
+@keyframes growBar {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+.bar { transform-origin: bottom; animation: growBar .8s ease forwards; }
+.bar:nth-child(1) { animation-delay: .05s; }
+.bar:nth-child(2) { animation-delay: .1s; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.mini-stat  { animation: fadeIn .4s ease forwards; opacity: 0; }
+.mini-stat:nth-child(1) { animation-delay: .05s; }
+.mini-stat:nth-child(2) { animation-delay: .1s; }
+.mini-stat:nth-child(3) { animation-delay: .15s; }
+.mini-stat:nth-child(4) { animation-delay: .2s; }
+.mini-stat:nth-child(5) { animation-delay: .25s; }
+.mini-stat:nth-child(6) { animation-delay: .3s; }
+</style>
+{% endblock %}
+
+
 {% block content %}
-<h1>Analytics Page</h1>
 
-<!-- Analytics Section -->
-    <div>
-      <div class="section-header">
-        <div>
-          <div class="section-title">Analytics & Insights</div>
-          <div class="section-sub">Monthly overview — January to May 2025</div>
-        </div>
-        <button class="btn btn-outline btn-sm">Export Report</button>
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
+<div class="page-header">
+  <div>
+    <div class="page-header-title">Analytics &amp; Insights</div>
+    <div class="page-header-sub">
+      <span>Monthly overview — January to May 2025</span>
+      <span class="hdot"></span>
+      <span>King Khalid University Hospital</span>
+    </div>
+  </div>
+  <div class="page-header-actions">
+    <div class="range-tabs">
+      <div class="range-tab">7D</div>
+      <div class="range-tab">1M</div>
+      <div class="range-tab active">5M</div>
+      <div class="range-tab">1Y</div>
+    </div>
+    <button class="btn btn-outline btn-sm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Export Report
+    </button>
+    <button class="btn btn-primary btn-sm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+      </svg>
+      Refresh
+    </button>
+  </div>
+</div>
+
+<!-- =====================================================
+     MINI STAT CARDS
+====================================================== -->
+<div class="mini-stats-grid">
+
+  <div class="mini-stat">
+    <div class="mini-stat-accent accent-blue"></div>
+    <div class="mini-stat-top">
+      <div class="mini-stat-icon msi-blue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M9 11H5a2 2 0 00-2 2v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 00-2-2h-4M12 2v13"/>
+        </svg>
       </div>
-      <div class="analytics-grid" style="margin-top:14px">
+      <span class="mini-trend mt-up">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        +12%
+      </span>
+    </div>
+    <div>
+      <div class="mini-stat-value">{{ total_requests|default:"84" }}</div>
+      <div class="mini-stat-label">Total Requests</div>
+    </div>
+  </div>
 
-        <!-- Monthly Bars -->
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Monthly Donation Activity</div>
-              <div class="card-sub">Requests vs Completions</div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="chart-bars">
-              <div class="chart-bar-wrap">
-                <div class="chart-bar" style="height:42px"></div>
-                <div class="chart-bar accent" style="height:28px"></div>
-                <div class="chart-label">Jan</div>
-              </div>
-              <div class="chart-bar-wrap">
-                <div class="chart-bar" style="height:55px"></div>
-                <div class="chart-bar accent" style="height:38px"></div>
-                <div class="chart-label">Feb</div>
-              </div>
-              <div class="chart-bar-wrap">
-                <div class="chart-bar" style="height:70px"></div>
-                <div class="chart-bar accent" style="height:50px"></div>
-                <div class="chart-label">Mar</div>
-              </div>
-              <div class="chart-bar-wrap">
-                <div class="chart-bar" style="height:60px"></div>
-                <div class="chart-bar accent" style="height:45px"></div>
-                <div class="chart-label">Apr</div>
-              </div>
-              <div class="chart-bar-wrap">
-                <div class="chart-bar" style="height:80px"></div>
-                <div class="chart-bar accent" style="height:60px"></div>
-                <div class="chart-label">May</div>
-              </div>
-            </div>
-            <div style="display:flex;gap:16px;margin-top:12px">
-              <div style="display:flex;align-items:center;gap:6px">
-                <div style="width:10px;height:10px;border-radius:3px;background:var(--ehyaa-primary);opacity:.7"></div>
-                <span style="font-size:11.5px;color:var(--text-secondary)">Requests Created</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:6px">
-                <div style="width:10px;height:10px;border-radius:3px;background:var(--ehyaa-accent);opacity:.7"></div>
-                <span style="font-size:11.5px;color:var(--text-secondary)">Completions</span>
-              </div>
-            </div>
-          </div>
-        </div>
-       <!-- Donut - Request Status -->
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Request Completion Rate</div>
-              <div class="card-sub">Status distribution</div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="donut-wrap">
-              <div class="donut">
-                <svg class="donut-svg" viewBox="0 0 36 36">
-                  <circle class="donut-bg" cx="18" cy="18" r="13"/>
-                  <!-- Completed: 51% of 81.7 ≈ 41.7 -->
-                  <circle class="donut-seg" cx="18" cy="18" r="13" stroke="#10B981" stroke-dasharray="41.7 81.7" stroke-dashoffset="0"/>
-                  <!-- In Progress: 21% -->
-                  <circle class="donut-seg" cx="18" cy="18" r="13" stroke="#1558D6" stroke-dasharray="17.2 81.7" stroke-dashoffset="-41.7"/>
-                  <!-- Pending: 27% -->
-                  <circle class="donut-seg" cx="18" cy="18" r="13" stroke="#F59E0B" stroke-dasharray="22 81.7" stroke-dashoffset="-58.9"/>
-                </svg>
-                <div class="donut-label">51%<small>Done</small></div>
-              </div>
-              <div class="donut-legend">
-                <div class="legend-row">
-                  <div class="legend-dot" style="background:#10B981"></div>
-                  <span class="legend-text">Completed</span>
-                  <span class="legend-val">43</span>
-                </div>
-                <div class="legend-row">
-                  <div class="legend-dot" style="background:var(--ehyaa-primary)"></div>
-                  <span class="legend-text">In Progress</span>
-                  <span class="legend-val">18</span>
-                </div>
-                <div class="legend-row">
-                  <div class="legend-dot" style="background:#F59E0B"></div>
-                  <span class="legend-text">Pending</span>
-                  <span class="legend-val">23</span>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="mini-stat">
+    <div class="mini-stat-accent accent-green"></div>
+    <div class="mini-stat-top">
+      <div class="mini-stat-icon msi-green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <span class="mini-trend mt-up">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        +8%
+      </span>
+    </div>
+    <div>
+      <div class="mini-stat-value">{{ completed_donations|default:"43" }}</div>
+      <div class="mini-stat-label">Completed Donations</div>
+    </div>
+  </div>
+
+  <div class="mini-stat">
+    <div class="mini-stat-accent accent-teal"></div>
+    <div class="mini-stat-top">
+      <div class="mini-stat-icon msi-teal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+          <path d="M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+      </div>
+      <span class="mini-trend mt-up">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        +22
+      </span>
+    </div>
+    <div>
+      <div class="mini-stat-value">{{ active_donors|default:"317" }}</div>
+      <div class="mini-stat-label">Active Donors</div>
+    </div>
+  </div>
+
+  <div class="mini-stat">
+    <div class="mini-stat-accent accent-red"></div>
+    <div class="mini-stat-top">
+      <div class="mini-stat-icon msi-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+        </svg>
+      </div>
+      <span class="mini-trend mt-down">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        −2
+      </span>
+    </div>
+    <div>
+      <div class="mini-stat-value">{{ emergency_requests|default:"7" }}</div>
+      <div class="mini-stat-label">Emergency Requests</div>
+    </div>
+  </div>
+
+  <div class="mini-stat">
+    <div class="mini-stat-accent accent-amber"></div>
+    <div class="mini-stat-top">
+      <div class="mini-stat-icon msi-amber">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <span class="mini-trend mt-neu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Same
+      </span>
+    </div>
+    <div>
+      <div class="mini-stat-value">{{ avg_response|default:"3.4h" }}</div>
+      <div class="mini-stat-label">Avg Response Time</div>
+    </div>
+  </div>
+
+  <div class="mini-stat">
+    <div class="mini-stat-accent accent-violet"></div>
+    <div class="mini-stat-top">
+      <div class="mini-stat-icon msi-violet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6"  y1="20" x2="6"  y2="14"/>
+        </svg>
+      </div>
+      <span class="mini-trend mt-up">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        +18%
+      </span>
+    </div>
+    <div>
+      <div class="mini-stat-value">{{ monthly_growth|default:"+18%" }}</div>
+      <div class="mini-stat-label">Monthly Growth</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- =====================================================
+     ROW 1: BAR CHART + DONUT CHART
+====================================================== -->
+<div class="analytics-grid">
+
+  <!-- ---- Monthly Donation Activity (Bar Chart) ---- -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Monthly Donation Activity</div>
+        <div class="card-sub">Requests vs Completions — Jan to May 2025</div>
+      </div>
+      <button class="btn btn-outline btn-sm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+        </svg>
+        Options
+      </button>
+    </div>
+
+    <!-- Chart -->
+    <div class="bar-chart-wrap">
+      <div class="bar-chart" style="position:relative;">
+
+        <!-- Y-axis reference labels (decorative) -->
+        <div style="position:absolute;left:-8px;top:0;bottom:32px;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none;">
+          <span style="font-size:9px;color:var(--text-light);font-weight:700;">40</span>
+          <span style="font-size:9px;color:var(--text-light);font-weight:700;">30</span>
+          <span style="font-size:9px;color:var(--text-light);font-weight:700;">20</span>
+          <span style="font-size:9px;color:var(--text-light);font-weight:700;">10</span>
+          <span style="font-size:9px;color:var(--text-light);font-weight:700;">0</span>
         </div>
 
-        <!-- Blood Units Progress -->
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Blood Units Collected</div>
-              <div class="card-sub">By blood type · May 2025</div>
-            </div>
+        <!-- January -->
+        <div class="bar-month">
+          <div class="bar-group">
+            <div class="bar bar-requests"  style="height:42%;" data-val="17 req"></div>
+            <div class="bar bar-completed" style="height:30%;" data-val="12 done"></div>
           </div>
-          <div class="card-body">
-            <div class="prog-list">
-              <div class="prog-item">
-                <div class="prog-top">
-                  <span class="prog-name">O+ / O−</span>
-                  <span class="prog-val" style="color:var(--ehyaa-accent)">412 units</span>
-                </div>
-                <div class="prog-bar">
-                  <div class="prog-fill" style="width:76%;background:var(--ehyaa-accent)"></div>
-                </div>
-              </div>
-              <div class="prog-item">
-                <div class="prog-top">
-                  <span class="prog-name">A+ / A−</span>
-                  <span class="prog-val" style="color:var(--ehyaa-primary)">298 units</span>
-                </div>
-                <div class="prog-bar">
-                  <div class="prog-fill" style="width:58%;background:var(--ehyaa-primary)"></div>
-                </div>
-              </div>
-              <div class="prog-item">
-                <div class="prog-top">
-                  <span class="prog-name">B+ / B−</span>
-                  <span class="prog-val" style="color:var(--ehyaa-teal)">325 units</span>
-                </div>
-                <div class="prog-bar">
-                  <div class="prog-fill" style="width:63%;background:var(--ehyaa-teal)"></div>
-                </div>
-              </div>
-              <div class="prog-item">
-                <div class="prog-top">
-                  <span class="prog-name">AB+ / AB−</span>
-                  <span class="prog-val" style="color:var(--ehyaa-purple)">213 units</span>
-                </div>
-                <div class="prog-bar">
-                  <div class="prog-fill" style="width:41%;background:var(--ehyaa-purple)"></div>
-                </div>
-              </div>
-            </div>
+          <span class="bar-label">Jan</span>
+        </div>
+
+        <!-- February -->
+        <div class="bar-month">
+          <div class="bar-group">
+            <div class="bar bar-requests"  style="height:55%;" data-val="22 req"></div>
+            <div class="bar bar-completed" style="height:40%;" data-val="16 done"></div>
           </div>
+          <span class="bar-label">Feb</span>
+        </div>
+
+        <!-- March -->
+        <div class="bar-month">
+          <div class="bar-group">
+            <div class="bar bar-requests"  style="height:48%;" data-val="19 req"></div>
+            <div class="bar bar-completed" style="height:38%;" data-val="15 done"></div>
+          </div>
+          <span class="bar-label">Mar</span>
+        </div>
+
+        <!-- April -->
+        <div class="bar-month">
+          <div class="bar-group">
+            <div class="bar bar-requests"  style="height:70%;" data-val="28 req"></div>
+            <div class="bar bar-completed" style="height:55%;" data-val="22 done"></div>
+          </div>
+          <span class="bar-label">Apr</span>
+        </div>
+
+        <!-- May -->
+        <div class="bar-month">
+          <div class="bar-group">
+            <div class="bar bar-requests"  style="height:85%;" data-val="34 req"></div>
+            <div class="bar bar-completed" style="height:60%;" data-val="24 done"></div>
+          </div>
+          <span class="bar-label">May</span>
         </div>
 
       </div>
     </div>
+
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-dot ld-blue"></div> Requests</div>
+      <div class="legend-item"><div class="legend-dot ld-green"></div> Completed</div>
+    </div>
+
+    <div class="card-foot">
+      <span style="font-size:12.5px;color:var(--text-muted);">
+        Peak month: <strong style="color:var(--text-dark);">May 2025</strong> · 34 requests
+      </span>
+      <span class="mini-trend mt-up" style="font-size:11.5px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="18 15 12 9 6 15"/></svg>
+        Completion rate 70.6%
+      </span>
+    </div>
+  </div>
+
+  <!-- ---- Request Completion Rate (Donut Chart) ---- -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Completion Rate</div>
+        <div class="card-sub">Status distribution · All time</div>
+      </div>
+    </div>
+
+    <div class="donut-wrap">
+
+      <!-- SVG Donut -->
+      <div class="donut-chart-container">
+        <!--
+          Circle circumference = 2π × r = 2π × 54 ≈ 339.3
+          Completed  51%  → dasharray: 173  offset: 0
+          In Progress 21% → dasharray: 71   offset: -173
+          Pending    20%  → dasharray: 68   offset: -244
+          Cancelled   8%  → dasharray: 27   offset: -312
+        -->
+        <svg class="donut-svg" viewBox="0 0 120 120">
+          <!-- Track -->
+          <circle cx="60" cy="60" r="54"
+            fill="none" stroke="var(--bg-page)" stroke-width="12"/>
+          <!-- Completed — blue -->
+          <circle class="donut-ring" cx="60" cy="60" r="54"
+            fill="none" stroke="#2563eb" stroke-width="12"
+            stroke-dasharray="173 167" stroke-dashoffset="0"
+            stroke-linecap="round"/>
+          <!-- In Progress — violet -->
+          <circle class="donut-ring" cx="60" cy="60" r="54"
+            fill="none" stroke="#8b5cf6" stroke-width="12"
+            stroke-dasharray="71 269" stroke-dashoffset="-173"
+            stroke-linecap="round"/>
+          <!-- Pending — amber -->
+          <circle class="donut-ring" cx="60" cy="60" r="54"
+            fill="none" stroke="#f59e0b" stroke-width="12"
+            stroke-dasharray="68 272" stroke-dashoffset="-244"
+            stroke-linecap="round"/>
+          <!-- Cancelled — slate -->
+          <circle class="donut-ring" cx="60" cy="60" r="54"
+            fill="none" stroke="#94a3b8" stroke-width="12"
+            stroke-dasharray="24 316" stroke-dashoffset="-312"
+            stroke-linecap="round"/>
+        </svg>
+        <div class="donut-center">
+          <div class="donut-pct">51%</div>
+          <div class="donut-sub">Done</div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="donut-legend">
+        <div class="donut-legend-item">
+          <div class="donut-legend-left">
+            <div class="donut-legend-dot" style="background:#2563eb;"></div>
+            <span class="donut-legend-label">Completed</span>
+          </div>
+          <div class="donut-legend-right">
+            <span class="donut-legend-val">43</span>
+            <span class="donut-legend-pct">51%</span>
+          </div>
+        </div>
+        <div class="donut-legend-item">
+          <div class="donut-legend-left">
+            <div class="donut-legend-dot" style="background:#8b5cf6;"></div>
+            <span class="donut-legend-label">In Progress</span>
+          </div>
+          <div class="donut-legend-right">
+            <span class="donut-legend-val">18</span>
+            <span class="donut-legend-pct">21%</span>
+          </div>
+        </div>
+        <div class="donut-legend-item">
+          <div class="donut-legend-left">
+            <div class="donut-legend-dot" style="background:#f59e0b;"></div>
+            <span class="donut-legend-label">Pending</span>
+          </div>
+          <div class="donut-legend-right">
+            <span class="donut-legend-val">17</span>
+            <span class="donut-legend-pct">20%</span>
+          </div>
+        </div>
+        <div class="donut-legend-item">
+          <div class="donut-legend-left">
+            <div class="donut-legend-dot" style="background:#94a3b8;"></div>
+            <span class="donut-legend-label">Cancelled</span>
+          </div>
+          <div class="donut-legend-right">
+            <span class="donut-legend-val">6</span>
+            <span class="donut-legend-pct">8%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-foot">
+      <span style="font-size:12px;color:var(--text-muted);">Total 84 requests · Jan–May 2025</span>
+    </div>
+  </div>
+
+</div><!-- /analytics-grid row 1 -->
+
+<!-- =====================================================
+     ROW 2: BLOOD UNITS + INSIGHTS + CITY BREAKDOWN
+====================================================== -->
+<div class="analytics-grid-3">
+
+  <!-- ---- Blood Units by Type ---- -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Blood Units Collected</div>
+        <div class="card-sub">By blood type · 2025</div>
+      </div>
+      <span style="font-size:12px;font-weight:700;color:var(--text-muted);">1,248 total</span>
+    </div>
+
+    <div class="blood-progress-wrap">
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <span class="blood-badge-sm bb-red">O+</span>
+            <span class="blood-type-name">O Positive</span>
+          </div>
+          <span class="blood-type-units">348 units · 28%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-red" style="width:78%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <span class="blood-badge-sm bb-blue">A+</span>
+            <span class="blood-type-name">A Positive</span>
+          </div>
+          <span class="blood-type-units">296 units · 24%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-blue" style="width:65%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <span class="blood-badge-sm bb-teal">B+</span>
+            <span class="blood-type-name">B Positive</span>
+          </div>
+          <span class="blood-type-units">212 units · 17%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-teal" style="width:50%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <span class="blood-badge-sm bb-violet">AB+</span>
+            <span class="blood-type-name">AB Positive</span>
+          </div>
+          <span class="blood-type-units">148 units · 12%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-violet" style="width:38%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <span class="blood-badge-sm bb-amber">O−</span>
+            <span class="blood-type-name">O Negative</span>
+          </div>
+          <span class="blood-type-units">110 units · 9%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-amber" style="width:28%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <span class="blood-badge-sm bb-green">A−</span>
+            <span class="blood-type-name">A Negative</span>
+          </div>
+          <span class="blood-type-units">74 units · 6%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-green" style="width:20%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <span class="blood-badge-sm bb-pink">B−</span>
+            <span class="blood-type-name">B Negative</span>
+          </div>
+          <span class="blood-type-units">38 units · 3%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-pink" style="width:12%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <span class="blood-badge-sm bb-red" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">AB−</span>
+            <span class="blood-type-name">AB Negative</span>
+          </div>
+          <span class="blood-type-units">22 units · 2%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill" style="width:7%;background:linear-gradient(90deg,#6d28d9,#a78bfa);"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ---- Quick Insights ---- -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Key Insights</div>
+        <div class="card-sub">Platform highlights · May 2025</div>
+      </div>
+    </div>
+
+    <div class="insight-grid" style="grid-template-columns:1fr;">
+
+      <div class="insight-item">
+        <div class="insight-icon ii-green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="insight-label">Top Performing Blood Type</div>
+          <div class="insight-value">O+ — 348 units</div>
+          <div class="insight-sub">Most donated & requested in 2025</div>
+        </div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-icon ii-blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8"  y1="2" x2="8"  y2="6"/>
+            <line x1="3"  y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <div>
+          <div class="insight-label">Peak Donation Day</div>
+          <div class="insight-value">Saturday</div>
+          <div class="insight-sub">38% of donations happen on weekends</div>
+        </div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-icon ii-teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="insight-label">Most Active City</div>
+          <div class="insight-value">Riyadh</div>
+          <div class="insight-sub">62% of total donor responses</div>
+        </div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-icon ii-violet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="insight-label">Donor Retention Rate</div>
+          <div class="insight-value">67.4%</div>
+          <div class="insight-sub">Donors who donated more than once</div>
+        </div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-icon ii-amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div>
+          <div class="insight-label">Avg. Fulfillment Time</div>
+          <div class="insight-value">18.3 hours</div>
+          <div class="insight-sub">From request creation to completion</div>
+        </div>
+      </div>
+
+      <div class="insight-item">
+        <div class="insight-icon ii-red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+          </svg>
+        </div>
+        <div>
+          <div class="insight-label">Emergency Success Rate</div>
+          <div class="insight-value">85.7%</div>
+          <div class="insight-sub">Emergency requests fulfilled within 6h</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ---- City Breakdown ---- -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Donors by City</div>
+        <div class="card-sub">Geographic distribution</div>
+      </div>
+    </div>
+
+    <div class="blood-progress-wrap">
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <div style="width:28px;height:28px;border-radius:8px;background:var(--primary-gradient);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" width="13" height="13"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <span class="blood-type-name">Riyadh</span>
+          </div>
+          <span class="blood-type-units">197 · 62%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-blue" style="width:62%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#14b8a6,#0d9488);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" width="13" height="13"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <span class="blood-type-name">Jeddah</span>
+          </div>
+          <span class="blood-type-units">57 · 18%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-teal" style="width:18%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" width="13" height="13"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <span class="blood-type-name">Dammam</span>
+          </div>
+          <span class="blood-type-units">32 · 10%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-amber" style="width:10%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" width="13" height="13"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <span class="blood-type-name">Mecca</span>
+          </div>
+          <span class="blood-type-units">19 · 6%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-green" style="width:6%;"></div>
+        </div>
+      </div>
+
+      <div class="blood-type-row">
+        <div class="blood-type-header">
+          <div class="blood-type-left">
+            <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" width="13" height="13"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <span class="blood-type-name">Other Cities</span>
+          </div>
+          <span class="blood-type-units">12 · 4%</span>
+        </div>
+        <div class="blood-progress-bar">
+          <div class="blood-progress-fill bpf-violet" style="width:4%;"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card-foot" style="padding-top:14px;">
+      <span style="font-size:12px;color:var(--text-muted);">317 total donors across 5 cities</span>
+    </div>
+  </div>
+
+</div><!-- /analytics-grid-3 -->
+
+<!-- =====================================================
+     ROW 3: RECENT TRENDS TABLE
+====================================================== -->
+<div class="card" style="margin-bottom:24px;">
+  <div class="card-head">
+    <div>
+      <div class="card-title">Recent Donation Trends</div>
+      <div class="card-sub">Week-over-week performance — April 14 to May 3, 2025</div>
+    </div>
+    <button class="btn btn-outline btn-sm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Export
+    </button>
+  </div>
+
+  <div class="analytics-table-wrap">
+    <table class="analytics-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Week</th>
+          <th>Requests</th>
+          <th>Completions</th>
+          <th>Donors Engaged</th>
+          <th>Emergency</th>
+          <th>Top Blood Type</th>
+          <th>Success Rate</th>
+          <th>Change</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td><div class="rank-badge rank-1">1</div></td>
+          <td>
+            <div style="font-weight:700;color:var(--text-dark);font-size:13.5px;">Apr 28 – May 3</div>
+            <div style="font-size:11.5px;color:var(--text-muted);">Week 5</div>
+          </td>
+          <td style="font-weight:800;font-size:15px;color:var(--text-dark);">21</td>
+          <td style="font-weight:800;font-size:15px;color:#059669;">15</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="color:var(--text-muted)"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              <span style="font-weight:700;">94</span>
+            </div>
+          </td>
+          <td><span style="font-weight:700;color:#dc2626;">3</span></td>
+          <td><span class="blood-badge-sm bb-red" style="font-size:10px;">O+</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="flex:1;height:6px;background:var(--bg-page);border-radius:999px;overflow:hidden;">
+                <div style="width:71%;height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:999px;"></div>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:var(--text-dark);">71%</span>
+            </div>
+          </td>
+          <td><span class="change-pill cp-up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>+24%</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="rank-badge rank-2">2</div></td>
+          <td>
+            <div style="font-weight:700;color:var(--text-dark);font-size:13.5px;">Apr 21 – 27</div>
+            <div style="font-size:11.5px;color:var(--text-muted);">Week 4</div>
+          </td>
+          <td style="font-weight:800;font-size:15px;color:var(--text-dark);">17</td>
+          <td style="font-weight:800;font-size:15px;color:#059669;">12</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="color:var(--text-muted)"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              <span style="font-weight:700;">76</span>
+            </div>
+          </td>
+          <td><span style="font-weight:700;color:#dc2626;">2</span></td>
+          <td><span class="blood-badge-sm bb-blue" style="font-size:10px;">A+</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="flex:1;height:6px;background:var(--bg-page);border-radius:999px;overflow:hidden;">
+                <div style="width:70%;height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:999px;"></div>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:var(--text-dark);">70%</span>
+            </div>
+          </td>
+          <td><span class="change-pill cp-up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>+13%</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="rank-badge rank-3">3</div></td>
+          <td>
+            <div style="font-weight:700;color:var(--text-dark);font-size:13.5px;">Apr 14 – 20</div>
+            <div style="font-size:11.5px;color:var(--text-muted);">Week 3</div>
+          </td>
+          <td style="font-weight:800;font-size:15px;color:var(--text-dark);">14</td>
+          <td style="font-weight:800;font-size:15px;color:#059669;">9</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="color:var(--text-muted)"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              <span style="font-weight:700;">58</span>
+            </div>
+          </td>
+          <td><span style="font-weight:700;color:#dc2626;">1</span></td>
+          <td><span class="blood-badge-sm bb-teal" style="font-size:10px;">B+</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="flex:1;height:6px;background:var(--bg-page);border-radius:999px;overflow:hidden;">
+                <div style="width:64%;height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:999px;"></div>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:var(--text-dark);">64%</span>
+            </div>
+          </td>
+          <td><span class="change-pill cp-down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>−5%</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="rank-badge rank-n">4</div></td>
+          <td>
+            <div style="font-weight:700;color:var(--text-dark);font-size:13.5px;">Apr 7 – 13</div>
+            <div style="font-size:11.5px;color:var(--text-muted);">Week 2</div>
+          </td>
+          <td style="font-weight:800;font-size:15px;color:var(--text-dark);">11</td>
+          <td style="font-weight:800;font-size:15px;color:#059669;">8</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="color:var(--text-muted)"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              <span style="font-weight:700;">44</span>
+            </div>
+          </td>
+          <td><span style="font-weight:700;color:#dc2626;">2</span></td>
+          <td><span class="blood-badge-sm bb-red" style="font-size:10px;">O−</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="flex:1;height:6px;background:var(--bg-page);border-radius:999px;overflow:hidden;">
+                <div style="width:72%;height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:999px;"></div>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:var(--text-dark);">72%</span>
+            </div>
+          </td>
+          <td><span class="change-pill cp-neu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>0%</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card-foot">
+    <span style="font-size:12.5px;color:var(--text-muted);">
+      Showing last 4 weeks · Overall success rate: <strong style="color:var(--text-dark);">69.4%</strong>
+    </span>
+    <button class="btn btn-soft-blue btn-sm">View Full History →</button>
+  </div>
+</div>
+
 {% endblock %}

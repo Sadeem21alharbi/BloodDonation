@@ -3,753 +3,319 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-theme="light" data-lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Ehyaa · Hospital Panel{% endblock %}</title>
 
-    <title>
-        {% block title %}Ehyaa Dashboard{% endblock %}
-    </title>
+  <!-- Fonts — matches main platform -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <style>
-        /* ─── Design Tokens (matches donor dashboard) ─── */
-        :root {
-            --primary-from:       #1a56db;
-            --primary-to:         #3f83f8;
-            --primary-gradient:   linear-gradient(135deg, #1a56db 0%, #3f83f8 100%);
-            --accent-red:         #ef4444;
-            --accent-red-shadow:  rgba(239, 68, 68, 0.25);
+  <!-- Hospital Dashboard CSS -->
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
 
-            --bg-page:            #f3f4f6;
-            --bg-card:            #ffffff;
-            --bg-sidebar:         #ffffff;
-
-            --text-dark:          #1f2937;
-            --text-muted:         #6b7280;
-            --text-light:         #9ca3af;
-
-            --border-light:       #e5e7eb;
-            --border-card:        #f0f1f3;
-
-            --sidebar-w:          260px;
-            --topbar-h:           68px;
-            --radius-card:        16px;
-            --radius-pill:        999px;
-
-            --shadow-card:        0 2px 16px rgba(26, 86, 219, 0.07);
-            --shadow-nav:         0 4px 24px rgba(26, 86, 219, 0.10);
-            --transition:         0.22s cubic-bezier(.4,0,.2,1);
-        }
-
-        [data-theme="dark"] {
-            --bg-page:            #0f1117;
-            --bg-card:            #1a1d27;
-            --bg-sidebar:         #13151e;
-            --text-dark:          #f1f5f9;
-            --text-muted:         #8b92a9;
-            --text-light:         #4b5263;
-            --border-light:       #232634;
-            --border-card:        #1e2130;
-            --shadow-card:        0 2px 16px rgba(0,0,0,0.35);
-            --shadow-nav:         0 4px 24px rgba(0,0,0,0.4);
-        }
-
-        /* ─── Reset ─── */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html, body {
-            height: 100%;
-            font-family: 'Plus Jakarta Sans', 'Tajawal', sans-serif;
-            background: var(--bg-page);
-            color: var(--text-dark);
-            font-size: 14px;
-        }
-
-        [lang="ar"] body,
-        [dir="rtl"] body {
-            font-family: 'Tajawal', 'Plus Jakarta Sans', sans-serif;
-        }
-
-        a { text-decoration: none; color: inherit; }
-
-        /* ─── Shell Layout ─── */
-        .shell {
-            display: grid;
-            grid-template-columns: var(--sidebar-w) 1fr;
-            grid-template-rows: var(--topbar-h) 1fr;
-            grid-template-areas:
-                "sidebar topbar"
-                "sidebar main";
-            min-height: 100vh;
-        }
-
-        /* ─── Sidebar ─── */
-        .sidebar {
-            grid-area: sidebar;
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border-light);
-            display: flex;
-            flex-direction: column;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-nav);
-            z-index: 100;
-        }
-
-        [dir="rtl"] .sidebar {
-            border-right: none;
-            border-left: 1px solid var(--border-light);
-        }
-
-        /* Brand */
-        .sidebar-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 20px 22px;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .brand-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: var(--primary-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.30);
-            flex-shrink: 0;
-        }
-
-        .brand-logo svg {
-            width: 22px;
-            height: 22px;
-        }
-
-        .brand-name {
-            font-size: 17px;
-            font-weight: 800;
-            color: var(--primary-from);
-            line-height: 1.2;
-        }
-
-        .brand-sub {
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 0.04em;
-        }
-
-        /* Nav */
-        .nav-section {
-            padding: 18px 14px 6px;
-        }
-
-        .nav-label {
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-light);
-            padding: 0 8px;
-            margin-bottom: 6px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            border-radius: 10px;
-            font-size: 13.5px;
-            font-weight: 500;
-            color: var(--text-muted);
-            transition: background var(--transition), color var(--transition), transform var(--transition);
-            cursor: pointer;
-            margin-bottom: 2px;
-        }
-
-        .nav-item:hover {
-            background: rgba(26, 86, 219, 0.06);
-            color: var(--primary-from);
-            transform: translateX(2px);
-        }
-
-        [dir="rtl"] .nav-item:hover {
-            transform: translateX(-2px);
-        }
-
-        .nav-item.active {
-            background: var(--primary-gradient);
-            color: #ffffff;
-            font-weight: 600;
-            box-shadow: 0 4px 14px rgba(26, 86, 219, 0.25);
-        }
-
-        .nav-item.active:hover {
-            transform: none;
-        }
-
-        /* Nav icons */
-        .nav-item i {
-            width: 18px;
-            text-align: center;
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        /* Sidebar bottom spacer */
-        .sidebar-footer {
-            margin-top: auto;
-            padding: 16px 14px;
-            border-top: 1px solid var(--border-light);
-        }
-
-        .sidebar-footer .nav-item {
-            color: var(--accent-red);
-        }
-
-        .sidebar-footer .nav-item:hover {
-            background: rgba(239, 68, 68, 0.07);
-            color: var(--accent-red);
-        }
-
-        /* ─── Topbar ─── */
-        .topbar {
-            grid-area: topbar;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 0 28px;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border-light);
-            position: sticky;
-            top: 0;
-            z-index: 90;
-            box-shadow: 0 1px 8px rgba(26, 86, 219, 0.05);
-        }
-
-        .topbar-title {
-            flex: 1;
-        }
-
-        .topbar-page {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-dark);
-            line-height: 1.2;
-        }
-
-        .topbar-breadcrumb {
-            font-size: 11.5px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .topbar-search {
-            flex: 0 0 260px;
-        }
-
-        .topbar-search input {
-            width: 100%;
-            padding: 9px 16px 9px 38px;
-            border: 1.5px solid var(--border-light);
-            border-radius: var(--radius-pill);
-            background: var(--bg-page);
-            color: var(--text-dark);
-            font-size: 13px;
-            font-family: inherit;
-            outline: none;
-            transition: border-color var(--transition), box-shadow var(--transition);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' fill='none' stroke='%236b7280' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: 12px center;
-        }
-
-        .topbar-search input:focus {
-            border-color: var(--primary-from);
-            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.10);
-        }
-
-        .topbar-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Toggle pill (lang / theme) */
-        .toggle-pill {
-            display: flex;
-            background: var(--bg-page);
-            border: 1.5px solid var(--border-light);
-            border-radius: var(--radius-pill);
-            padding: 3px;
-            gap: 2px;
-        }
-
-        .toggle-pill button {
-            border: none;
-            background: transparent;
-            border-radius: var(--radius-pill);
-            padding: 5px 11px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: background var(--transition), color var(--transition);
-            font-family: inherit;
-        }
-
-        .toggle-pill button.active,
-        .toggle-pill button:hover {
-            background: var(--primary-gradient);
-            color: #fff;
-        }
-
-        /* Avatar */
-        .topbar-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--primary-gradient);
-            color: white;
-            font-size: 12px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 10px rgba(26, 86, 219, 0.28);
-            cursor: pointer;
-            transition: box-shadow var(--transition), transform var(--transition);
-        }
-
-        .topbar-avatar:hover {
-            transform: scale(1.07);
-            box-shadow: 0 5px 16px rgba(26, 86, 219, 0.38);
-        }
-
-        /* ─── Main content area ─── */
-        .dashboard-wrapper {
-            grid-area: main;
-            overflow-y: auto;
-            background: var(--bg-page);
-        }
-
-        .main-content {
-            padding: 32px 28px;
-            max-width: 1280px;
-        }
-
-        /* ─── Shared card style (available to child templates) ─── */
-        .card {
-            background: var(--bg-card);
-            border-radius: var(--radius-card);
-            box-shadow: var(--shadow-card);
-            border: 1px solid var(--border-card);
-            padding: 24px;
-            transition: transform var(--transition), box-shadow var(--transition);
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 28px rgba(26, 86, 219, 0.11);
-        }
-
-        /* Stat card accent (matches donor dashboard border-bottom style) */
-        .stat-card {
-            border-bottom: 4px solid var(--primary-from);
-            text-align: center;
-        }
-
-        .stat-card i {
-            font-size: 2rem;
-            color: var(--primary-from);
-            margin-bottom: 10px;
-        }
-
-        .stat-card h4 {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .stat-card .value {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text-dark);
-        }
-
-        /* Blood type badge */
-        .blood-type-badge {
-            background: var(--accent-red);
-            color: white;
-            width: 52px;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 1.1rem;
-            font-weight: 800;
-            box-shadow: 0 5px 15px var(--accent-red-shadow);
-        }
-
-        /* Welcome header banner */
-        .welcome-header {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 26px 30px;
-            border-radius: 20px;
-            margin-bottom: 28px;
-            box-shadow: 0 10px 25px rgba(26, 86, 219, 0.20);
-        }
-
-        /* Progress bar */
-        .progress-bar-container {
-            height: 10px;
-            background: var(--border-light);
-            border-radius: var(--radius-pill);
-            overflow: hidden;
-            margin: 14px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary-gradient);
-            border-radius: var(--radius-pill);
-            transition: width 0.6s ease;
-        }
-
-        /* Status badges */
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: var(--radius-pill);
-            font-size: 0.78rem;
-            font-weight: 600;
-        }
-
-        .status-completed { background: #dcfce7; color: #166534; }
-        .status-pending   { background: #fef9c3; color: #854d0e; }
-        .status-urgent    { background: #fee2e2; color: #991b1b; }
-
-        /* Section headings inside pages */
-        .section-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-title::before {
-            content: '';
-            display: block;
-            width: 4px;
-            height: 18px;
-            background: var(--primary-gradient);
-            border-radius: 4px;
-        }
-
-        /* Button primaries */
-        .btn-primary {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: var(--radius-pill);
-            padding: 10px 22px;
-            font-size: 13.5px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 4px 14px rgba(26, 86, 219, 0.22);
-            transition: opacity var(--transition), transform var(--transition);
-        }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        .btn-danger {
-            background: var(--accent-red);
-            color: white;
-            border: none;
-            border-radius: var(--radius-pill);
-            padding: 10px 22px;
-            font-size: 13.5px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 4px 14px var(--accent-red-shadow);
-            transition: opacity var(--transition), transform var(--transition);
-        }
-
-        .btn-danger:hover {
-            opacity: 0.88;
-            transform: translateY(-1px);
-        }
-
-        /* Table shared styles */
-        table { border-collapse: collapse; width: 100%; }
-        th { color: var(--text-muted); font-weight: 500; font-size: 12.5px; padding: 8px 12px; border-bottom: 1.5px solid var(--border-light); }
-        td { padding: 10px 12px; font-size: 13.5px; border-bottom: 1px solid var(--border-card); color: var(--text-dark); }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: rgba(26, 86, 219, 0.03); }
-
-        /* ─── Footer ─── */
-        .app-footer {
-            text-align: center;
-            padding: 14px 0;
-            border-top: 1px solid var(--border-light);
-            background: var(--bg-card);
-        }
-
-        .app-footer p {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* ─── Scrollbar ─── */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 6px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(26,86,219,0.25); }
-
-        /* ─── RTL adjustments ─── */
-        [dir="rtl"] .topbar-search input {
-            background-position: calc(100% - 12px) center;
-            padding: 9px 38px 9px 16px;
-        }
-
-                svg{
-            width:18px;
-            height:18px;
-            flex-shrink:0;
-        }
-
-        /* Stat cards */
-        .stat-icon svg{
-            width:22px;
-            height:22px;
-        }
-
-        /* Buttons */
-        .btn svg{
-            width:14px;
-            height:14px;
-        }
-
-        /* Action icons inside tables */
-        .act-btn svg{
-            width:15px;
-            height:15px;
-        }
-
-        /* Notification icons */
-        .notif-icon-wrap svg{
-            width:18px;
-            height:18px;
-        }
-
-        /* Response pills */
-        .resp-pill svg{
-            width:13px;
-            height:13px;
-        }
-
-        /* Alert icon */
-        .alert-icon svg{
-            width:20px;
-            height:20px;
-        }
-
-        /* Welcome button icons */
-        .welcome-actions svg{
-            width:14px;
-            height:14px;
-        }
-
-        /* Fix giant FA icons inherited from old styles */
-        i.fas,
-        i.fa,
-        i.far,
-        i.fa-solid{
-            font-size:14px;
-            line-height:1;
-        }
-
-        /* Sidebar icons */
-        .nav-item i{
-            width:18px;
-            font-size:14px;
-        }
-
-        /* Prevent stretching */
-        svg:not([width]){
-            max-width:100%;
-        }
-
-        /* ─── Responsive: collapse sidebar on small screens ─── */
-        @media (max-width: 768px) {
-            .shell {
-                grid-template-columns: 1fr;
-                grid-template-areas:
-                    "topbar"
-                    "main";
-            }
-
-            .sidebar { display: none; }
-
-            .topbar-search { display: none; }
-        }
-    </style>
-
-    {% block extra_css %}{% endblock %}
+  {% block extra_css %}{% endblock %}
 </head>
 
 <body>
 
-<div class="shell">
+<!-- ═══════════════════════════════════════════════
+     SHELL
+════════════════════════════════════════════════ -->
+<div class="hd-shell">
 
-    <!-- ========== SIDEBAR ========== -->
-    <aside class="sidebar">
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="hd-sidebar" id="hdSidebar">
 
-        <div class="sidebar-brand">
-            <div class="brand-logo">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                    <path d="M12 2C8 6 4 9.5 4 13a8 8 0 0016 0c0-3.5-4-7-8-11z"/>
-                    <path d="M12 9v6M9 12h6"/>
-                </svg>
-            </div>
-            <div class="brand-text">
-                <div class="brand-name">إحياء</div>
-                <div class="brand-sub">Hospital Panel</div>
-            </div>
+    <!-- Brand -->
+    <div class="hd-brand">
+      <a href="{% url 'hospital:dashboard' %}" class="hd-brand-inner">
+        <div class="hd-brand-logo">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="12" fill="url(#logoGrad)"/>
+            <path d="M20 8C20 8 11 16.5 11 22.5C11 27.3 15.1 31 20 31C24.9 31 29 27.3 29 22.5C29 16.5 20 8 20 8Z" fill="white" fill-opacity="0.9"/>
+            <path d="M17 22H23M20 19V25" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#1a56db"/>
+                <stop offset="1" stop-color="#3f83f8"/>
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
-
-        <div class="nav-section">
-            <div class="nav-label">Main</div>
-
-            <a href="{% url 'hospital:dashboard' %}"
-               class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                <i class="fas fa-chart-line"></i>
-                Dashboard
-            </a>
-
-            <a href="{% url 'hospital:profile' %}"
-               class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
-                <i class="fas fa-hospital"></i>
-                Hospital Profile
-            </a>
-
-            <a href="{% url 'hospital:requests' %}"
-               class="nav-item {% if request.resolver_match.url_name == 'requests' %}active{% endif %}">
-                <i class="fas fa-tint"></i>
-                Donation Requests
-            </a>
-
-            <a href="{% url 'hospital:responses' %}"
-               class="nav-item {% if request.resolver_match.url_name == 'responses' %}active{% endif %}">
-                <i class="fas fa-users"></i>
-                Donor Responses
-            </a>
+        <div class="hd-brand-text">
+          <span class="hd-brand-ar">إحياء</span>
+          <span class="hd-brand-en">Hospital Panel</span>
         </div>
-
-        <div class="nav-section">
-            <div class="nav-label">Insights</div>
-
-            <a href="{% url 'hospital:analytics' %}"
-               class="nav-item {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}">
-                <i class="fas fa-chart-bar"></i>
-                Analytics
-            </a>
-        </div>
-
-        <div class="nav-section">
-            <div class="nav-label">System</div>
-
-            <a href="{% url 'hospital:settings' %}"
-               class="nav-item {% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
-                <i class="fas fa-cog"></i>
-                Settings
-            </a>
-        </div>
-
-        <div class="sidebar-footer">
-            <a href="#" class="nav-item">
-                <i class="fas fa-sign-out-alt"></i>
-                Logout
-            </a>
-        </div>
-
-    </aside>
-
-    <!-- ========== TOPBAR ========== -->
-    <header class="topbar">
-
-        <div class="topbar-title">
-            <div class="topbar-page">{% block page_title %}Dashboard{% endblock %}</div>
-            <div class="topbar-breadcrumb">Ehyaa · Hospital Panel</div>
-        </div>
-
-        <div class="topbar-search">
-            <input type="text" placeholder="Search requests, donors…" />
-        </div>
-
-        <div class="topbar-actions">
-
-            <!-- Language -->
-            <div class="toggle-pill">
-                <button class="active"
-                    onclick="this.classList.add('active');this.nextElementSibling.classList.remove('active');document.documentElement.setAttribute('lang','en');document.documentElement.setAttribute('dir','ltr');">
-                    EN
-                </button>
-                <button
-                    onclick="this.classList.add('active');this.previousElementSibling.classList.remove('active');document.documentElement.setAttribute('lang','ar');document.documentElement.setAttribute('dir','rtl');">
-                    AR
-                </button>
-            </div>
-
-            <!-- Theme -->
-            <div class="toggle-pill">
-                <button class="active"
-                    onclick="this.classList.add('active');this.nextElementSibling.classList.remove('active');document.documentElement.setAttribute('data-theme','light');">
-                    ☀
-                </button>
-                <button
-                    onclick="this.classList.add('active');this.previousElementSibling.classList.remove('active');document.documentElement.setAttribute('data-theme','dark');">
-                    ☾
-                </button>
-            </div>
-
-            <div class="topbar-avatar">KH</div>
-
-        </div>
-
-    </header>
-
-    <!-- ========== MAIN CONTENT ========== -->
-    <div class="dashboard-wrapper">
-        <main class="main-content">
-            {% block content %}{% endblock %}
-        </main>
+      </a>
+      <!-- Mobile close -->
+      <button class="hd-sidebar-close" id="hdSidebarClose" aria-label="Close sidebar">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
 
-</div>
+    <!-- Nav -->
+    <nav class="hd-nav">
+      <div class="hd-nav-section">
+        <span class="hd-nav-label" data-t="main">Main</span>
 
-<!-- ========== FOOTER ========== -->
-<div class="app-footer">
-    <p>Ehyaa Blood Donation Platform · إحياء © 2025 · All Rights Reserved</p>
-</div>
+        <a href="{% url 'hospital:dashboard' %}"
+           class="hd-nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+          <span class="hd-nav-icon"><i class="fas fa-chart-line"></i></span>
+          <span class="hd-nav-text" data-t="nav_dashboard">Dashboard</span>
+        </a>
+
+        <a href="{% url 'hospital:profile' %}"
+           class="hd-nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+          <span class="hd-nav-icon"><i class="fas fa-hospital"></i></span>
+          <span class="hd-nav-text" data-t="nav_profile">Hospital Profile</span>
+        </a>
+
+        <a href="{% url 'hospital:requests' %}"
+           class="hd-nav-item {% if request.resolver_match.url_name == 'requests' %}active{% endif %}">
+          <span class="hd-nav-icon"><i class="fas fa-tint"></i></span>
+          <span class="hd-nav-text" data-t="nav_requests">Donation Requests</span>
+          {% comment %}
+          Uncomment and wire up a context variable for pending count:
+          {% if pending_count %}<span class="hd-nav-badge">{{ pending_count }}</span>{% endif %}
+          {% endcomment %}
+        </a>
+
+        <a href="{% url 'hospital:responses' %}"
+           class="hd-nav-item {% if request.resolver_match.url_name == 'responses' %}active{% endif %}">
+          <span class="hd-nav-icon"><i class="fas fa-users"></i></span>
+          <span class="hd-nav-text" data-t="nav_responses">Donor Responses</span>
+        </a>
+      </div>
+
+      <div class="hd-nav-section">
+        <span class="hd-nav-label" data-t="insights">Insights</span>
+
+        <a href="{% url 'hospital:analytics' %}"
+           class="hd-nav-item {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}">
+          <span class="hd-nav-icon"><i class="fas fa-chart-bar"></i></span>
+          <span class="hd-nav-text" data-t="nav_analytics">Analytics</span>
+        </a>
+      </div>
+
+      <div class="hd-nav-section">
+        <span class="hd-nav-label" data-t="system">System</span>
+
+        <a href="{% url 'hospital:settings' %}"
+           class="hd-nav-item {% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
+          <span class="hd-nav-icon"><i class="fas fa-cog"></i></span>
+          <span class="hd-nav-text" data-t="nav_settings">Settings</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="hd-sidebar-footer">
+      <div class="hd-sidebar-user">
+        <div class="hd-user-avatar">
+          {% if request.user.hospital_profile.logo %}
+            <img src="{{ request.user.hospital_profile.logo.url }}" alt="Hospital Logo" />
+          {% else %}
+            <span>{{ request.user.username|slice:":2"|upper }}</span>
+          {% endif %}
+        </div>
+        <div class="hd-user-info">
+          <span class="hd-user-name">{{ request.user.hospital_profile.name|default:request.user.username }}</span>
+          <span class="hd-user-role" data-t="role_hospital">Hospital</span>
+        </div>
+      </div>
+      <a href="{% url 'main:home' %}" class="hd-nav-item hd-nav-logout">
+        <span class="hd-nav-icon"><i class="fas fa-sign-out-alt"></i></span>
+        <span class="hd-nav-text" data-t="logout">Logout</span>
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- Sidebar backdrop (mobile) -->
+  <div class="hd-backdrop" id="hdBackdrop"></div>
+
+  <!-- ══════════ MAIN COLUMN ══════════ -->
+  <div class="hd-main-col">
+
+    <!-- ── Topbar ── -->
+    <header class="hd-topbar">
+
+      <!-- Mobile hamburger -->
+      <button class="hd-hamburger" id="hdHamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <!-- Page title -->
+      <div class="hd-topbar-title">
+        <h1 class="hd-page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+        <p class="hd-breadcrumb">
+          <a href="{% url 'main:home' %}">Ehyaa</a>
+          <i class="fas fa-chevron-right hd-crumb-sep"></i>
+          <span>Hospital Panel</span>
+          {% block breadcrumb_extra %}{% endblock %}
+        </p>
+      </div>
+
+      <!-- Search -->
+      <div class="hd-topbar-search">
+        <i class="fas fa-search hd-search-icon"></i>
+        <input type="text" placeholder="Search requests, donors…" data-t-placeholder="search_placeholder" />
+      </div>
+
+      <!-- Actions -->
+      <div class="hd-topbar-actions">
+
+        <!-- Lang toggle -->
+        <div class="hd-toggle-pill" id="langToggle" role="group" aria-label="Language">
+          <button class="active" data-lang="en"
+            onclick="setLang('en', this)">EN</button>
+          <button data-lang="ar"
+            onclick="setLang('ar', this)">AR</button>
+        </div>
+
+        <!-- Theme toggle -->
+        <div class="hd-toggle-pill" id="themeToggle" role="group" aria-label="Theme">
+          <button class="active" data-theme-btn="light"
+            onclick="setTheme('light', this)" title="Light mode">☀</button>
+          <button data-theme-btn="dark"
+            onclick="setTheme('dark', this)" title="Dark mode">☾</button>
+        </div>
+
+        <!-- Notifications bell -->
+        <button class="hd-icon-btn hd-notif-btn" aria-label="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="hd-notif-dot"></span>
+        </button>
+
+        <!-- Avatar dropdown -->
+        <div class="hd-avatar-wrap" id="hdAvatarWrap">
+          <button class="hd-avatar" id="hdAvatarBtn" aria-label="Account menu">
+            {% if request.user.hospital_profile.logo %}
+              <img src="{{ request.user.hospital_profile.logo.url }}" alt="Logo" />
+            {% else %}
+              {{ request.user.username|slice:":2"|upper }}
+            {% endif %}
+          </button>
+          <div class="hd-avatar-dropdown" id="hdAvatarDropdown">
+            <div class="hd-avatar-header">
+              <strong>{{ request.user.hospital_profile.name|default:request.user.username }}</strong>
+              <span>{{ request.user.email }}</span>
+            </div>
+            <a href="{% url 'hospital:profile' %}"><i class="fas fa-hospital"></i> Hospital Profile</a>
+            <a href="{% url 'hospital:settings' %}"><i class="fas fa-cog"></i> Settings</a>
+            <div class="hd-dropdown-divider"></div>
+            <a href="{% url 'main:home' %}" class="hd-dropdown-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ── Page content ── -->
+    <main class="hd-content">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- ── Footer ── -->
+    <footer class="hd-footer">
+      <p>© 2025 إحياء | Ehyaa Blood Donation Platform · All Rights Reserved · Made with ❤️ in Saudi Arabia</p>
+    </footer>
+
+  </div><!-- /.hd-main-col -->
+
+</div><!-- /.hd-shell -->
+
+
+<!-- ═══════════════════════════════════════
+     BASE SCRIPTS
+════════════════════════════════════════ -->
+<script>
+/* ── Theme ── */
+function setTheme(theme, btn) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('#themeToggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  localStorage.setItem('ehyaa_theme', theme);
+}
+
+/* ── Language ── */
+const translations = {
+  en: {
+    main: 'Main', insights: 'Insights', system: 'System',
+    nav_dashboard: 'Dashboard', nav_profile: 'Hospital Profile',
+    nav_requests: 'Donation Requests', nav_responses: 'Donor Responses',
+    nav_analytics: 'Analytics', nav_settings: 'Settings',
+    logout: 'Logout', role_hospital: 'Hospital',
+    search_placeholder: 'Search requests, donors…'
+  },
+  ar: {
+    main: 'الرئيسية', insights: 'تحليلات', system: 'النظام',
+    nav_dashboard: 'لوحة التحكم', nav_profile: 'ملف المستشفى',
+    nav_requests: 'طلبات التبرع', nav_responses: 'ردود المتبرعين',
+    nav_analytics: 'الإحصائيات', nav_settings: 'الإعدادات',
+    logout: 'تسجيل الخروج', role_hospital: 'مستشفى',
+    search_placeholder: 'ابحث عن طلبات أو متبرعين…'
+  }
+};
+
+function setLang(lang, btn) {
+  const html = document.documentElement;
+  html.setAttribute('lang', lang);
+  html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  html.setAttribute('data-lang', lang);
+  document.querySelectorAll('#langToggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  localStorage.setItem('ehyaa_lang', lang);
+
+  const t = translations[lang] || translations['en'];
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-t-placeholder');
+    if (t[key]) el.setAttribute('placeholder', t[key]);
+  });
+}
+
+/* ── Mobile sidebar ── */
+const sidebar   = document.getElementById('hdSidebar');
+const backdrop  = document.getElementById('hdBackdrop');
+const hamburger = document.getElementById('hdHamburger');
+const closeBtn  = document.getElementById('hdSidebarClose');
+
+function openSidebar()  { sidebar.classList.add('open'); backdrop.classList.add('show'); document.body.style.overflow = 'hidden'; }
+function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('show'); document.body.style.overflow = ''; }
+
+hamburger.addEventListener('click', openSidebar);
+closeBtn.addEventListener('click', closeSidebar);
+backdrop.addEventListener('click', closeSidebar);
+
+/* ── Avatar dropdown ── */
+const avatarBtn      = document.getElementById('hdAvatarBtn');
+const avatarDropdown = document.getElementById('hdAvatarDropdown');
+avatarBtn.addEventListener('click', e => { e.stopPropagation(); avatarDropdown.classList.toggle('open'); });
+document.addEventListener('click', () => avatarDropdown.classList.remove('open'));
+
+/* ── Restore preferences ── */
+(function () {
+  const savedTheme = localStorage.getItem('ehyaa_theme');
+  const savedLang  = localStorage.getItem('ehyaa_lang');
+  if (savedTheme) {
+    const btn = document.querySelector(`[data-theme-btn="${savedTheme}"]`);
+    if (btn) setTheme(savedTheme, btn);
+  }
+  if (savedLang) {
+    const btn = document.querySelector(`[data-lang="${savedLang}"]`);
+    if (btn) setLang(savedLang, btn);
+  }
+})();
+</script>
 
 {% block extra_js %}{% endblock %}
 

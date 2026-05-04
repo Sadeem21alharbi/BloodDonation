@@ -1,4 +1,5 @@
-<!-- templates/base.html -->
+
+<!-- templates/main/base.html -->
 
 {% load static %}
 
@@ -40,6 +41,8 @@
     <ul class="nav-links">
       <li><a href="{% url 'main:home' %}" class="active">الرئيسية</a></li>
       <li><a href="#about">عن المنصة</a></li>
+      <li><a href="#">كيف يعمل</a></li>
+      <li><a href="{% url 'main:home' %}#join">أنضم إلينا</a></li>
       {% if user.is_authenticated %}
         {% if user.hospital_profile %} 
           <li><a href="{% url 'hospital:requests' %}">طلبات الدم</a></li>
@@ -51,19 +54,19 @@
     <!-- Controls -->
     <div class="nav-controls">
       <button class="lang-toggle" id="langToggle">EN</button>
-      <button class="nav-btn-icon" id="themeToggle"><span id="themeIcon">🌙</span></button>
+      <!--<button class="nav-btn-icon" id="themeToggle"><span id="themeIcon">🌙</span></button>-->
 
       <!-- Auth Logic Dynamic -->
       <div class="nav-auth">
         {% if user.is_authenticated %}
           
-          <div class="user-profile-nav" style="display: flex; align-items: center; gap: 12px;">
+          <!--<div class="user-profile-nav" style="display: flex; align-items: center; gap: 12px;">
             <div class="text-end d-none d-md-block">
               <div style="font-weight: bold; font-size: 0.9rem;">{{ user.first_name }}</div>
               <small style="color: var(--primary-color); font-size: 0.75rem;">
                 {% if user.hospital_profile %} مستشفى {% else %} متبرع {% endif %}
               </small>
-            </div>
+            </div>-->
 
             <!-- تعديل الرابط هنا ليوجه للبروفايل مباشرة عند الضغط على الأيقونة -->
             <a href="{% if user.hospital_profile %}{% url 'hospital:profile' %}{% else %}{% url 'donor:profile' %}{% endif %}" class="nav-profile-link" title="الملف الشخصي">

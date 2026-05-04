@@ -1,0 +1,147 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<style>
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #1a56db 0%, #3f83f8 100%);
+    --accent-red: #ef4444;
+}
+
+body {
+    background: #f3f4f6;
+    font-family: 'Tajawal', sans-serif;
+}
+
+.register-wrapper {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    direction: rtl;
+}
+
+.register-card {
+    background: white;
+    width: 100%;
+    max-width: 550px;
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,.1);
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.register-header i {
+    font-size: 2.5rem;
+    color: var(--accent-red);
+    margin-bottom: 15px;
+}
+
+.register-header h2 {
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+form p {
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f9fafb;
+}
+
+input:focus {
+    outline: none;
+    border-color: #3f83f8;
+    background: white;
+}
+
+.btn-register {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.register-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.register-footer a {
+    color: #1a56db;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.errorlist {
+    color: red;
+    list-style: none;
+    padding: 0;
+}
+
+</style>
+
+<div class="register-wrapper">
+
+    <div class="register-card">
+
+        <div class="register-header">
+            <i class="fas fa-hospital"></i>
+
+            <h2>تسجيل مستشفى جديد</h2>
+
+            <p>
+                أنشئ حساب مستشفى لإدارة طلبات التبرع بالدم
+            </p>
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="btn-register">
+                إنشاء حساب
+            </button>
+
+        </form>
+
+        <div class="register-footer">
+            <p>
+                لديك حساب مستشفى بالفعل؟
+
+                <a href="{% url 'hospital:hospital_login' %}">
+                    تسجيل الدخول
+                </a>
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

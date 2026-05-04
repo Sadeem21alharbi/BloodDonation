@@ -1,0 +1,140 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<style>
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #1a56db 0%, #3f83f8 100%);
+    --accent-red: #ef4444;
+}
+
+body {
+    background: #f9fafb;
+    font-family: 'Tajawal', sans-serif;
+}
+
+.login-wrapper {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    direction: rtl;
+}
+
+.login-card {
+    background: white;
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,.05);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    width: 70px;
+    height: 70px;
+    background: #fff5f5;
+    color: var(--accent-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.btn-login {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-footer a {
+    color: #1a56db;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.errorlist {
+    color: red;
+    list-style: none;
+    padding: 0;
+}
+
+</style>
+
+<div class="login-wrapper">
+
+    <div class="login-card">
+
+        <div class="login-header">
+
+            <div class="logo-icon">
+                <i class="fas fa-hospital"></i>
+            </div>
+
+            <h2>تسجيل دخول المستشفى</h2>
+
+            <p>
+                قم بتسجيل الدخول لإدارة طلبات التبرع بالدم
+            </p>
+
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="btn-login">
+                تسجيل الدخول
+            </button>
+
+        </form>
+
+        <div class="auth-footer">
+
+            <p>
+                ليس لديك حساب؟
+
+                <a href="{% url 'hospital:hospital_register' %}">
+                    إنشاء حساب
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

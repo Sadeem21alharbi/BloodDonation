@@ -1,159 +1,951 @@
 {% extends 'hospital/base.html' %}
 
+{% block title %}Hospital Profile | Ehyaa{% endblock %}
+{% block page_title %}Hospital Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ═══════════════════════════════════════════════════
+   HOSPITAL PROFILE PAGE — page-specific styles only
+   Base tokens from hospital_dashboard.css
+═══════════════════════════════════════════════════ */
+
+.hp-main { display: flex; flex-direction: column; gap: 28px; }
+
+/* ── Page Header ── */
+.hp-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+
+.hp-header-title { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1.2; }
+.hp-header-sub {
+  color: var(--text-muted); font-size: 13px;
+  margin-top: 5px; display: flex; align-items: center; gap: 8px;
+}
+
+.hp-header-sub .dot {
+  width: 4px; height: 4px;
+  border-radius: 50%; background: var(--text-light); flex-shrink: 0;
+}
+
+.hp-header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── Profile Grid ── */
+.hp-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── Profile Card (left) ── */
+.hp-profile-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* Cover */
+.hp-cover {
+  height: 130px;
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 45%, #0891b2 100%);
+  position: relative; overflow: hidden;
+}
+
+.hp-cover-pattern {
+  position: absolute; inset: 0; opacity: .10;
+  background-image:
+    radial-gradient(circle at 20% 50%, #fff 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, #fff 1px, transparent 1px),
+    radial-gradient(circle at 60% 80%, #fff 1px, transparent 1px);
+  background-size: 40px 40px, 60px 60px, 50px 50px;
+}
+
+.hp-cover-edit {
+  position: absolute; top: 12px; right: 12px;
+  width: 34px; height: 34px; border-radius: 10px;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #fff; font-size: 13px;
+  transition: background var(--transition);
+}
+
+[dir="rtl"] .hp-cover-edit { right: auto; left: 12px; }
+
+.hp-cover-edit:hover { background: rgba(255,255,255,.30); }
+
+/* Avatar */
+.hp-avatar-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  margin-top: -40px; padding: 0 20px;
+  position: relative; z-index: 1;
+}
+
+.hp-avatar {
+  width: 80px; height: 80px;
+  border-radius: 22px;
+  background: var(--primary-gradient);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 26px; font-weight: 800;
+  border: 4px solid var(--bg-card);
+  box-shadow: 0 4px 16px rgba(26,86,219,.25);
+  position: relative; flex-shrink: 0; cursor: pointer;
+  overflow: hidden;
+}
+
+.hp-avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 18px; }
+
+.hp-avatar-overlay {
+  position: absolute; inset: 0; border-radius: 18px;
+  background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity var(--transition);
+  color: #fff; font-size: 16px;
+}
+
+.hp-avatar:hover .hp-avatar-overlay { opacity: 1; }
+
+/* Profile Info */
+.hp-profile-info { padding: 16px 22px 0; text-align: center; }
+
+.hp-profile-name {
+  font-size: 18px; font-weight: 800; color: var(--text);
+  line-height: 1.3; margin-bottom: 8px;
+}
+
+.hp-badge-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; flex-wrap: wrap; margin-bottom: 8px;
+}
+
+.hp-type-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: var(--radius-pill);
+  background: var(--primary-light); color: var(--primary);
+  font-size: 11.5px; font-weight: 700;
+}
+
+.hp-verified-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: var(--radius-pill);
+  background: #dcfce7; color: #16a34a;
+  font-size: 11.5px; font-weight: 700;
+}
+
+.hp-location {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  color: var(--text-muted); font-size: 12.5px; margin-bottom: 4px;
+}
+
+/* Stats row */
+.hp-stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin: 18px 0 0;
+}
+
+.hp-stat-cell {
+  background: var(--bg-card); padding: 14px 10px; text-align: center;
+}
+
+.hp-stat-cell-value {
+  font-size: 20px; font-weight: 800; color: var(--text);
+  line-height: 1; margin-bottom: 4px;
+}
+
+.hp-stat-cell-label {
+  font-size: 10.5px; color: var(--text-muted); font-weight: 600; line-height: 1.3;
+}
+
+/* Quick info rows */
+.hp-info-list {
+  padding: 18px 22px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.hp-info-row { display: flex; align-items: center; gap: 12px; }
+
+.hp-info-icon {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 14px;
+}
+
+.ii-blue   { background: var(--primary-light); color: var(--primary); }
+.ii-green  { background: #dcfce7; color: #16a34a; }
+.ii-amber  { background: #fef3c7; color: #d97706; }
+.ii-teal   { background: #ccfbf1; color: #0d9488; }
+.ii-violet { background: #ede9fe; color: #7c3aed; }
+.ii-blue2  { background: #dbeafe; color: #2563eb; }
+
+.hp-info-content { flex: 1; overflow: hidden; }
+
+.hp-info-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em;
+  color: var(--text-light); margin-bottom: 2px;
+}
+
+.hp-info-value {
+  font-size: 13px; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Profile footer */
+.hp-profile-divider { border: none; border-top: 1px solid var(--border); margin: 0 22px; }
+
+.hp-profile-footer { padding: 16px 22px; }
+
+/* ── Form Card (right) ── */
+.hp-form-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.hp-form-head {
+  padding: 20px 26px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+
+.hp-form-head-left { display: flex; align-items: center; gap: 14px; }
+
+.hp-form-head-icon {
+  width: 44px; height: 44px; border-radius: 14px;
+  background: var(--primary-gradient);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 18px; flex-shrink: 0;
+}
+
+.hp-form-head-title { font-size: 16px; font-weight: 800; color: var(--text); }
+.hp-form-head-sub   { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.hp-last-saved {
+  font-size: 12px; color: var(--text-light);
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* Tabs */
+.hp-tabs {
+  display: flex; gap: 2px;
+  padding: 14px 26px 0;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.hp-tabs::-webkit-scrollbar { display: none; }
+
+.hp-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 10px 16px;
+  font-size: 12.5px; font-weight: 700;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  cursor: pointer; transition: all var(--transition);
+  white-space: nowrap; margin-bottom: -1px;
+}
+
+.hp-tab i { font-size: 13px; }
+.hp-tab:hover { color: var(--text); }
+.hp-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+/* Form Body */
+.hp-form-body { padding: 24px 26px; }
+
+.hp-form-section { margin-bottom: 28px; }
+.hp-form-section:last-child { margin-bottom: 0; }
+
+.hp-form-section-title {
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-light);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.hp-form-section-title::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+.hp-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.hp-form-group { display: flex; flex-direction: column; gap: 6px; }
+.hp-form-group.full { grid-column: span 2; }
+
+.hp-label {
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.hp-label .req { color: var(--red); }
+
+.hp-label .rtl-hint {
+  font-size: 10px; font-weight: 600; color: var(--text-light);
+  background: var(--bg); border-radius: 4px; padding: 1px 6px;
+  margin-left: auto;
+}
+
+[dir="rtl"] .hp-label .rtl-hint { margin-left: 0; margin-right: auto; }
+
+.hp-input,
+.hp-select,
+.hp-textarea {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit; font-size: 13px;
+  outline: none; width: 100%;
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+.hp-input:focus,
+.hp-select:focus,
+.hp-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(26,86,219,.10);
+  background: var(--bg-card);
+}
+
+.hp-input::placeholder, .hp-textarea::placeholder { color: var(--text-light); }
+.hp-textarea { resize: vertical; min-height: 100px; line-height: 1.65; }
+.hp-select { cursor: pointer; }
+
+.hp-input-rtl { direction: rtl; text-align: right; font-size: 14px; }
+
+/* Input with icon */
+.hp-input-wrap { position: relative; }
+.hp-input-wrap .hp-input { padding-left: 38px; }
+[dir="rtl"] .hp-input-wrap .hp-input { padding-left: 14px; padding-right: 38px; }
+
+.hp-input-icon {
+  position: absolute; left: 12px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px; color: var(--text-light); pointer-events: none;
+}
+
+[dir="rtl"] .hp-input-icon { left: auto; right: 12px; }
+
+.hp-hint {
+  font-size: 11px; color: var(--text-light);
+  display: flex; justify-content: space-between;
+}
+
+/* Verification banner */
+.hp-verify-banner {
+  display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(135deg, rgba(16,185,129,.06), rgba(5,150,105,.04));
+  border: 1px solid rgba(16,185,129,.20);
+  border-radius: var(--radius);
+  padding: 14px 18px; margin-bottom: 24px;
+}
+
+.hp-verify-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: #dcfce7; color: #16a34a;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+
+.hp-verify-title { font-size: 13.5px; font-weight: 700; color: #065f46; }
+.hp-verify-sub   { font-size: 12px; color: #16a34a; margin-top: 2px; }
+
+/* Photo upload */
+.hp-upload {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 24px; text-align: center;
+  cursor: pointer; transition: all var(--transition);
+  background: var(--bg);
+}
+
+.hp-upload:hover { border-color: var(--primary); background: var(--primary-light); }
+
+.hp-upload-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: var(--primary-light); color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin: 0 auto 12px;
+  transition: background var(--transition);
+}
+
+.hp-upload:hover .hp-upload-icon { background: rgba(26,86,219,.18); }
+
+.hp-upload-title { font-size: 13.5px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.hp-upload-sub   { font-size: 12px; color: var(--text-muted); }
+.hp-upload-sub strong { color: var(--primary); }
+
+/* Toggle / switch */
+.hp-toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.hp-toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+.hp-toggle-row:first-child { padding-top: 0; }
+
+.hp-toggle-info { flex: 1; }
+.hp-toggle-title { font-size: 13.5px; font-weight: 700; color: var(--text); }
+.hp-toggle-sub   { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.hp-switch {
+  width: 44px; height: 24px; border-radius: var(--radius-pill);
+  background: var(--border); cursor: pointer; position: relative;
+  transition: background var(--transition); flex-shrink: 0;
+}
+
+.hp-switch.on { background: var(--primary-gradient); }
+
+.hp-switch-knob {
+  position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  transition: left var(--transition);
+}
+
+.hp-switch.on .hp-switch-knob { left: 23px; }
+
+[dir="rtl"] .hp-switch-knob { left: auto; right: 3px; }
+[dir="rtl"] .hp-switch.on .hp-switch-knob { right: 23px; left: auto; }
+
+/* Form footer */
+.hp-form-footer {
+  padding: 18px 26px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+
+.hp-form-footer-right { margin-left: auto; display: flex; gap: 10px; }
+[dir="rtl"] .hp-form-footer-right { margin-left: 0; margin-right: auto; }
+
+/* Danger button */
+.hd-btn-soft-danger {
+  background: #fee2e2; color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.hd-btn-soft-danger:hover { background: #fecaca; border-color: #fca5a5; }
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+  .hp-grid { grid-template-columns: 1fr; }
+  .hp-profile-card { max-width: 480px; }
+}
+
+@media (max-width: 768px) {
+  .hp-header { flex-direction: column; }
+  .hp-form-grid { grid-template-columns: 1fr; }
+  .hp-form-group.full { grid-column: span 1; }
+  .hp-form-head { flex-direction: column; align-items: flex-start; }
+  .hp-form-footer-right { margin-left: 0; width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .hp-header-title { font-size: 20px; }
+  .hp-tabs { padding: 12px 16px 0; }
+}
+</style>
+{% endblock %}
+
+
 {% block content %}
+<div class="hp-main">
 
- <!-- Hospital Profile Section -->
+  <!-- ═══════════════════════════════
+       PAGE HEADER
+  ════════════════════════════════ -->
+  <div class="hp-header hd-fade-in-up">
     <div>
-      <div class="section-header">
-        <div>
-          <div class="section-title">Hospital Profile</div>
-          <div class="section-sub">Manage your hospital information and settings</div>
-        </div>
+      <div class="hp-header-title">Hospital Profile</div>
+      <div class="hp-header-sub">
+        <span>{{ hospital.name|default:"King Khalid University Hospital" }}</span>
+        <span class="dot"></span>
+        <span>Last updated: {{ last_updated|default:"May 3, 2025 · 09:41 AM" }}</span>
       </div>
-      <div class="profile-section" style="margin-top:14px">
+    </div>
+    <div class="hp-header-actions">
+      <button class="hd-btn hd-btn-ghost hd-btn-sm">
+        <i class="fas fa-download"></i> Export Profile
+      </button>
+      <button class="hd-btn hd-btn-primary hd-btn-sm">
+        <i class="fas fa-pen"></i> Edit Profile
+      </button>
+    </div>
+  </div>
 
-        <!-- ID Card -->
-        <div class="profile-id-card">
-          <div class="profile-cover">
-            <button class="profile-cover-edit">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </button>
-          </div>
-          <div class="profile-body">
-            <div class="profile-logo-wrap">
-              KH
-              <div class="logo-upload-hint">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              </div>
+  <!-- ═══════════════════════════════
+       PROFILE GRID
+  ════════════════════════════════ -->
+  <div class="hp-grid hd-fade-in-up delay-1">
+
+    <!-- ═══ LEFT: PROFILE CARD ═══ -->
+    <div>
+      <div class="hp-profile-card">
+
+        <!-- Cover -->
+        <div class="hp-cover">
+          <div class="hp-cover-pattern"></div>
+          <button class="hp-cover-edit" title="Edit cover">
+            <i class="fas fa-pen" style="font-size:12px;"></i>
+          </button>
+        </div>
+
+        <!-- Avatar -->
+        <div class="hp-avatar-wrap">
+          <div class="hp-avatar">
+            {% if hospital.logo %}
+              <img src="{{ hospital.logo.url }}" alt="{{ hospital.name }}"/>
+            {% else %}
+              {{ hospital.initials|default:"KK" }}
+            {% endif %}
+            <div class="hp-avatar-overlay">
+              <i class="fas fa-camera"></i>
             </div>
-            <div class="profile-hosp-name">King Khalid Hospital</div>
-            <div class="profile-hosp-type">General Hospital · Ministry of Health</div>
-            <div style="display:flex;justify-content:center">
-              <div class="profile-verified">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                Verified Hospital
-              </div>
-            </div>
-            <div class="profile-divider"></div>
-            <div class="profile-stat-row">
-              <div class="profile-stat">
-                <div class="profile-stat-val">84</div>
-                <div class="profile-stat-lbl">Requests</div>
-              </div>
-              <div class="profile-stat">
-                <div class="profile-stat-val">317</div>
-                <div class="profile-stat-lbl">Donors</div>
-              </div>
-              <div class="profile-stat">
-                <div class="profile-stat-val">1,248</div>
-                <div class="profile-stat-lbl">Units</div>
-              </div>
-            </div>
-            <div class="profile-divider"></div>
-            <div style="display:flex;flex-direction:column;gap:8px;text-align:left">
-              <div style="display:flex;align-items:center;gap:8px">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span style="font-size:12px;color:var(--text-secondary)">Riyadh, Saudi Arabia</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.13 8.87 19.79 19.79 0 01.07 4.23 2 2 0 012.03 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                <span style="font-size:12px;color:var(--text-secondary)">+966 11 222 3344</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                <span style="font-size:12px;color:var(--text-secondary)">bloodbank@kkh.med.sa</span>
-              </div>
-            </div>
-            <div class="profile-divider"></div>
-            <button class="btn btn-destructive btn-sm" style="width:100%;justify-content:center">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
-              Delete Hospital Account
-            </button>
           </div>
         </div>
 
-        <!-- Edit Form -->
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Edit Hospital Information</div>
-              <div class="card-sub">Update your hospital profile and contact details</div>
+        <!-- Name & Badges -->
+        <div class="hp-profile-info">
+          <div class="hp-profile-name">{{ hospital.name|default:"King Khalid University Hospital" }}</div>
+          <div class="hp-badge-row">
+            <span class="hp-type-badge">
+              <i class="fas fa-hospital" style="font-size:11px;"></i>
+              {{ hospital.type|default:"University Hospital" }}
+            </span>
+            <span class="hp-verified-badge">
+              <i class="fas fa-circle-check" style="font-size:11px;"></i>
+              Verified
+            </span>
+          </div>
+          <div class="hp-location">
+            <i class="fas fa-location-dot" style="font-size:12px;color:var(--primary);"></i>
+            {{ hospital.city|default:"Riyadh" }}, {{ hospital.country|default:"Saudi Arabia" }}
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="hp-stats-row">
+          <div class="hp-stat-cell">
+            <div class="hp-stat-cell-value">{{ hospital.total_requests|default:"84" }}</div>
+            <div class="hp-stat-cell-label">Donation Requests</div>
+          </div>
+          <div class="hp-stat-cell">
+            <div class="hp-stat-cell-value">{{ hospital.total_donors|default:"317" }}</div>
+            <div class="hp-stat-cell-label">Total Donors</div>
+          </div>
+          <div class="hp-stat-cell">
+            <div class="hp-stat-cell-value">{{ hospital.blood_units|default:"1.2K" }}</div>
+            <div class="hp-stat-cell-label">Units Received</div>
+          </div>
+        </div>
+
+        <!-- Quick Info -->
+        <div class="hp-info-list">
+
+          <div class="hp-info-row">
+            <div class="hp-info-icon ii-blue"><i class="fas fa-location-dot"></i></div>
+            <div class="hp-info-content">
+              <div class="hp-info-label">Address</div>
+              <div class="hp-info-value">{{ hospital.address|default:"King Abdulaziz Rd, Riyadh 11472" }}</div>
             </div>
           </div>
-          <div class="card-body">
-            <div class="profile-form">
-              <div class="form-grid">
-                <div class="form-group">
-                  <div class="form-label">Hospital Name (English)</div>
-                  <input type="text" class="form-input" value="King Khalid Hospital" />
-                </div>
-                <div class="form-group">
-                  <div class="form-label">اسم المستشفى (عربي)</div>
-                  <input type="text" class="form-input" value="مستشفى الملك خالد" dir="rtl" />
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Hospital Type</div>
-                  <select class="form-input form-select">
-                    <option selected>General Hospital</option>
-                    <option>Specialty Hospital</option>
-                    <option>Medical City</option>
-                    <option>Clinic</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Health Sector</div>
-                  <select class="form-input form-select">
-                    <option selected>Ministry of Health</option>
-                    <option>Private Sector</option>
-                    <option>National Guard</option>
-                    <option>Military</option>
-                    <option>University</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <div class="form-label">City</div>
-                  <select class="form-input form-select">
-                    <option selected>Riyadh</option>
-                    <option>Jeddah</option>
-                    <option>Dammam</option>
-                    <option>Mecca</option>
-                    <option>Medina</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Phone Number</div>
-                  <input type="tel" class="form-input" value="+966 11 222 3344" />
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Email Address</div>
-                  <input type="email" class="form-input" value="bloodbank@kkh.med.sa" />
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Blood Bank Extension</div>
-                  <input type="text" class="form-input" value="Ext. 3456" />
-                </div>
-                <div class="form-group full">
-                  <div class="form-label">Full Address</div>
-                  <input type="text" class="form-input" value="King Khalid Medical City, Northern Ring Road, Riyadh 14311, Saudi Arabia" />
-                </div>
-                <div class="form-group full">
-                  <div class="form-label">Hospital Description</div>
-                  <textarea class="form-input">King Khalid Hospital is a leading general hospital operated by the Ministry of Health, serving the Riyadh region with comprehensive medical services including a state-of-the-art blood bank and transfusion center.</textarea>
-                </div>
-              </div>
-              <div class="form-actions">
-                <button class="btn btn-outline">Cancel</button>
-                <button class="btn btn-primary">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
-                  Save Changes
-                </button>
-              </div>
+
+          <div class="hp-info-row">
+            <div class="hp-info-icon ii-green"><i class="fas fa-phone"></i></div>
+            <div class="hp-info-content">
+              <div class="hp-info-label">Phone Number</div>
+              <div class="hp-info-value">{{ hospital.phone|default:"+966 11 467 0000" }}</div>
             </div>
           </div>
+
+          <div class="hp-info-row">
+            <div class="hp-info-icon ii-amber"><i class="fas fa-envelope"></i></div>
+            <div class="hp-info-content">
+              <div class="hp-info-label">Email Address</div>
+              <div class="hp-info-value">{{ hospital.email|default:"bloodbank@kkuh.edu.sa" }}</div>
+            </div>
+          </div>
+
+          <div class="hp-info-row">
+            <div class="hp-info-icon ii-teal"><i class="fas fa-droplet"></i></div>
+            <div class="hp-info-content">
+              <div class="hp-info-label">Blood Bank Extension</div>
+              <div class="hp-info-value">{{ hospital.blood_bank_ext|default:"Ext. 3421" }}</div>
+            </div>
+          </div>
+
+          <div class="hp-info-row">
+            <div class="hp-info-icon ii-violet"><i class="fas fa-building-columns"></i></div>
+            <div class="hp-info-content">
+              <div class="hp-info-label">Health Sector</div>
+              <div class="hp-info-value">{{ hospital.health_sector|default:"Ministry of Health (MOH)" }}</div>
+            </div>
+          </div>
+
+          <div class="hp-info-row">
+            <div class="hp-info-icon ii-blue2"><i class="fas fa-calendar-days"></i></div>
+            <div class="hp-info-content">
+              <div class="hp-info-label">Member Since</div>
+              <div class="hp-info-value">{{ hospital.joined_date|default:"January 2023" }}</div>
+            </div>
+          </div>
+
+        </div>
+
+        <hr class="hp-profile-divider" />
+
+        <div class="hp-profile-footer">
+          <button class="hd-btn hd-btn-soft-danger hd-btn-sm" style="width:100%;justify-content:center;"
+                  onclick="return confirm('Are you sure you want to delete this hospital account? This cannot be undone.')">
+            <i class="fas fa-trash"></i> Delete Hospital Account
+          </button>
         </div>
 
       </div>
     </div>
 
+    <!-- ═══ RIGHT: EDIT FORM ═══ -->
+    <div>
+      <div class="hp-form-card">
+
+        <!-- Form Header -->
+        <div class="hp-form-head">
+          <div class="hp-form-head-left">
+            <div class="hp-form-head-icon"><i class="fas fa-pen-to-square"></i></div>
+            <div>
+              <div class="hp-form-head-title">Edit Hospital Information</div>
+              <div class="hp-form-head-sub">Update your hospital's profile and contact details</div>
+            </div>
+          </div>
+          <div class="hp-last-saved">
+            <i class="fas fa-circle-check" style="color:#16a34a;font-size:12px;"></i>
+            Saved May 2, 2025
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="hp-tabs">
+          <div class="hp-tab active"><i class="fas fa-user"></i> General Info</div>
+          <div class="hp-tab"><i class="fas fa-phone"></i> Contact</div>
+          <div class="hp-tab"><i class="fas fa-lock"></i> Security</div>
+          <div class="hp-tab"><i class="fas fa-bell"></i> Notifications</div>
+        </div>
+
+        <!-- Form -->
+        <form method="POST" action="{% url 'hospital:profile_update' %}" novalidate enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="hp-form-body">
+
+            <!-- Verification Banner -->
+            <div class="hp-verify-banner">
+              <div class="hp-verify-icon"><i class="fas fa-shield-halved"></i></div>
+              <div>
+                <div class="hp-verify-title">Account Verified — Ministry of Health</div>
+                <div class="hp-verify-sub">Your hospital profile has been verified. License #MOH-2023-0847.</div>
+              </div>
+            </div>
+
+            <!-- ── Hospital Identity ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">Hospital Identity</div>
+              <div class="hp-form-grid">
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="name-en">
+                    Hospital Name (English) <span class="req">*</span>
+                  </label>
+                  <input id="name-en" name="name_en" type="text"
+                         class="hp-input"
+                         value="{{ hospital.name|default:'King Khalid University Hospital' }}"
+                         placeholder="Hospital name in English" required />
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="name-ar">
+                    Hospital Name (Arabic)
+                    <span class="rtl-hint">RTL</span>
+                  </label>
+                  <input id="name-ar" name="name_ar" type="text"
+                         class="hp-input hp-input-rtl"
+                         value="{{ hospital.name_ar|default:'مستشفى الملك خالد الجامعي' }}"
+                         placeholder="اسم المستشفى بالعربية"
+                         dir="rtl" />
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="hosp-type">
+                    Hospital Type <span class="req">*</span>
+                  </label>
+                  <select id="hosp-type" name="hospital_type" class="hp-select" required>
+                    <option value="">Select type…</option>
+                    <option value="university"  {% if hospital.type == 'University Hospital' %}selected{% endif %}>University Hospital</option>
+                    <option value="general"     {% if hospital.type == 'General Hospital'    %}selected{% endif %}>General Hospital</option>
+                    <option value="specialist"  {% if hospital.type == 'Specialist Hospital' %}selected{% endif %}>Specialist Hospital</option>
+                    <option value="private"     {% if hospital.type == 'Private Hospital'    %}selected{% endif %}>Private Hospital</option>
+                    <option value="military"    {% if hospital.type == 'Military Hospital'   %}selected{% endif %}>Military Hospital</option>
+                    <option value="national"    {% if hospital.type == 'National Guard'      %}selected{% endif %}>National Guard</option>
+                    <option value="maternity"                                                              >Maternity &amp; Children</option>
+                    <option value="clinic"                                                                 >Medical Clinic</option>
+                  </select>
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="health-sector">
+                    Health Sector <span class="req">*</span>
+                  </label>
+                  <select id="health-sector" name="health_sector" class="hp-select" required>
+                    <option value="">Select sector…</option>
+                    <option value="MOH"        selected>Ministry of Health (MOH)</option>
+                    <option value="NGHA">National Guard (NGHA)</option>
+                    <option value="MOD">Ministry of Defense (MOD)</option>
+                    <option value="KFSH">King Faisal Specialist (KFSH)</option>
+                    <option value="private">Private Sector</option>
+                    <option value="university">University Sector</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ── Location ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">Location</div>
+              <div class="hp-form-grid">
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="city">City <span class="req">*</span></label>
+                  <select id="city" name="city" class="hp-select" required>
+                    <option value="">Select city…</option>
+                    <option value="riyadh"  selected>Riyadh</option>
+                    <option value="jeddah">Jeddah</option>
+                    <option value="mecca">Mecca</option>
+                    <option value="medina">Medina</option>
+                    <option value="dammam">Dammam</option>
+                    <option value="khobar">Al Khobar</option>
+                    <option value="taif">Taif</option>
+                    <option value="tabuk">Tabuk</option>
+                    <option value="abha">Abha</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="district">District / Neighbourhood</label>
+                  <input id="district" name="district" type="text"
+                         class="hp-input"
+                         value="{{ hospital.district|default:'Al Olaya District' }}"
+                         placeholder="e.g. Al Olaya District" />
+                </div>
+
+                <div class="hp-form-group full">
+                  <label class="hp-label" for="address">Full Address</label>
+                  <div class="hp-input-wrap">
+                    <i class="hp-input-icon fas fa-location-dot"></i>
+                    <input id="address" name="address" type="text"
+                           class="hp-input"
+                           value="{{ hospital.address|default:'King Abdulaziz Rd, Riyadh 11472, Saudi Arabia' }}"
+                           placeholder="Full address including postal code" />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ── Contact ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">Contact Information</div>
+              <div class="hp-form-grid">
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="phone">Phone Number <span class="req">*</span></label>
+                  <div class="hp-input-wrap">
+                    <i class="hp-input-icon fas fa-phone"></i>
+                    <input id="phone" name="phone" type="tel"
+                           class="hp-input"
+                           value="{{ hospital.phone|default:'+966 11 467 0000' }}"
+                           placeholder="+966 1X XXX XXXX" required />
+                  </div>
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="email">Email Address <span class="req">*</span></label>
+                  <div class="hp-input-wrap">
+                    <i class="hp-input-icon fas fa-envelope"></i>
+                    <input id="email" name="email" type="email"
+                           class="hp-input"
+                           value="{{ hospital.email|default:'bloodbank@kkuh.edu.sa' }}"
+                           placeholder="contact@hospital.com" required />
+                  </div>
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="blood-ext">Blood Bank Extension</label>
+                  <input id="blood-ext" name="blood_bank_ext" type="text"
+                         class="hp-input"
+                         value="{{ hospital.blood_bank_ext|default:'Ext. 3421' }}"
+                         placeholder="e.g. Ext. 3421" />
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="website">Website</label>
+                  <div class="hp-input-wrap">
+                    <i class="hp-input-icon fas fa-globe"></i>
+                    <input id="website" name="website" type="url"
+                           class="hp-input"
+                           value="{{ hospital.website|default:'https://www.kkuh.edu.sa' }}"
+                           placeholder="https://www.hospital.com" />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ── About ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">About the Hospital</div>
+              <div class="hp-form-grid" style="grid-template-columns:1fr;">
+                <div class="hp-form-group">
+                  <label class="hp-label" for="description">Hospital Description</label>
+                  <textarea id="description" name="description" class="hp-textarea" rows="4"
+                            placeholder="Describe your hospital, specializations, and blood donation facilities…">{{ hospital.description|default:"King Khalid University Hospital is one of the largest academic medical centers in the Kingdom of Saudi Arabia. Affiliated with King Saud University, it provides tertiary and quaternary healthcare services with a state-of-the-art blood bank facility serving patients across the Riyadh region." }}</textarea>
+                  <div class="hp-hint">
+                    <span>Displayed publicly on your hospital's donation profile page.</span>
+                    <span id="char-count">0 / 500</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── Logo Upload ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">Hospital Logo</div>
+              <div class="hp-upload" onclick="document.getElementById('logo-input').click()">
+                <input type="file" id="logo-input" name="logo" accept="image/*" style="display:none" />
+                <div class="hp-upload-icon"><i class="fas fa-camera"></i></div>
+                <div class="hp-upload-title">Upload Hospital Logo</div>
+                <div class="hp-upload-sub">
+                  <strong>Click to upload</strong> or drag and drop ·
+                  PNG, JPG, SVG up to 2MB
+                </div>
+              </div>
+            </div>
+
+            <!-- ── Notification Preferences ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">Notification Preferences</div>
+
+              <div class="hp-toggle-row">
+                <div class="hp-toggle-info">
+                  <div class="hp-toggle-title">Emergency Donor Alerts</div>
+                  <div class="hp-toggle-sub">Receive alerts when critical blood types are requested in your region</div>
+                </div>
+                <div class="hp-switch on" onclick="this.classList.toggle('on')">
+                  <div class="hp-switch-knob"></div>
+                </div>
+              </div>
+
+              <div class="hp-toggle-row">
+                <div class="hp-toggle-info">
+                  <div class="hp-toggle-title">New Donor Responses</div>
+                  <div class="hp-toggle-sub">Get notified when donors respond to your active requests</div>
+                </div>
+                <div class="hp-switch on" onclick="this.classList.toggle('on')">
+                  <div class="hp-switch-knob"></div>
+                </div>
+              </div>
+
+              <div class="hp-toggle-row">
+                <div class="hp-toggle-info">
+                  <div class="hp-toggle-title">Weekly Summary Report</div>
+                  <div class="hp-toggle-sub">Receive a weekly digest of donation activity and statistics</div>
+                </div>
+                <div class="hp-switch" onclick="this.classList.toggle('on')">
+                  <div class="hp-switch-knob"></div>
+                </div>
+              </div>
+
+              <div class="hp-toggle-row">
+                <div class="hp-toggle-info">
+                  <div class="hp-toggle-title">SMS Notifications</div>
+                  <div class="hp-toggle-sub">Send critical alerts to the registered mobile number via SMS</div>
+                </div>
+                <div class="hp-switch on" onclick="this.classList.toggle('on')">
+                  <div class="hp-switch-knob"></div>
+                </div>
+              </div>
+
+            </div>
+
+          </div><!-- /hp-form-body -->
+
+          <!-- Form Footer -->
+          <div class="hp-form-footer">
+            <div class="hp-last-saved">
+              <i class="fas fa-clock" style="font-size:12px;"></i>
+              Last saved: May 2, 2025 at 4:30 PM
+            </div>
+            <div class="hp-form-footer-right">
+              <button type="reset" class="hd-btn hd-btn-ghost">
+                <i class="fas fa-xmark"></i> Cancel
+              </button>
+              <button type="submit" class="hd-btn hd-btn-primary">
+                <i class="fas fa-floppy-disk"></i> Save Changes
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div><!-- /.hp-grid -->
+
+</div><!-- /.hp-main -->
+
+{% block extra_js %}
+<script>
+/* Character counter */
+(function () {
+  var ta = document.getElementById('description');
+  var ct = document.getElementById('char-count');
+  if (!ta || !ct) return;
+  function update() {
+    var n = ta.value.length;
+    ct.textContent = n + ' / 500';
+    ct.style.color = n > 450 ? 'var(--red)' : '';
+  }
+  ta.addEventListener('input', update);
+  update();
+})();
+
+/* Tab switching */
+document.querySelectorAll('.hp-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.hp-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+  });
+});
+</script>
+{% endblock %}
 
 {% endblock %}

@@ -126,7 +126,7 @@ def journey_view(request):
 def leaderboard_view(request):
     # عرض المتصدرين بناءً على النقاط (تحفيز المتبرعين)
     top_donors = DonorProfile.objects.all().order_by('-points')[:10]
-    return render(request, 'leaderboard.html', {'top_donors': top_donors})
+    return render(request, 'donor/leaderboard.html', {'top_donors': top_donors})
 
 def impact_view(request):
     return render(request, 'donor/impact.html')

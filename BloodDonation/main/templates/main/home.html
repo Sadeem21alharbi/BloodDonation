@@ -20,7 +20,6 @@
     body {
         background-color: var(--white);
         font-family: 'Tajawal', sans-serif;
-        /* إزالة الاتجاه الثابت ليعتمد على ملف base.html */
         overflow-x: hidden;
     }
 
@@ -142,8 +141,8 @@
 
 {% block content %}
 <header class="hero-section">
-    <div class="container"><h1 class="hero-title">{% trans "تبرع بدمك.. وانقذ حياة" %}</h1>
-        <p class="hero-subtitle">{% trans "نحن هنا لنربط المتبرعين بالمحتاجين بكل سهولة وأمان عبر أحدث التقنيات." %}</p>
+    <div class="container">
+        <h1 class="hero-title">{% trans "تبرع بدمك.. وانقذ حياة" %}</h1><p class="hero-subtitle">{% trans "نحن هنا لنربط المتبرعين بالمحتاجين بكل سهولة وأمان عبر أحدث التقنيات." %}</p>
         <a href="#join" class="btn-white-rounded">{% trans "ابدأ الآن" %} <i class="fas fa-heart ms-2"></i></a>
     </div>
 </header>
@@ -188,7 +187,8 @@
         </div>
 
         <div class="user-selection-grid">
-            <a href="{% url 'donor:login' %}" class="reveal" style="display: block;">
+            <!-- كرت المتبرع -->
+            <a href="{% url 'donor:login' %}" class="reveal" style="display: block; color: inherit;">
                 <div class="selection-card">
                     <div class="card-icon donor-icon">
                         <i class="fas fa-hand-holding-heart"></i>
@@ -199,21 +199,16 @@
                 </div>
             </a>
 
-            <div class="reveal">
+            <!-- كرت المستشفى -->
+            <a href="{% url 'hospital:hospital_login' %}" class="reveal" style="display: block; color: inherit;">
                 <div class="selection-card">
                     <div class="card-icon hospital-icon">
                         <i class="fas fa-hospital-alt"></i>
-                    
-            <!-- الكرت الثاني: مستشفى -->
-            <a href="{% url 'hospital:hospital_login' %}" class="selection-card-link" style="text-decoration: none; color: inherit;">
-                <div class="selection-card">
-                    <div class="card-icon">
-                        <i class="fas fa-hospital"></i>
                     </div>
-                    <h3>مستشفى</h3>
-                    <p>إدارة طلبات التبرع والتواصل مع المتبرعين</p>
-                </div>
-            <!-- كرت المستشفى المعدل --> 
+                    <h3>{% trans "مستشفى" %}</h3>
+                    <p>{% trans "إدارة طلبات التبرع والتواصل مع المتبرعين" %}</p>
+<span class="btn btn-success rounded-pill px-5 py-2 mt-4 fw-bold" style="background-color: var(--hospital-green) !important; border: none;">{% trans "دخول المستشفيات" %}</span>                </div>
+            </a>
         </div>
     </div>
 </section>

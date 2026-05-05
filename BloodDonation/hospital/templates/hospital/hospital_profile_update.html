@@ -33,8 +33,10 @@
 
 /* ── Profile Grid ── */
 .hp-grid {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
 /* ── Profile Card (left) ── */
@@ -44,8 +46,6 @@
   border: 1px solid var(--border-card);
   box-shadow: var(--shadow-card);
   overflow: hidden;
-  width: 100%;
-  max-width: 420px;
 }
 
 /* Cover */
@@ -465,168 +465,304 @@
 </style>
 {% endblock %}
 
-
 {% block content %}
 <div class="hp-main">
-
-  <!-- ═══════════════════════════════
-       PAGE HEADER
-  ════════════════════════════════ -->
-  <div class="hp-header hd-fade-in-up">
     <div>
-      <div class="hp-header-title">Hospital Profile</div>
-      <div class="hp-header-sub">
-        <span>{{ hospital.name|default:"King Khalid University Hospital" }}</span>
-        <span class="dot"></span>
-        <span>Last updated: {{ last_updated|default:"May 3, 2025 · 09:41 AM" }}</span>
+      <div class="hp-form-card">
+
+        <!-- Form Header -->
+        <div class="hp-form-head">
+          <div class="hp-form-head-left">
+            <div class="hp-form-head-icon"><i class="fas fa-pen-to-square"></i></div>
+            <div>
+              <div class="hp-form-head-title">Edit Hospital Information</div>
+              <div class="hp-form-head-sub">Update your hospital's profile and contact details</div>
+            </div>
+          </div>
+          <div class="hp-last-saved">
+            <i class="fas fa-circle-check" style="color:#16a34a;font-size:12px;"></i>
+            Saved May 2, 2025
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="hp-tabs">
+          <div class="hp-tab active"><i class="fas fa-user"></i> General Info</div>
+          <div class="hp-tab"><i class="fas fa-phone"></i> Contact</div>
+          <div class="hp-tab"><i class="fas fa-lock"></i> Security</div>
+          <div class="hp-tab"><i class="fas fa-bell"></i> Notifications</div>
+        </div>
+
+        <!-- Form -->
+        <form method="POST" action="{% url 'hospital:profile_update' %}" novalidate enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="hp-form-body">
+
+            <!-- Verification Banner -->
+            <div class="hp-verify-banner">
+              <div class="hp-verify-icon"><i class="fas fa-shield-halved"></i></div>
+              <div>
+                <div class="hp-verify-title">Account Verified — Ministry of Health</div>
+                <div class="hp-verify-sub">Your hospital profile has been verified. License #MOH-2023-0847.</div>
+              </div>
+            </div>
+
+            <!-- ── Hospital Identity ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">Hospital Identity</div>
+              <div class="hp-form-grid">
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="name-en">
+                    Hospital Name (English) <span class="req">*</span>
+                  </label>
+                  <input id="name-en" name="name_en" type="text"
+                         class="hp-input"
+                         value="{{ hospital.name|default:'King Khalid University Hospital' }}"
+                         placeholder="Hospital name in English" required />
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="name-ar">
+                    Hospital Name (Arabic)
+                    <span class="rtl-hint">RTL</span>
+                  </label>
+                  <input id="name-ar" name="name_ar" type="text"
+                         class="hp-input hp-input-rtl"
+                         value="{{ hospital.name_ar|default:'مستشفى الملك خالد الجامعي' }}"
+                         placeholder="اسم المستشفى بالعربية"
+                         dir="rtl" />
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="hosp-type">
+                    Hospital Type <span class="req">*</span>
+                  </label>
+                  <select id="hosp-type" name="hospital_type" class="hp-select" required>
+                    <option value="">Select type…</option>
+                    <option value="university"  {% if hospital.type == 'University Hospital' %}selected{% endif %}>University Hospital</option>
+                    <option value="general"     {% if hospital.type == 'General Hospital'    %}selected{% endif %}>General Hospital</option>
+                    <option value="specialist"  {% if hospital.type == 'Specialist Hospital' %}selected{% endif %}>Specialist Hospital</option>
+                    <option value="private"     {% if hospital.type == 'Private Hospital'    %}selected{% endif %}>Private Hospital</option>
+                    <option value="military"    {% if hospital.type == 'Military Hospital'   %}selected{% endif %}>Military Hospital</option>
+                    <option value="national"    {% if hospital.type == 'National Guard'      %}selected{% endif %}>National Guard</option>
+                    <option value="maternity"                                                              >Maternity &amp; Children</option>
+                    <option value="clinic"                                                                 >Medical Clinic</option>
+                  </select>
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="health-sector">
+                    Health Sector <span class="req">*</span>
+                  </label>
+                  <select id="health-sector" name="health_sector" class="hp-select" required>
+                    <option value="">Select sector…</option>
+                    <option value="MOH"        selected>Ministry of Health (MOH)</option>
+                    <option value="NGHA">National Guard (NGHA)</option>
+                    <option value="MOD">Ministry of Defense (MOD)</option>
+                    <option value="KFSH">King Faisal Specialist (KFSH)</option>
+                    <option value="private">Private Sector</option>
+                    <option value="university">University Sector</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ── Location ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">Location</div>
+              <div class="hp-form-grid">
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="city">City <span class="req">*</span></label>
+                  <select id="city" name="city" class="hp-select" required>
+                    <option value="">Select city…</option>
+                    <option value="riyadh"  selected>Riyadh</option>
+                    <option value="jeddah">Jeddah</option>
+                    <option value="mecca">Mecca</option>
+                    <option value="medina">Medina</option>
+                    <option value="dammam">Dammam</option>
+                    <option value="khobar">Al Khobar</option>
+                    <option value="taif">Taif</option>
+                    <option value="tabuk">Tabuk</option>
+                    <option value="abha">Abha</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="district">District / Neighbourhood</label>
+                  <input id="district" name="district" type="text"
+                         class="hp-input"
+                         value="{{ hospital.district|default:'Al Olaya District' }}"
+                         placeholder="e.g. Al Olaya District" />
+                </div>
+
+                <div class="hp-form-group full">
+                  <label class="hp-label" for="address">Full Address</label>
+                  <div class="hp-input-wrap">
+                    <i class="hp-input-icon fas fa-location-dot"></i>
+                    <input id="address" name="address" type="text"
+                           class="hp-input"
+                           value="{{ hospital.address|default:'King Abdulaziz Rd, Riyadh 11472, Saudi Arabia' }}"
+                           placeholder="Full address including postal code" />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ── Contact ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">Contact Information</div>
+              <div class="hp-form-grid">
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="phone">Phone Number <span class="req">*</span></label>
+                  <div class="hp-input-wrap">
+                    <i class="hp-input-icon fas fa-phone"></i>
+                    <input id="phone" name="phone" type="tel"
+                           class="hp-input"
+                           value="{{ hospital.phone|default:'+966 11 467 0000' }}"
+                           placeholder="+966 1X XXX XXXX" required />
+                  </div>
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="email">Email Address <span class="req">*</span></label>
+                  <div class="hp-input-wrap">
+                    <i class="hp-input-icon fas fa-envelope"></i>
+                    <input id="email" name="email" type="email"
+                           class="hp-input"
+                           value="{{ hospital.email|default:'bloodbank@kkuh.edu.sa' }}"
+                           placeholder="contact@hospital.com" required />
+                  </div>
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="blood-ext">Blood Bank Extension</label>
+                  <input id="blood-ext" name="blood_bank_ext" type="text"
+                         class="hp-input"
+                         value="{{ hospital.blood_bank_ext|default:'Ext. 3421' }}"
+                         placeholder="e.g. Ext. 3421" />
+                </div>
+
+                <div class="hp-form-group">
+                  <label class="hp-label" for="website">Website</label>
+                  <div class="hp-input-wrap">
+                    <i class="hp-input-icon fas fa-globe"></i>
+                    <input id="website" name="website" type="url"
+                           class="hp-input"
+                           value="{{ hospital.website|default:'https://www.kkuh.edu.sa' }}"
+                           placeholder="https://www.hospital.com" />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ── About ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">About the Hospital</div>
+              <div class="hp-form-grid" style="grid-template-columns:1fr;">
+                <div class="hp-form-group">
+                  <label class="hp-label" for="description">Hospital Description</label>
+                  <textarea id="description" name="description" class="hp-textarea" rows="4"
+                            placeholder="Describe your hospital, specializations, and blood donation facilities…">{{ hospital.description|default:"King Khalid University Hospital is one of the largest academic medical centers in the Kingdom of Saudi Arabia. Affiliated with King Saud University, it provides tertiary and quaternary healthcare services with a state-of-the-art blood bank facility serving patients across the Riyadh region." }}</textarea>
+                  <div class="hp-hint">
+                    <span>Displayed publicly on your hospital's donation profile page.</span>
+                    <span id="char-count">0 / 500</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── Logo Upload ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">Hospital Logo</div>
+              <div class="hp-upload" onclick="document.getElementById('logo-input').click()">
+                <input type="file" id="logo-input" name="logo" accept="image/*" style="display:none" />
+                <div class="hp-upload-icon"><i class="fas fa-camera"></i></div>
+                <div class="hp-upload-title">Upload Hospital Logo</div>
+                <div class="hp-upload-sub">
+                  <strong>Click to upload</strong> or drag and drop ·
+                  PNG, JPG, SVG up to 2MB
+                </div>
+              </div>
+            </div>
+
+            <!-- ── Notification Preferences ── -->
+            <div class="hp-form-section">
+              <div class="hp-form-section-title">Notification Preferences</div>
+
+              <div class="hp-toggle-row">
+                <div class="hp-toggle-info">
+                  <div class="hp-toggle-title">Emergency Donor Alerts</div>
+                  <div class="hp-toggle-sub">Receive alerts when critical blood types are requested in your region</div>
+                </div>
+                <div class="hp-switch on" onclick="this.classList.toggle('on')">
+                  <div class="hp-switch-knob"></div>
+                </div>
+              </div>
+
+              <div class="hp-toggle-row">
+                <div class="hp-toggle-info">
+                  <div class="hp-toggle-title">New Donor Responses</div>
+                  <div class="hp-toggle-sub">Get notified when donors respond to your active requests</div>
+                </div>
+                <div class="hp-switch on" onclick="this.classList.toggle('on')">
+                  <div class="hp-switch-knob"></div>
+                </div>
+              </div>
+
+              <div class="hp-toggle-row">
+                <div class="hp-toggle-info">
+                  <div class="hp-toggle-title">Weekly Summary Report</div>
+                  <div class="hp-toggle-sub">Receive a weekly digest of donation activity and statistics</div>
+                </div>
+                <div class="hp-switch" onclick="this.classList.toggle('on')">
+                  <div class="hp-switch-knob"></div>
+                </div>
+              </div>
+
+              <div class="hp-toggle-row">
+                <div class="hp-toggle-info">
+                  <div class="hp-toggle-title">SMS Notifications</div>
+                  <div class="hp-toggle-sub">Send critical alerts to the registered mobile number via SMS</div>
+                </div>
+                <div class="hp-switch on" onclick="this.classList.toggle('on')">
+                  <div class="hp-switch-knob"></div>
+                </div>
+              </div>
+
+            </div>
+
+          </div><!-- /hp-form-body -->
+
+          <!-- Form Footer -->
+          <div class="hp-form-footer">
+            <div class="hp-last-saved">
+              <i class="fas fa-clock" style="font-size:12px;"></i>
+              Last saved: May 2, 2025 at 4:30 PM
+            </div>
+            <div class="hp-form-footer-right">
+              <button type="reset" class="hd-btn hd-btn-ghost">
+                <i class="fas fa-xmark"></i> Cancel
+              </button>
+              <button type="submit" class="hd-btn hd-btn-primary">
+                <i class="fas fa-floppy-disk"></i> Save Changes
+              </button>
+            </div>
+          </div>
+          </form>
       </div>
     </div>
-    <div class="hp-header-actions">
-      <button class="hd-btn hd-btn-ghost hd-btn-sm">
-        <i class="fas fa-download"></i> Export Profile
-      </button>
-      <a href="{% url 'hospital:profile_update' %}"
-        class="hd-btn hd-btn-primary hd-btn-sm">
-        <i class="fas fa-pen"></i> Edit Profile
-      </a>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════
-       PROFILE GRID
-  ════════════════════════════════ -->
-  <div class="hp-grid hd-fade-in-up delay-1">
-
-    <!-- ═══ LEFT: PROFILE CARD ═══ -->
-    <div>
-      <div class="hp-profile-card">
-
-        <!-- Cover -->
-        <div class="hp-cover">
-          <div class="hp-cover-pattern"></div>
-          <button class="hp-cover-edit" title="Edit cover">
-            <i class="fas fa-pen" style="font-size:12px;"></i>
-          </button>
-        </div>
-
-        <!-- Avatar -->
-        <div class="hp-avatar-wrap">
-          <div class="hp-avatar">
-            {% if hospital.logo %}
-              <img src="{{ hospital.logo.url }}" alt="{{ hospital.name }}"/>
-            {% else %}
-              {{ hospital.initials|default:"KK" }}
-            {% endif %}
-            <div class="hp-avatar-overlay">
-              <i class="fas fa-camera"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- Name & Badges -->
-        <div class="hp-profile-info">
-          <div class="hp-profile-name">{{ hospital.name|default:"King Khalid University Hospital" }}</div>
-          <div class="hp-badge-row">
-            <span class="hp-type-badge">
-              <i class="fas fa-hospital" style="font-size:11px;"></i>
-              {{ hospital.type|default:"University Hospital" }}
-            </span>
-            <span class="hp-verified-badge">
-              <i class="fas fa-circle-check" style="font-size:11px;"></i>
-              Verified
-            </span>
-          </div>
-          <div class="hp-location">
-            <i class="fas fa-location-dot" style="font-size:12px;color:var(--primary);"></i>
-            {{ hospital.city|default:"Riyadh" }}, {{ hospital.country|default:"Saudi Arabia" }}
-          </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="hp-stats-row">
-          <div class="hp-stat-cell">
-            <div class="hp-stat-cell-value">{{ hospital.total_requests|default:"84" }}</div>
-            <div class="hp-stat-cell-label">Donation Requests</div>
-          </div>
-          <div class="hp-stat-cell">
-            <div class="hp-stat-cell-value">{{ hospital.total_donors|default:"317" }}</div>
-            <div class="hp-stat-cell-label">Total Donors</div>
-          </div>
-          <div class="hp-stat-cell">
-            <div class="hp-stat-cell-value">{{ hospital.blood_units|default:"1.2K" }}</div>
-            <div class="hp-stat-cell-label">Units Received</div>
-          </div>
-        </div>
-
-        <!-- Quick Info -->
-        <div class="hp-info-list">
-
-          <div class="hp-info-row">
-            <div class="hp-info-icon ii-blue"><i class="fas fa-location-dot"></i></div>
-            <div class="hp-info-content">
-              <div class="hp-info-label">Address</div>
-              <div class="hp-info-value">{{ hospital.address|default:"King Abdulaziz Rd, Riyadh 11472" }}</div>
-            </div>
-          </div>
-
-          <div class="hp-info-row">
-            <div class="hp-info-icon ii-green"><i class="fas fa-phone"></i></div>
-            <div class="hp-info-content">
-              <div class="hp-info-label">Phone Number</div>
-              <div class="hp-info-value">{{ hospital.phone|default:"+966 11 467 0000" }}</div>
-            </div>
-          </div>
-
-          <div class="hp-info-row">
-            <div class="hp-info-icon ii-amber"><i class="fas fa-envelope"></i></div>
-            <div class="hp-info-content">
-              <div class="hp-info-label">Email Address</div>
-              <div class="hp-info-value">{{ hospital.email|default:"bloodbank@kkuh.edu.sa" }}</div>
-            </div>
-          </div>
-
-          <div class="hp-info-row">
-            <div class="hp-info-icon ii-teal"><i class="fas fa-droplet"></i></div>
-            <div class="hp-info-content">
-              <div class="hp-info-label">Blood Bank Extension</div>
-              <div class="hp-info-value">{{ hospital.blood_bank_ext|default:"Ext. 3421" }}</div>
-            </div>
-          </div>
-
-          <div class="hp-info-row">
-            <div class="hp-info-icon ii-violet"><i class="fas fa-building-columns"></i></div>
-            <div class="hp-info-content">
-              <div class="hp-info-label">Health Sector</div>
-              <div class="hp-info-value">{{ hospital.health_sector|default:"Ministry of Health (MOH)" }}</div>
-            </div>
-          </div>
-
-          <div class="hp-info-row">
-            <div class="hp-info-icon ii-blue2"><i class="fas fa-calendar-days"></i></div>
-            <div class="hp-info-content">
-              <div class="hp-info-label">Member Since</div>
-              <div class="hp-info-value">{{ hospital.joined_date|default:"January 2023" }}</div>
-            </div>
-          </div>
-
-        </div>
-
-        <hr class="hp-profile-divider" />
-
-        <div class="hp-profile-footer">
-          <button class="hd-btn hd-btn-soft-danger hd-btn-sm" style="width:100%;justify-content:center;"
-                  onclick="return confirm('Are you sure you want to delete this hospital account? This cannot be undone.')">
-            <i class="fas fa-trash"></i> Delete Hospital Account
-          </button>
-        </div>
-
-        </form>
-      </div>
-    </div>
-
-  </div><!-- /.hp-grid -->
-
 </div><!-- /.hp-main -->
+{% endblock %}
+
 
 {% block extra_js %}
 <script>
@@ -634,12 +770,15 @@
 (function () {
   var ta = document.getElementById('description');
   var ct = document.getElementById('char-count');
+
   if (!ta || !ct) return;
+
   function update() {
     var n = ta.value.length;
     ct.textContent = n + ' / 500';
     ct.style.color = n > 450 ? 'var(--red)' : '';
   }
+
   ta.addEventListener('input', update);
   update();
 })();
@@ -647,10 +786,12 @@
 /* Tab switching */
 document.querySelectorAll('.hp-tab').forEach(function(tab) {
   tab.addEventListener('click', function() {
-    document.querySelectorAll('.hp-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.hp-tab').forEach(function(t) {
+      t.classList.remove('active');
+    });
+
     tab.classList.add('active');
   });
 });
 </script>
-{% endblock %}
 {% endblock %}

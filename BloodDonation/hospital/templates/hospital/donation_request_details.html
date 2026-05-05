@@ -1,0 +1,445 @@
+<!--hospital/donation_request_details.html-->
+
+{% extends 'hospital/base.html' %}
+
+{% block title %}Donation Request #{{ request_obj.id }} | Ehyaa{% endblock %}
+{% block page_title %}Donation Request Details{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ═══════════════════════════════════════════════════
+   DONATION REQUEST DETAILS PAGE
+═══════════════════════════════════════════════════ */
+
+.rq-main { display: flex; flex-direction: column; gap: 28px; }
+
+/* ── Page Header ── */
+.rq-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+
+.rq-header-title {
+  font-size: 26px; font-weight: 800;
+  color: var(--text); line-height: 1.2;
+}
+
+.rq-header-sub {
+  color: var(--text-muted); font-size: 13px;
+  margin-top: 5px; display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rq-header-sub .dot {
+  width: 4px; height: 4px;
+  border-radius: 50%; background: var(--text-light);
+  display: inline-block; flex-shrink: 0;
+}
+
+.rq-header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── Detail Card ── */
+.rq-detail-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.rq-detail-hero {
+  background: var(--primary-gradient);
+  padding: 22px 26px; color: #fff;
+}
+
+.rq-detail-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: 11px; font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.rq-detail-title { font-size: 18px; font-weight: 800; line-height: 1.3; }
+
+.rq-detail-meta {
+  font-size: 12px; opacity: .88; margin-top: 8px;
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+
+.rq-detail-body {
+  padding: 22px 26px;
+  display: flex; flex-direction: column; gap: 0;
+}
+
+.rq-detail-section-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-light); margin-bottom: 12px; display: block;
+}
+
+.rq-detail-rows { display: flex; flex-direction: column; gap: 12px; }
+
+.rq-detail-row {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 10px; font-size: 13px;
+}
+
+.rq-detail-row-label { color: var(--text-muted); flex-shrink: 0; }
+.rq-detail-row-value { font-weight: 700; color: var(--text); text-align: right; }
+
+.rq-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* Blood badge */
+.rq-blood {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 5px 13px; border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 800; color: #fff;
+  white-space: nowrap;
+}
+.bb-red    { background: linear-gradient(135deg,#ef4444,#dc2626); box-shadow: 0 2px 7px rgba(239,68,68,.28); }
+.bb-violet { background: linear-gradient(135deg,#8b5cf6,#7c3aed); box-shadow: 0 2px 7px rgba(139,92,246,.28); }
+.bb-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); box-shadow: 0 2px 7px rgba(20,184,166,.28); }
+.bb-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); box-shadow: 0 2px 7px rgba(245,158,11,.28); }
+.bb-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow: 0 2px 7px rgba(37,99,235,.28); }
+
+/* Urgency labels */
+.rq-urgency {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: var(--radius-pill);
+  font-size: 11.5px; font-weight: 700;
+}
+.urg-high   { background: #fee2e2; color: #b91c1c; }
+.urg-medium { background: #fef3c7; color: #92400e; }
+.urg-low    { background: #dcfce7; color: #166534; }
+
+/* Status pills */
+.rq-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: var(--radius-pill);
+  font-size: 11.5px; font-weight: 700; white-space: nowrap;
+}
+.rq-status::before {
+  content: ''; width: 6px; height: 6px;
+  border-radius: 50%; flex-shrink: 0;
+}
+.sp-pending   { background: #fef3c7; color: #92400e; }
+.sp-pending::before   { background: #f59e0b; }
+.sp-active    { background: #dbeafe; color: #1d4ed8; }
+.sp-active::before    { background: #2563eb; }
+.sp-inprog    { background: #ede9fe; color: #6d28d9; }
+.sp-inprog::before    { background: #8b5cf6; }
+.sp-completed { background: #dcfce7; color: #065f46; }
+.sp-completed::before { background: #059669; }
+.sp-cancelled { background: #f1f5f9; color: #475569; }
+.sp-cancelled::before { background: #94a3b8; }
+.sp-emergency { background: #fee2e2; color: #991b1b; }
+.sp-emergency::before { background: #ef4444; }
+
+/* Notes */
+.rq-note {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  font-size: 13px; color: var(--text-muted);
+  line-height: 1.65;
+  border-left: 3px solid var(--primary);
+}
+[dir="rtl"] .rq-note { border-left: none; border-right: 3px solid var(--primary); }
+
+.rq-detail-footer {
+  padding: 14px 26px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  background: var(--bg);
+}
+
+.rq-date { font-size: 12.5px; color: var(--text-muted); }
+.rq-dept { font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+
+/* ── Timeline Card ── */
+.rq-timeline-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.rq-timeline-head {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.rq-card-title { font-size: 15px; font-weight: 800; color: var(--text); }
+
+.rq-timeline-body {
+  padding: 22px 24px;
+  display: flex; flex-direction: column;
+}
+
+.tl-item {
+  display: flex; gap: 14px;
+  padding-bottom: 24px; position: relative;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 17px; top: 36px;
+  width: 2px; bottom: 0;
+  background: var(--border); z-index: 0;
+}
+[dir="rtl"] .tl-item:not(:last-child)::before { left: auto; right: 17px; }
+
+.tl-icon {
+  width: 36px; height: 36px;
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; z-index: 1; font-size: 14px;
+}
+.ti-blue   { background: #dbeafe; color: #2563eb; }
+.ti-amber  { background: #fef3c7; color: #d97706; }
+.ti-violet { background: #ede9fe; color: #7c3aed; }
+.ti-green  { background: #dcfce7; color: #16a34a; }
+.ti-red    { background: #fee2e2; color: #dc2626; }
+.ti-teal   { background: #ccfbf1; color: #0d9488; }
+.ti-gray   { background: #f1f5f9; color: #64748b; }
+
+.tl-content { flex: 1; }
+.tl-title { font-weight: 700; font-size: 13.5px; color: var(--text); }
+.tl-desc  { font-size: 12.5px; color: var(--text-muted); margin-top: 3px; line-height: 1.55; }
+.tl-time  { font-size: 11px; color: var(--text-light); margin-top: 5px; }
+
+/* ── Info Grid (2 col on wide) ── */
+.rq-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .rq-header { flex-direction: column; }
+  .rq-info-grid { grid-template-columns: 1fr; }
+  .rq-detail-body { padding: 18px; }
+  .rq-detail-footer { flex-direction: column; align-items: flex-start; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="rq-main" style="max-width:860px; margin:0 auto;">
+
+    <!-- ── Header ── -->
+    <div class="rq-header">
+        <div>
+            <h1 class="rq-header-title">Request #{{ request_obj.id }}</h1>
+            <div class="rq-header-sub">
+                <span class="rq-dept"><i class="fas fa-hospital"></i> {{ request_obj.department }}</span>
+                <span class="dot"></span>
+                <span class="rq-date"><i class="far fa-calendar-alt"></i> Created {{ request_obj.created_at|date:"M d, Y" }}</span>
+                {% if request_obj.created_by %}
+                <span class="dot"></span>
+                <span><i class="fas fa-user"></i> {{ request_obj.created_by.get_full_name|default:request_obj.created_by.username }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="rq-header-actions">
+            <a href="{% url 'hospital:requests' %}" class="hd-btn hd-btn-secondary hd-btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="{% url 'hospital:request_update' request_obj.id %}" class="hd-btn hd-btn-primary hd-btn-sm">
+                <i class="fas fa-edit"></i> Edit Request
+            </a>
+            <a href="{% url 'hospital:request_delete' request_obj.id %}" class="hd-btn hd-btn-sm" style="background:#fee2e2;color:#dc2626;border:none;">
+                <i class="fas fa-trash-alt"></i> Delete
+            </a>
+        </div>
+    </div>
+
+    <!-- ── Detail Card ── -->
+    <div class="rq-detail-card">
+
+        <!-- Hero -->
+        <div class="rq-detail-hero">
+            <div class="rq-detail-badge">
+                <i class="fas fa-tint"></i> Donation Request
+            </div>
+            <h2 class="rq-detail-title">{{ request_obj.title }}</h2>
+            <div class="rq-detail-meta">
+                <span><i class="fas fa-hospital-alt"></i> {{ request_obj.department }}</span>
+                <span><i class="fas fa-calendar-check"></i> {{ request_obj.created_at|date:"M d, Y" }}</span>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="rq-detail-body">
+
+            <!-- Two-column info grid -->
+            <div class="rq-info-grid">
+
+                <!-- Left: Vital Statistics -->
+                <div>
+                    <span class="rq-detail-section-label">Vital Statistics</span>
+                    <div class="rq-detail-rows">
+
+                        <div class="rq-detail-row">
+                            <span class="rq-detail-row-label">Blood Type Required</span>
+                            <span class="rq-blood
+                                {% if request_obj.blood_type in 'A+,A-' %}bb-red
+                                {% elif request_obj.blood_type in 'B+,B-' %}bb-violet
+                                {% elif request_obj.blood_type in 'O+,O-' %}bb-teal
+                                {% elif request_obj.blood_type in 'AB+,AB-' %}bb-amber
+                                {% else %}bb-blue{% endif %}">
+                                {{ request_obj.blood_type }}
+                            </span>
+                        </div>
+
+                        <div class="rq-detail-row">
+                            <span class="rq-detail-row-label">Required Units</span>
+                            <span class="rq-detail-row-value">{{ request_obj.required_units }} Units</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Right: Priority & Status -->
+                <div>
+                    <span class="rq-detail-section-label">Priority &amp; Status</span>
+                    <div class="rq-detail-rows">
+
+                        <div class="rq-detail-row">
+                            <span class="rq-detail-row-label">Urgency Level</span>
+                            <span class="rq-urgency
+                                {% if request_obj.urgency == 'HIGH' %}urg-high
+                                {% elif request_obj.urgency == 'MEDIUM' %}urg-medium
+                                {% else %}urg-low{% endif %}">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ request_obj.get_urgency_display }}
+                            </span>
+                        </div>
+
+                        <div class="rq-detail-row">
+                            <span class="rq-detail-row-label">Current Status</span>
+                            <span class="rq-status
+                                {% if request_obj.status == 'PENDING' or request_obj.status == 'pending' %}sp-pending
+                                {% elif request_obj.status == 'ACTIVE' or request_obj.status == 'active' %}sp-active
+                                {% elif request_obj.status == 'COMPLETED' or request_obj.status == 'completed' %}sp-completed
+                                {% elif request_obj.status == 'CANCELLED' or request_obj.status == 'cancelled' %}sp-cancelled
+                                {% else %}sp-inprog{% endif %}">
+                                {{ request_obj.get_status_display }}
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- /info-grid -->
+
+            <div class="rq-divider"></div>
+
+            <!-- Clinical Notes -->
+            <div>
+                <span class="rq-detail-section-label">Clinical Notes</span>
+                <div class="rq-note">
+                    {% if request_obj.notes %}
+                        {{ request_obj.notes }}
+                    {% else %}
+                        <span style="opacity:.65;font-style:italic;">No additional notes or clinical instructions provided for this request.</span>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div><!-- /detail-body -->
+
+        <!-- Footer -->
+        <div class="rq-detail-footer">
+            <span class="rq-date"><i class="far fa-clock"></i> Last updated: {{ request_obj.updated_at|date:"M d, Y — H:i" }}</span>
+            {% if request_obj.hospital %}
+            <span class="rq-dept"><i class="fas fa-building"></i> {{ request_obj.hospital }}</span>
+            {% endif %}
+        </div>
+
+    </div><!-- /detail-card -->
+
+    <!-- ── Activity Timeline ── -->
+    <div class="rq-timeline-card">
+        <div class="rq-timeline-head">
+            <h3 class="rq-card-title"><i class="fas fa-history" style="color:var(--primary);margin-right:8px;"></i>Activity Timeline</h3>
+        </div>
+        <div class="rq-timeline-body">
+
+            <!-- Created event — always present -->
+            <div class="tl-item">
+                <div class="tl-icon ti-green"><i class="fas fa-plus"></i></div>
+                <div class="tl-content">
+                    <div class="tl-title">Request Created</div>
+                    <div class="tl-desc">
+                        Donation request was logged
+                        {% if request_obj.created_by %}by <strong>{{ request_obj.created_by.get_full_name|default:request_obj.created_by.username }}</strong>{% endif %}
+                        for department <strong>{{ request_obj.department }}</strong>.
+                    </div>
+                    <div class="tl-time"><i class="far fa-clock"></i> {{ request_obj.created_at|timesince }} ago &mdash; {{ request_obj.created_at|date:"M d, Y H:i" }}</div>
+                </div>
+            </div>
+
+            <!-- Updated event — only if updated_at differs from created_at -->
+            {% if request_obj.updated_at != request_obj.created_at %}
+            <div class="tl-item">
+                <div class="tl-icon ti-amber"><i class="fas fa-pen"></i></div>
+                <div class="tl-content">
+                    <div class="tl-title">Request Updated</div>
+                    <div class="tl-desc">Request details were modified.</div>
+                    <div class="tl-time"><i class="far fa-clock"></i> {{ request_obj.updated_at|timesince }} ago &mdash; {{ request_obj.updated_at|date:"M d, Y H:i" }}</div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Status-specific final state -->
+            {% if request_obj.status == 'COMPLETED' or request_obj.status == 'completed' %}
+            <div class="tl-item">
+                <div class="tl-icon ti-teal"><i class="fas fa-check-double"></i></div>
+                <div class="tl-content">
+                    <div class="tl-title">Request Fulfilled</div>
+                    <div class="tl-desc">All required units have been collected and the request is marked as completed.</div>
+                    <div class="tl-time">{{ request_obj.updated_at|date:"M d, Y H:i" }}</div>
+                </div>
+            </div>
+            {% elif request_obj.status == 'CANCELLED' or request_obj.status == 'cancelled' %}
+            <div class="tl-item">
+                <div class="tl-icon ti-red"><i class="fas fa-times"></i></div>
+                <div class="tl-content">
+                    <div class="tl-title">Request Cancelled</div>
+                    <div class="tl-desc">This donation request was cancelled and is no longer active.</div>
+                    <div class="tl-time">{{ request_obj.updated_at|date:"M d, Y H:i" }}</div>
+                </div>
+            </div>
+            {% elif request_obj.status == 'ACTIVE' or request_obj.status == 'active' %}
+            <div class="tl-item">
+                <div class="tl-icon ti-blue"><i class="fas fa-broadcast-tower"></i></div>
+                <div class="tl-content">
+                    <div class="tl-title">Request Active</div>
+                    <div class="tl-desc">Request is currently active and open for donor matching.</div>
+                    <div class="tl-time">{{ request_obj.updated_at|date:"M d, Y H:i" }}</div>
+                </div>
+            </div>
+            {% else %}
+            <div class="tl-item">
+                <div class="tl-icon ti-violet"><i class="fas fa-hourglass-half"></i></div>
+                <div class="tl-content">
+                    <div class="tl-title">Awaiting Review</div>
+                    <div class="tl-desc">Request is pending review and will be activated shortly.</div>
+                    <div class="tl-time">{{ request_obj.updated_at|date:"M d, Y H:i" }}</div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div><!-- /timeline-card -->
+
+</div>
+{% endblock %}

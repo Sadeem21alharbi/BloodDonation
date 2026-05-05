@@ -1,0 +1,514 @@
+{% extends 'hospital/base.html' %}
+
+{% block title %}Response #{{ response_obj.id }} | Ehyaa{% endblock %}
+{% block page_title %}Donor Response Detail{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ═══════════════════════════════════════════════════
+   DONOR RESPONSE DETAIL PAGE
+═══════════════════════════════════════════════════ */
+
+.dr-main { display: flex; flex-direction: column; gap: 24px; max-width: 960px; margin: 0 auto; }
+
+.dr-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.dr-header-title  { font-size: 24px; font-weight: 800; color: var(--text); }
+.dr-header-sub    { font-size: 13px; color: var(--text-muted); margin-top: 5px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dr-header-sub .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text-light); }
+.dr-header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── Detail hero card ── */
+.dr-detail-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card); overflow: hidden;
+}
+.dr-detail-hero {
+  background: var(--primary-gradient);
+  padding: 24px 28px;
+  display: flex; align-items: center; gap: 18px; color: #fff; flex-wrap: wrap;
+}
+.dr-detail-avatar {
+  width: 62px; height: 62px; border-radius: 18px;
+  background: rgba(255,255,255,.2); border: 2px solid rgba(255,255,255,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.dr-detail-hero-name { font-size: 19px; font-weight: 800; line-height: 1.2; }
+.dr-detail-hero-meta {
+  font-size: 13px; opacity: .88; margin-top: 5px;
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+.dr-detail-hero-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 13px; border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 700;
+  background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.28);
+  color: #fff; white-space: nowrap; margin-left: auto;
+}
+
+/* ── Body sections ── */
+.dr-detail-body {
+  padding: 24px 28px;
+  display: flex; flex-direction: column; gap: 22px;
+}
+.dr-section-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-light); margin-bottom: 12px; display: block;
+}
+.dr-info-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px 32px;
+}
+.dr-field-label { font-size: 11.5px; color: var(--text-muted); margin-bottom: 3px; }
+.dr-field-value { font-size: 13.5px; font-weight: 700; color: var(--text); }
+
+.dr-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+
+/* Blood / urgency / status reuse */
+.dr-blood {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 4px 11px; border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 800; color: #fff;
+}
+.bb-red    { background: linear-gradient(135deg,#ef4444,#dc2626); }
+.bb-violet { background: linear-gradient(135deg,#8b5cf6,#7c3aed); }
+.bb-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); }
+.bb-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); }
+.bb-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); }
+
+.resp-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 700;
+}
+.resp-status::before { content:''; width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.sp-pending   { background:#fef3c7; color:#92400e; }
+.sp-pending::before   { background:#f59e0b; }
+.sp-inprog    { background:#dbeafe; color:#1d4ed8; }
+.sp-inprog::before    { background:#2563eb; }
+.sp-accepted  { background:#dcfce7; color:#166534; }
+.sp-accepted::before  { background:#10b981; }
+.sp-rejected  { background:#fee2e2; color:#991b1b; }
+.sp-rejected::before  { background:#ef4444; }
+.sp-completed { background:#ccfbf1; color:#065f46; }
+.sp-completed::before { background:#059669; }
+
+.urg-high { background: #fee2e2; color: #b91c1c; }
+.urg-med  { background: #fef3c7; color: #92400e; }
+.urg-low  { background: #dcfce7; color: #166534; }
+.dr-urgency { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:var(--radius-pill); font-size:11.5px; font-weight:700; }
+
+/* Notes box */
+.dr-note {
+  background: var(--bg); border-radius: var(--radius);
+  padding: 14px 16px; font-size: 13px; color: var(--text-muted);
+  line-height: 1.65; border-left: 3px solid var(--primary);
+}
+[dir="rtl"] .dr-note { border-left: none; border-right: 3px solid var(--primary); }
+
+/* Request summary box */
+.dr-req-box {
+  background: var(--bg); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 16px 18px;
+}
+.dr-req-box-title {
+  font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.dr-req-rows { display: flex; flex-direction: column; gap: 8px; }
+.dr-req-row  { display: flex; justify-content: space-between; font-size: 13px; gap: 10px; }
+.dr-req-row-label { color: var(--text-muted); }
+.dr-req-row-value { font-weight: 700; color: var(--text); text-align: right; }
+
+/* Footer */
+.dr-detail-footer {
+  padding: 16px 28px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; background: var(--bg);
+}
+.dr-footer-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Soft buttons */
+.hd-btn-soft-green { background: #dcfce7; color: #16a34a; border: none; }
+.hd-btn-soft-green:hover { background: #bbf7d0; }
+.hd-btn-soft-blue  { background: rgba(37,99,235,.10); color: var(--primary); border: none; }
+.hd-btn-soft-blue:hover  { background: rgba(37,99,235,.18); }
+.hd-btn-soft-red   { background: #fee2e2; color: #dc2626; border: none; }
+.hd-btn-soft-red:hover   { background: #fecaca; }
+.hd-btn-soft-teal  { background: #ccfbf1; color: #0d9488; border: none; }
+.hd-btn-soft-teal:hover  { background: #99f6e4; }
+
+/* Timeline */
+.dr-timeline-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card); overflow: hidden;
+}
+.dr-timeline-head { padding: 18px 24px; border-bottom: 1px solid var(--border-card); }
+.dr-timeline-body { padding: 22px 24px; display: flex; flex-direction: column; }
+
+.tl-item { display: flex; gap: 14px; padding-bottom: 22px; position: relative; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item:not(:last-child)::before {
+  content: ''; position: absolute; left: 17px; top: 36px;
+  width: 2px; bottom: 0; background: var(--border); z-index: 0;
+}
+.tl-icon {
+  width: 36px; height: 36px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; z-index: 1; font-size: 14px;
+}
+.ti-blue   { background: #dbeafe; color: #2563eb; }
+.ti-amber  { background: #fef3c7; color: #d97706; }
+.ti-violet { background: #ede9fe; color: #7c3aed; }
+.ti-green  { background: #dcfce7; color: #16a34a; }
+.ti-red    { background: #fee2e2; color: #dc2626; }
+.ti-teal   { background: #ccfbf1; color: #0d9488; }
+.ti-gray   { background: #f1f5f9; color: #64748b; }
+.tl-content { flex: 1; }
+.tl-title { font-weight: 700; font-size: 13.5px; color: var(--text); }
+.tl-desc  { font-size: 12.5px; color: var(--text-muted); margin-top: 3px; line-height: 1.55; }
+.tl-time  { font-size: 11px; color: var(--text-light); margin-top: 5px; }
+
+/* Messages */
+.msg-success {
+  background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .dr-header { flex-direction: column; }
+  .dr-info-grid { grid-template-columns: 1fr; }
+  .dr-detail-hero { flex-direction: column; align-items: flex-start; }
+  .dr-detail-hero-status { margin-left: 0; }
+  .dr-detail-body, .dr-detail-footer { padding: 18px; }
+  .dr-footer-actions { width: 100%; }
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="dr-main">
+
+  {% for msg in messages %}
+    <div class="msg-success">
+      <i class="fas fa-circle-check"></i> {{ msg }}
+    </div>
+  {% endfor %}
+
+  <!-- ── Header ── -->
+  <div class="dr-header">
+    <div>
+      <div class="dr-header-title">Response #{{ response_obj.id }}</div>
+      <div class="dr-header-sub">
+        <span><i class="fas fa-user"></i> {{ response_obj.donor.get_full_name|default:response_obj.donor.username }}</span>
+        <span class="dot"></span>
+        <span><i class="fas fa-tint"></i> {{ response_obj.request.request_id }}</span>
+        <span class="dot"></span>
+        <span><i class="far fa-clock"></i> {{ response_obj.responded_at|date:"M d, Y" }}</span>
+      </div>
+    </div>
+    <div class="dr-header-actions">
+      <a href="{% url 'hospital:donor_responses' %}" class="hd-btn hd-btn-secondary hd-btn-sm">
+        <i class="fas fa-arrow-left"></i> Back to List
+      </a>
+      <a href="{% url 'hospital:delete_donor_response' response_id=response_obj.id %}"
+         class="hd-btn hd-btn-sm" style="background:#fee2e2;color:#dc2626;border:none;">
+        <i class="fas fa-trash-alt"></i> Delete
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Main detail card ── -->
+  <div class="dr-detail-card">
+
+    <!-- Hero -->
+    <div class="dr-detail-hero">
+      <div class="dr-detail-avatar">
+        {{ response_obj.donor.first_name|first|upper }}{{ response_obj.donor.last_name|first|upper }}
+        {% if not response_obj.donor.first_name %}{{ response_obj.donor.username|first|upper }}{% endif %}
+      </div>
+      <div style="flex:1;">
+        <div class="dr-detail-hero-name">
+          {{ response_obj.donor.get_full_name|default:response_obj.donor.username }}
+        </div>
+        <div class="dr-detail-hero-meta">
+          <span><i class="fas fa-envelope"></i> {{ response_obj.donor.email|default:"No email on file" }}</span>
+          <span><i class="fas fa-tint"></i> Responding to {{ response_obj.request.request_id }}</span>
+        </div>
+      </div>
+      <span class="dr-detail-hero-status">
+        <i class="fas fa-circle" style="font-size:8px;"></i>
+        {{ response_obj.get_status_display }}
+      </span>
+    </div>
+
+    <!-- Body -->
+    <div class="dr-detail-body">
+
+      <!-- Donor info -->
+      <div>
+        <span class="dr-section-label">Donor Information</span>
+        <div class="dr-info-grid">
+          <div>
+            <div class="dr-field-label">Full Name</div>
+            <div class="dr-field-value">{{ response_obj.donor.get_full_name|default:"—" }}</div>
+          </div>
+          <div>
+            <div class="dr-field-label">Username</div>
+            <div class="dr-field-value">{{ response_obj.donor.username }}</div>
+          </div>
+          <div>
+            <div class="dr-field-label">Email</div>
+            <div class="dr-field-value">{{ response_obj.donor.email|default:"—" }}</div>
+          </div>
+          <div>
+            <div class="dr-field-label">Member Since</div>
+            <div class="dr-field-value">{{ response_obj.donor.date_joined|date:"M d, Y" }}</div>
+          </div>
+          <div>
+            <div class="dr-field-label">Total Responses</div>
+            <div class="dr-field-value">{{ response_obj.donor.hospital_responses.count }} responses</div>
+          </div>
+          <div>
+            <div class="dr-field-label">Response Status</div>
+            <div class="dr-field-value">
+              <span class="resp-status sp-{{ response_obj.status }}">
+                {{ response_obj.get_status_display }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="dr-divider">
+
+      <!-- Linked request summary -->
+      <div>
+        <span class="dr-section-label">Linked Donation Request</span>
+        <div class="dr-req-box">
+          <div class="dr-req-box-title">
+            <i class="fas fa-file-medical" style="color:var(--primary);"></i>
+            {{ response_obj.request.request_id }} — {{ response_obj.request.title }}
+          </div>
+          <div class="dr-req-rows">
+            <div class="dr-req-row">
+              <span class="dr-req-row-label">Blood Type Required</span>
+              <span class="dr-blood
+                {% with bt=response_obj.request.blood_type %}
+                  {% if bt == 'A+' or bt == 'A-' %}bb-red
+                  {% elif bt == 'B+' or bt == 'B-' %}bb-violet
+                  {% elif bt == 'O+' or bt == 'O-' %}bb-teal
+                  {% elif bt == 'AB+' or bt == 'AB-' %}bb-amber
+                  {% else %}bb-blue{% endif %}
+                {% endwith %}">{{ response_obj.request.blood_type }}</span>
+            </div>
+            <div class="dr-req-row">
+              <span class="dr-req-row-label">Units Required</span>
+              <span class="dr-req-row-value">{{ response_obj.request.required_units }} units</span>
+            </div>
+            <div class="dr-req-row">
+              <span class="dr-req-row-label">Urgency</span>
+              <span class="dr-urgency
+                {% if response_obj.request.urgency == 'high' %}urg-high
+                {% elif response_obj.request.urgency == 'medium' %}urg-med
+                {% else %}urg-low{% endif %}">
+                {% if response_obj.request.urgency == 'high' %}🔴{% elif response_obj.request.urgency == 'medium' %}🟡{% else %}🟢{% endif %}
+                {{ response_obj.request.get_urgency_display }}
+              </span>
+            </div>
+            <div class="dr-req-row">
+              <span class="dr-req-row-label">Department</span>
+              <span class="dr-req-row-value">{{ response_obj.request.department }}</span>
+            </div>
+            <div class="dr-req-row">
+              <span class="dr-req-row-label">Hospital</span>
+              <span class="dr-req-row-value">{{ response_obj.request.hospital }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="dr-divider">
+
+      <!-- Notes -->
+      <div>
+        <span class="dr-section-label">Donor Notes</span>
+        <div class="dr-note">
+          {% if response_obj.notes %}
+            {{ response_obj.notes }}
+          {% else %}
+            <span style="opacity:.6;font-style:italic;">No notes provided by the donor.</span>
+          {% endif %}
+        </div>
+      </div>
+
+    </div><!-- /body -->
+
+    <!-- Footer: status actions -->
+    <div class="dr-detail-footer">
+      <span style="font-size:12px;color:var(--text-muted);">
+        <i class="far fa-clock"></i>
+        Responded {{ response_obj.responded_at|timesince }} ago &mdash;
+        updated {{ response_obj.updated_at|date:"M d, Y H:i" }}
+      </span>
+      <div class="dr-footer-actions">
+        {% if response_obj.status == 'pending' %}
+          <form method="post" action="{% url 'hospital:update_response_status' response_id=response_obj.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="inprog">
+            <button type="submit" class="hd-btn hd-btn-sm hd-btn-soft-blue">
+              <i class="fas fa-wave-square"></i> Mark In Progress
+            </button>
+          </form>
+          <form method="post" action="{% url 'hospital:update_response_status' response_id=response_obj.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="accepted">
+            <button type="submit" class="hd-btn hd-btn-sm hd-btn-soft-green">
+              <i class="fas fa-check"></i> Accept
+            </button>
+          </form>
+          <form method="post" action="{% url 'hospital:update_response_status' response_id=response_obj.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="rejected">
+            <button type="submit" class="hd-btn hd-btn-sm hd-btn-soft-red">
+              <i class="fas fa-xmark"></i> Reject
+            </button>
+          </form>
+
+        {% elif response_obj.status == 'inprog' %}
+          <form method="post" action="{% url 'hospital:update_response_status' response_id=response_obj.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="accepted">
+            <button type="submit" class="hd-btn hd-btn-sm hd-btn-soft-green">
+              <i class="fas fa-check"></i> Accept
+            </button>
+          </form>
+          <form method="post" action="{% url 'hospital:update_response_status' response_id=response_obj.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="completed">
+            <button type="submit" class="hd-btn hd-btn-sm hd-btn-soft-teal">
+              <i class="fas fa-droplet"></i> Mark Completed
+            </button>
+          </form>
+          <form method="post" action="{% url 'hospital:update_response_status' response_id=response_obj.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="rejected">
+            <button type="submit" class="hd-btn hd-btn-sm hd-btn-soft-red">
+              <i class="fas fa-xmark"></i> Reject
+            </button>
+          </form>
+
+        {% elif response_obj.status == 'accepted' %}
+          <form method="post" action="{% url 'hospital:update_response_status' response_id=response_obj.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="completed">
+            <button type="submit" class="hd-btn hd-btn-sm hd-btn-soft-teal">
+              <i class="fas fa-droplet"></i> Mark Completed
+            </button>
+          </form>
+          <form method="post" action="{% url 'hospital:update_response_status' response_id=response_obj.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="rejected">
+            <button type="submit" class="hd-btn hd-btn-sm hd-btn-soft-red">
+              <i class="fas fa-xmark"></i> Reject
+            </button>
+          </form>
+
+        {% elif response_obj.status == 'completed' or response_obj.status == 'rejected' %}
+          <span style="font-size:13px;color:var(--text-muted);font-style:italic;">
+            <i class="fas fa-lock"></i> This response is finalized.
+          </span>
+        {% endif %}
+      </div>
+    </div>
+
+  </div><!-- /detail-card -->
+
+  <!-- ── Timeline ── -->
+  <div class="dr-timeline-card">
+    <div class="dr-timeline-head">
+      <div style="font-size:15px;font-weight:800;color:var(--text);">
+        <i class="fas fa-history" style="color:var(--primary);margin-right:8px;"></i>Activity Timeline
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
+        Response #{{ response_obj.id }} history
+      </div>
+    </div>
+    <div class="dr-timeline-body">
+
+      <!-- Submitted — always -->
+      <div class="tl-item">
+        <div class="tl-icon ti-blue"><i class="fas fa-user-plus"></i></div>
+        <div class="tl-content">
+          <div class="tl-title">Response Submitted</div>
+          <div class="tl-desc">
+            <strong>{{ response_obj.donor.get_full_name|default:response_obj.donor.username }}</strong>
+            submitted a donor response for request
+            <strong>{{ response_obj.request.request_id }}</strong>
+            ({{ response_obj.request.blood_type }}, {{ response_obj.request.required_units }} units).
+          </div>
+          <div class="tl-time">
+            <i class="far fa-clock"></i>
+            {{ response_obj.responded_at|date:"M d, Y H:i" }} &mdash;
+            {{ response_obj.responded_at|timesince }} ago
+          </div>
+        </div>
+      </div>
+
+      <!-- Status events -->
+      {% if response_obj.status == 'inprog' %}
+      <div class="tl-item">
+        <div class="tl-icon ti-violet"><i class="fas fa-wave-square"></i></div>
+        <div class="tl-content">
+          <div class="tl-title">Marked In Progress</div>
+          <div class="tl-desc">Response is currently being processed by the hospital coordinator.</div>
+          <div class="tl-time">{{ response_obj.updated_at|date:"M d, Y H:i" }}</div>
+        </div>
+      </div>
+      {% elif response_obj.status == 'accepted' %}
+      <div class="tl-item">
+        <div class="tl-icon ti-green"><i class="fas fa-check"></i></div>
+        <div class="tl-content">
+          <div class="tl-title">Response Accepted</div>
+          <div class="tl-desc">Donor has been accepted. Awaiting donation appointment.</div>
+          <div class="tl-time">{{ response_obj.updated_at|date:"M d, Y H:i" }}</div>
+        </div>
+      </div>
+      {% elif response_obj.status == 'rejected' %}
+      <div class="tl-item">
+        <div class="tl-icon ti-red"><i class="fas fa-xmark"></i></div>
+        <div class="tl-content">
+          <div class="tl-title">Response Rejected</div>
+          <div class="tl-desc">Donor response was reviewed and rejected.</div>
+          <div class="tl-time">{{ response_obj.updated_at|date:"M d, Y H:i" }}</div>
+        </div>
+      </div>
+      {% elif response_obj.status == 'completed' %}
+      <div class="tl-item">
+        <div class="tl-icon ti-teal"><i class="fas fa-droplet"></i></div>
+        <div class="tl-content">
+          <div class="tl-title">Donation Completed</div>
+          <div class="tl-desc">Donor successfully completed the blood donation process.</div>
+          <div class="tl-time">{{ response_obj.updated_at|date:"M d, Y H:i" }}</div>
+        </div>
+      </div>
+      {% else %}
+      <div class="tl-item">
+        <div class="tl-icon ti-amber"><i class="fas fa-hourglass-half"></i></div>
+        <div class="tl-content">
+          <div class="tl-title">Awaiting Review</div>
+          <div class="tl-desc">Response is pending review by the hospital coordinator.</div>
+          <div class="tl-time">{{ response_obj.responded_at|date:"M d, Y H:i" }}</div>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,6 +1,262 @@
 {% extends 'hospital/base.html' %}
 
-{% block content %}
-<h1>Settings Page</h1>
+{% block title %}Settings · إعدادات المنصة{% endblock %}
 
+{% block page_title %}Settings{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* تصميم كروت الإعدادات */
+    .settings-container {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .settings-section {
+        background: var(--hd-card-bg, #fff);
+        border-radius: 16px;
+        border: 1px solid var(--hd-border, #e5e7eb);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .settings-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--hd-border, #e5e7eb);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .settings-header i {
+        color: #1a56db;
+        font-size: 1.2rem;
+    }
+
+    .settings-header h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .settings-body {
+        padding: 24px;
+    }
+
+    /* صف الإعداد الواحد */
+    .setting-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 0;
+    }
+
+    .setting-row:not(:last-child) {
+        border-bottom: 1px dashed var(--hd-border, #e5e7eb);
+    }
+
+    .setting-info h3 {
+        font-size: 1rem;
+        margin: 0 0 4px 0;
+        font-weight: 600;
+    }
+
+    .setting-info p {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin: 0;
+    }
+
+    /* مفتاح التبديل (Switch Customization) */
+    .switch-toggle {
+        position: relative;
+        display: inline-block;
+        width: 52px;
+        height: 28px;
+    }
+
+    .switch-toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #d1d5db;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #1a56db;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(24px);
+    }
+
+    /* دعم الوضع الداكن للستايل الداخلي */
+    [data-theme="dark"] .settings-section {
+        background: #1f2937;
+        border-color: #374151;
+    }
+    [data-theme="dark"] .setting-info p {
+        color: #9ca3af;
+    }
+    [data-theme="dark"] .settings-header i {
+        color: #60a5fa;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+
+    <section class="settings-section">
+        <div class="settings-header">
+            <i class="fas fa-sliders-h"></i>
+            <h2 data-t="settings_preferences">Preferences & Appearance</h2>
+        </div>
+        <div class="settings-body">
+            
+            <div class="setting-row">
+                <div class="setting-info">
+                    <h3 data-t="settings_lang_title">Interface Language</h3>
+                    <p data-t="settings_lang_desc">Choose between Arabic and English for the panel.</p>
+                </div>
+                <div class="hd-toggle-pill" id="settingsLangToggle">
+                    <button id="btnEn" onclick="triggerLang('en')">EN</button>
+                    <button id="btnAr" onclick="triggerLang('ar')">AR</button>
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-info">
+                    <h3 data-t="settings_theme_title">Display Mode</h3>
+                    <p data-t="settings_theme_desc">Switch between light and dark visual themes.</p>
+                </div>
+                <div class="setting-action">
+                    <label class="switch-toggle">
+                        <input type="checkbox" id="themeSwitch" onclick="toggleTheme()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-header">
+            <i class="fas fa-shield-alt"></i>
+            <h2 data-t="settings_safety">Security</h2>
+        </div>
+        <div class="settings-body">
+            <div class="setting-row">
+                <div class="setting-info">
+                    <h3 data-t="settings_pass_title">Password</h3>
+                    <p data-t="settings_pass_desc">Keep your account secure by updating your password regularly.</p>
+                </div>
+                <button class="hd-nav-item" style="padding: 8px 16px; font-size: 14px; background: #f3f4f6; border-radius: 8px; border:none; cursor:pointer;">
+                    Update
+                </button>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 1. ترجمات إضافية لصفحة الإعدادات
+    Object.assign(translations.en, {
+        settings_preferences: 'Preferences & Appearance',
+        settings_lang_title: 'Interface Language',
+        settings_lang_desc: 'Choose between Arabic and English for the panel.',
+        settings_theme_title: 'Display Mode (Dark/Light)',
+        settings_theme_desc: 'Switch between light and dark visual themes.',
+        settings_safety: 'Security',
+        settings_pass_title: 'Account Password',
+        settings_pass_desc: 'Keep your account secure by updating your password.'
+    });
+
+    Object.assign(translations.ar, {
+        settings_preferences: 'التفضيلات والمظهر',
+        settings_lang_title: 'لغة الواجهة',
+        settings_lang_desc: 'اختر بين اللغة العربية والإنجليزية للوحة التحكم.',
+        settings_theme_title: 'وضع العرض (داكن/فاتح)',
+        settings_theme_desc: 'التبديل بين الثيم المضيء والمظلم.',
+        settings_safety: 'الأمان',
+        settings_pass_title: 'كلمة مرور الحساب',
+        settings_pass_desc: 'حافظ على أمان حسابك بتحديث كلمة المرور بانتظام.'
+    });
+
+    // 2. مزامنة حالة العناصر عند تحميل الصفحة
+    function syncSettingsPage() {
+        const currentTheme = localStorage.getItem('ehyaa_theme') || 'light';
+        const currentLang = localStorage.getItem('ehyaa_lang') || 'en';
+
+        // ضبط زر التبديل للثيم
+        const themeSwitch = document.getElementById('themeSwitch');
+        themeSwitch.checked = (currentTheme === 'dark');
+
+        // ضبط أزرار اللغة في الصفحة
+        updateLangButtons(currentLang);
+    }
+
+    // 3. وظيفة تغيير اللغة من داخل الصفحة
+    function triggerLang(lang) {
+        // استدعاء الوظيفة الموجودة في base.html
+        const btn = lang === 'en' ? document.getElementById('btnEn') : document.getElementById('btnAr');
+        setLang(lang, btn);
+        updateLangButtons(lang);
+    }
+
+    function updateLangButtons(lang) {
+        const btns = document.querySelectorAll('#settingsLangToggle button');
+        btns.forEach(b => b.classList.remove('active'));
+        if(lang === 'en') document.getElementById('btnEn').classList.add('active');
+        else document.getElementById('btnAr').classList.add('active');
+    }
+
+    // 4. وظيفة تغيير الثيم من خلال السويتش (Switch)
+    function toggleTheme() {
+        const isDark = document.getElementById('themeSwitch').checked;
+        const newTheme = isDark ? 'dark' : 'light';
+        
+        // استدعاء الوظيفة الأصلية من base.html
+        // نمرر كائن وهمي بدلاً من زر الـ Toggle الصغير في الـ topbar لتجنب الأخطاء
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('ehyaa_theme', newTheme);
+        
+        // مزامنة الأزرار في الـ Topbar أيضاً لتبقى الحالة موحدة
+        const topbarBtn = document.querySelector(`[data-theme-btn="${newTheme}"]`);
+        if(topbarBtn) {
+            document.querySelectorAll('#themeToggle button').forEach(b => b.classList.remove('active'));
+            topbarBtn.classList.add('active');
+        }
+    }
+
+    // التنفيذ عند التحميل
+    document.addEventListener('DOMContentLoaded', syncSettingsPage);
+</script>
 {% endblock %}

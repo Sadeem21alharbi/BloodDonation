@@ -327,13 +327,14 @@
             </a>
 
             <!-- الكرت الثاني: مستشفى -->
-            <div class="selection-card" onclick="toggleAuthOptions('hospital')" style="cursor: pointer;">
-                <div class="card-icon">
-                    <i class="fas fa-hospital"></i>
+            <a href="{% url 'hospital:hospital_login' %}" class="selection-card-link" style="text-decoration: none; color: inherit;">
+                <div class="selection-card">
+                    <div class="card-icon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <h3>مستشفى</h3>
+                    <p>إدارة طلبات التبرع والتواصل مع المتبرعين</p>
                 </div>
-                <h3>مستشفى / مركز طبي</h3>
-                <p>إدارة طلبات الدم والوصول للمتبرعين بسرعة</p>
-            </div>
         </div>
     </div>
 </section>

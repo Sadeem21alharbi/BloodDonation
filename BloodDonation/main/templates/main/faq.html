@@ -1,0 +1,234 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+الأسئلة الشائعة | منصة إحياء
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-blue: #1a56db;
+        --sky-light: #e0f2fe;
+        --accent-color: #3b82f6;
+    }
+
+    body {
+        font-family: 'Tajawal', sans-serif;
+        background-color: #f8fafc;
+        direction: rtl;
+    }
+
+    /* هيدر متناسق مع باقي الصفحات */
+    .faq-hero {
+        padding: 140px 0 100px;
+        background-color: var(--sky-light);
+        color: var(--primary-blue);
+        text-align: center;
+        border-bottom-left-radius: 50% 20%;
+        border-bottom-right-radius: 50% 20%;
+        margin-top: -100px;
+    }
+
+    .faq-hero h1 {
+        font-size: 4rem;
+        font-weight: 900;
+        margin-bottom: 15px;
+    }
+
+    /* حاوية الأسئلة */
+    .faq-container {
+        max-width: 900px;
+        margin: -50px auto 100px;
+        padding: 0 20px;
+    }
+
+    .faq-item {
+        background: white;
+        border-radius: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border: 1px solid rgba(26, 86, 219, 0.05);
+        overflow: hidden;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .faq-item:hover {
+        transform: scale(1.02);
+        box-shadow: 0 15px 45px rgba(26, 86, 219, 0.1);
+    }
+
+    .faq-question {
+        padding: 30px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        transition: 0.3s;
+    }
+
+    .faq-question h4 {
+        margin: 0;
+        font-weight: 700;
+        color: #2d3436;
+        font-size: 1.2rem;
+    }
+
+    .faq-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--sky-light);
+        color: var(--primary-blue);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.4s;
+    }
+
+    /* جزء الإجابة المخفي */
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+        background: #fafbff;
+    }
+
+    .faq-answer-content {
+        padding: 0 30px 30px;
+        color: #636e72;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    /* حالة الفتح */
+    .faq-item.active {
+        border-right: 8px solid var(--primary-blue);
+    }
+
+    .faq-item.active .faq-answer {
+        max-height: 1000px;
+        transition: max-height 1s ease-in-out;
+    }
+
+    .faq-item.active .faq-icon {
+        transform: rotate(180deg);
+        background: var(--primary-blue);
+        color: white;
+    }
+
+    /* أنيميشن الظهور */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: 0.8s ease-out;
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        .faq-hero h1 { font-size: 2.5rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="faq-hero">
+    <div class="container">
+        <div class="reveal active">
+            <span class="badge rounded-pill bg-white text-primary px-4 py-2 mb-3 fw-bold shadow-sm">لديك تساؤل؟</span>
+            <h1>الأسئلة الشائعة</h1>
+            <p class="lead opacity-80">كل ما تحتاج معرفته عن منصة إحياء ورحلة التبرع</p>
+        </div>
+    </div>
+</header>
+
+<div class="faq-container">
+    <!-- سؤال 1 -->
+    <div class="faq-item reveal">
+        <div class="faq-question">
+            <h4>كيف يمكنني البدء بالتبرع عبر المنصة؟</h4>
+            <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+        </div>
+        <div class="faq-answer">
+            <div class="faq-answer-content">
+                الأمر بسيط جداً! كل ما عليك هو إنشاء حساب، ثم تصفح حالات الاحتياج العاجلة في منطقتك، واختيار الحالة التي تناسبك للتوجه للمركز الطبي.
+            </div>
+        </div>
+    </div>
+
+    <!-- سؤال 2 -->
+    <div class="faq-item reveal">
+        <div class="faq-question">
+            <h4>هل بياناتي الصحية في أمان؟</h4>
+            <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+        </div>
+        <div class="faq-answer">
+            <div class="faq-answer-content">
+                بالتأكيد، في إحياء نولي الخصوصية أهمية قصوى. يتم تشفير كافة البيانات الشخصية والطبية ولا تظهر إلا للمنشآت الصحية المصرح لها فقط.
+            </div>
+        </div>
+    </div>
+
+    <!-- سؤال 3 -->
+    <div class="faq-item reveal">
+        <div class="faq-question">
+            <h4>ماهي شروط التبرع بالدم؟</h4>
+            <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+        </div>
+        <div class="faq-answer">
+            <div class="faq-answer-content">
+                يجب أن يكون عمر المتبرع بين 18-65 سنة، ولا يقل وزنه عن 50 كجم، بالإضافة إلى تمتعه بحالة صحية جيدة وعدم وجود أمراض معدية.
+            </div>
+        </div>
+    </div>
+
+    <!-- سؤال 4 -->
+    <div class="faq-item reveal">
+        <div class="faq-question">
+            <h4>كيف أحصل على نقاط الأبطال؟</h4>
+            <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+        </div>
+        <div class="faq-answer">
+            <div class="faq-answer-content">
+                بمجرد إتمام عملية التبرع وتوثيقها من قبل المستشفى، ستضاف النقاط تلقائياً إلى ملفك الشخصي لتظهر ضمن لوحة شرف أبطال إحياء.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // نظام الأكورديون الديناميكي
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            // إغلاق باقي الأسئلة عند فتح سؤال جديد (اختياري)
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) otherItem.classList.remove('active');
+            });
+            
+            item.classList.toggle('active');
+        });
+    });
+
+    // أنيميشن الظهور عند التمرير
+    function reveal() {
+        var reveals = document.querySelectorAll(".reveal");
+        for (var i = 0; i < reveals.length; i++) {
+            var windowHeight = window.innerHeight;
+            var elementTop = reveals[i].getBoundingClientRect().top;
+            if (elementTop < windowHeight - 50) {
+                reveals[i].classList.add("active");
+            }
+        }
+    }
+    window.addEventListener("scroll", reveal);
+    reveal();
+</script>
+{% endblock %}

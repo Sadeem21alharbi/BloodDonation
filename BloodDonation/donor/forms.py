@@ -5,22 +5,10 @@ from django.contrib.auth.models import User
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        # إضافة 'username' هنا لتمكين المتبرع من تعديله
+        fields = ['username', 'first_name', 'last_name', 'email']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-        }
-
-from django import forms
-from .models import DonorProfile
-from django.contrib.auth.models import User
-
-class UserUpdateForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'email']
-        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
@@ -30,16 +18,16 @@ class ProfileUpdateForm(forms.ModelForm):
     # خيارات نعم/لا للأمراض والأدوية
     CHRONIC_CHOICES = [('no', 'لا'), ('yes', 'نعم')]
     
-    # خيارات فصيلة الدم التي طلبتِها
+    # خيارات فصيلة الدم
     BLOOD_TYPES = [
-        ('', 'اختر فصيلة الدم'), # خيار فارغ في البداية
+        ('', 'اختر فصيلة الدم'),
         ('A+', 'A+'), ('A-', 'A-'),
         ('B+', 'B+'), ('B-', 'B-'),
         ('AB+', 'AB+'), ('AB-', 'AB-'),
         ('O+', 'O+'), ('O-', 'O-'),
     ]
 
-    # تعريف الحقول الإضافية
+    # تعريف الحقول الإضافية للتوافق مع منطق الـ JavaScript في الواجهة
     has_chronic = forms.ChoiceField(choices=CHRONIC_CHOICES, label="هل تعاني من أمراض مزمنة؟")
     takes_meds = forms.ChoiceField(choices=CHRONIC_CHOICES, label="هل تتناول أي أدوية؟")
     
@@ -62,7 +50,7 @@ class ProfileUpdateForm(forms.ModelForm):
             'gender': forms.Select(attrs={'class': 'form-control'}),
             'marital_status': forms.Select(attrs={'class': 'form-control'}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'blood_type': forms.Select(attrs={'class': 'form-control'}), # سيظهر كقائمة منسدلة
+            'blood_type': forms.Select(attrs={'class': 'form-control'}),
             'weight': forms.NumberInput(attrs={'class': 'form-control'}),
             'chronic_disease_type': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'اذكر نوع المرض'}),
             'medication_type': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'اذكر نوع الدواء'}),

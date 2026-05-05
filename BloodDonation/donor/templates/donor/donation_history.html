@@ -4,57 +4,83 @@
 {% block page_title %}سجل تبرعاتي{% endblock %}
 
 {% block content %}
-<div class="history-container" style="max-width: 900px; margin: 0 auto; animation: fadeIn 0.8s ease;">
+<div class="history-container" style="max-width: 900px; margin: 0 auto; animation: fadeIn 0.8s ease; direction: rtl;">
     
-    <!-- ملخص الإنجازات -->
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px;">
-        <div style="background: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-            <div style="color: #1a56db; font-size: 2rem; margin-bottom: 5px; font-weight: 800;">12</div>
-            <div style="color: #718096; font-size: 0.8rem;">إجمالي الوحدات</div>
+    <!-- ملخص الإنجازات (بيانات ديناميكية من بروفايل المتبرع) -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px;">
+        <!-- إجمالي الوحدات -->
+        <div style="background: white; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <div style="color: #1a56db; font-size: 2.2rem; margin-bottom: 5px; font-weight: 800;">
+                {{ user.donorprofile.total_donations|default:"0" }}
+            </div>
+            <div style="color: #718096; font-size: 0.9rem; font-weight: bold;">إجمالي الوحدات</div>
         </div>
-        <div style="background: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-            <div style="color: #e11d48; font-size: 2rem; margin-bottom: 5px; font-weight: 800;">36</div>
-            <div style="color: #718096; font-size: 0.8rem;">أرواح ساهمت في إنقاذها</div>
+
+        <!-- أرواح ساهمت في إنقاذها -->
+        <div style="background: white; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <div style="color: #e11d48; font-size: 2.2rem; margin-bottom: 5px; font-weight: 800;">
+                {{ user.donorprofile.lives_saved|default:"0" }}
+            </div>
+            <div style="color: #718096; font-size: 0.9rem; font-weight: bold;">أرواح ساهمت في إنقاذها</div>
         </div>
-        <div style="background: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-            <div style="color: #059669; font-size: 2rem; margin-bottom: 5px; font-weight: 800;">O+</div>
-            <div style="color: #718096; font-size: 0.8rem;">فصيلة دمك</div>
+
+        <!-- فصيلة الدم -->
+        <div style="background: white; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <div style="color: #059669; font-size: 2.2rem; margin-bottom: 5px; font-weight: 800;">
+                {{ user.donorprofile.blood_type|default:"--" }}
+            </div>
+            <div style="color: #718096; font-size: 0.9rem; font-weight: bold;">فصيلة دمك</div>
         </div>
     </div>
 
-    <!-- التايم لاين -->
+    <!-- التايم لاين (سجل العمليات) -->
     <div class="timeline" style="position: relative; padding: 20px 0;">
+        <!-- الخط العمودي -->
         <div style="position: absolute; right: 30px; top: 0; bottom: 0; width: 2px; background: #e2e8f0;"></div>
 
-        <!-- تبرع واحد -->
+        {% for record in donations %}
+        <!-- عنصر التبرع (ديناميكي) -->
         <div class="timeline-item" style="position: relative; margin-bottom: 30px; padding-right: 60px;">
-            <div style="position: absolute; right: 21px; top: 0; width: 20px; height: 20px; background: #1a56db; border: 4px solid white; border-radius: 50%; z-index: 2; box-shadow: 0 0 0 3px #bfdbfe;"></div>
+            <!-- نقطة التايم لاين (تتغير بناءً على كونها الأحدث أم لا) -->
+            <div style="position: absolute; right: 21px; top: 10px; width: 20px; height: 20px; 
+                 background: {% if forloop.first %}#1a56db{% else %}#cbd5e0{% endif %}; 
+                 border: 4px solid white; border-radius: 50%; z-index: 2; 
+                 box-shadow: {% if forloop.first %}0 0 0 3px #bfdbfe{% else %}none{% endif %};"></div>
             
-            <div style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center;">
+            <div style="background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center; border: 1px solid #f1f5f9;">
                 <div>
-                    <span style="color: #1a56db; font-size: 0.8rem; font-weight: bold;">15 مايو 2024</span>
-                    <h4 style="margin: 5px 0; color: #2d3748;">مستشفى دلة - الرياض</h4>
-                    <span style="color: #718096; font-size: 0.85rem;">تم بنجاح تبرع بوحدة واحدة</span>
+                    <span style="color: #1a56db; font-size: 0.85rem; font-weight: bold;">{{ record.date|date:"j F Y" }}</span>
+                    <h4 style="margin: 8px 0; color: #2d3748; font-weight: 700;">{{ record.hospital_name }}</h4>
+                    <span style="color: #718096; font-size: 0.9rem;">تم التبرع بـ ({{ record.units }}) وحدة بنجاح</span>
                 </div>
+                
                 <div style="text-align: center;">
-                    <span style="background: #ecfdf5; color: #059669; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">مكتمل</span>
-                    <br>
-                    <a href="#" style="color: #1a56db; font-size: 0.75rem; text-decoration: none; display: block; margin-top: 10px;">تحميل الشهادة <i class="fas fa-download"></i></a>
+                    <span style="background: #ecfdf5; color: #059669; padding: 8px 18px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; border: 1px solid #d1fae5;">مكتمل</span>
+                    
+                    {% if record.certificate %}
+                    <a href="{{ record.certificate.url }}" target="_blank" style="color: #1a56db; font-size: 0.8rem; text-decoration: none; display: block; margin-top: 15px; font-weight: bold;">
+                         تحميل الشهادة <i class="fas fa-download ms-1"></i>
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
-
-        <!-- تبرع آخر -->
-        <div class="timeline-item" style="position: relative; margin-bottom: 30px; padding-right: 60px;">
-            <div style="position: absolute; right: 21px; top: 0; width: 20px; height: 20px; background: #cbd5e0; border: 4px solid white; border-radius: 50%; z-index: 2;"></div>
-            
-            <div style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); opacity: 0.8;">
-                <span style="color: #718096; font-size: 0.8rem; font-weight: bold;">10 يناير 2024</span>
-                <h4 style="margin: 5px 0; color: #2d3748;">مدينة الملك فهد الطبية</h4>
-                <span style="color: #718096; font-size: 0.85rem;">تبرع دوري</span>
-            </div>
+        {% empty %}
+        <!-- في حال عدم وجود سجلات -->
+        <div style="text-align: center; padding: 50px; background: white; border-radius: 30px; border: 2px dashed #e2e8f0;">
+            <i class="fas fa-history style-block mb-3" style="font-size: 3rem; color: #cbd5e0;"></i>
+            <p style="color: #718096;">لا يوجد سجل تبرعات حالياً. ابدأ رحلة العطاء اليوم!</p>
+            <a href="{% url 'donor:available_requests' %}" class="btn btn-primary rounded-pill px-4 mt-2">استعرض طلبات التبرع</a>
         </div>
+        {% endfor %}
 
     </div>
 </div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
 {% endblock %}

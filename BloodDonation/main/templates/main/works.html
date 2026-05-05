@@ -1,0 +1,202 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+كيف يعمل | منصة إحياء
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --text-dark: #2d3436;
+        --sky-light: #e0f2fe;
+        /* ألوان الخطوات الجديدة */
+        --color-step-1: #8e44ad; /* بنفسجي */
+        --color-step-2: #ff7675; /* أحمر مرجاني */
+        --color-step-3: #00b894; /* أخضر زمردي */
+        --color-step-4: #fdcb6e; /* برتقالي ذهبي */
+    }
+
+    body {
+        font-family: 'Tajawal', sans-serif;
+        background-color: #fdfdfd;
+        direction: rtl;
+        overflow-x: hidden;
+    }
+
+    /* تعديل الهيدر ليطابق صفحة "من نحن" في عرض الخط والقياسات */
+    .works-hero {
+        padding: 140px 0 100px;
+        background-color: var(--sky-light);
+        color: #1a56db;
+        text-align: center;
+        border-bottom-left-radius: 50% 20%;
+        border-bottom-right-radius: 50% 20%;
+        margin-top: -100px;
+    }
+
+    .works-hero h1 {
+        font-size: 4rem; /* نفس قياس من نحن */
+        font-weight: 900; /* جعل الخط عريض جداً */
+        letter-spacing: -1px;
+        margin-bottom: 20px;
+    }
+
+    .works-hero p.lead {
+        font-size: 1.25rem;
+        font-weight: 600;
+        opacity: 0.9;
+    }
+
+    .journey-container {
+        position: relative;
+        padding: 80px 0;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .journey-step {
+        display: grid;
+        grid-template-columns: 1fr 80px 1fr;
+        align-items: center;
+        margin-bottom: 100px;
+        position: relative;
+    }
+
+    .step-card {
+        background: white;
+        padding: 40px;
+        border-radius: 35px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: 0.5s ease;
+        border-top: 5px solid #eee; /* سيتغير حسب الخطوة */
+    }
+
+    /* تخصيص ألوان كل خطوة */
+    .step-1 .step-card { border-top-color: var(--color-step-1); }
+    .step-1 .step-badge { background: var(--color-step-1); }
+    .step-1 .step-icon { color: var(--color-step-1); }
+
+    .step-2 .step-card { border-top-color: var(--color-step-2); }
+    .step-2 .step-badge { background: var(--color-step-2); }
+    .step-2 .step-icon { color: var(--color-step-2); }
+
+    .step-3 .step-card { border-top-color: var(--color-step-3); }
+    .step-3 .step-badge { background: var(--color-step-3); }
+    .step-3 .step-icon { color: var(--color-step-3); }
+
+    .step-4 .step-card { border-top-color: var(--color-step-4); }
+    .step-4 .step-badge { background: var(--color-step-4); }
+    .step-4 .step-icon { color: var(--color-step-4); }
+
+    .journey-step.odd .step-card { grid-column: 1; text-align: right; }
+    .journey-step.even .step-card { grid-column: 3; text-align: right; }
+
+    .step-badge {
+        grid-column: 2;
+        width: 60px; height: 60px;
+        color: white;
+        border-radius: 20px; /* شكل مربع منحني عصري */
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; font-weight: bold;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        justify-self: center;
+    }
+
+    .step-icon {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .step-card h3 { color: var(--text-dark); font-weight: 800; }
+
+    /* أنيميشن عند التحويم */
+    .step-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .reveal { opacity: 0; transform: translateY(40px); transition: 0.8s ease-out; }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 991px) {
+        .journey-step { grid-template-columns: 1fr; gap: 20px; }
+        .journey-step.odd .step-card, .journey-step.even .step-card { grid-column: 1; text-align: center; }
+        .step-badge { grid-column: 1; grid-row: 1; margin: 0 auto; }
+        .works-hero h1 { font-size: 2.5rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="works-hero">
+    <div class="container">
+        <div class="reveal active">
+            <span class="badge rounded-pill bg-white text-primary px-4 py-2 mb-3 fw-bold shadow-sm">كيف يعمل</span><h1>رحلة العطاء في إحياء</h1>
+            <p class="lead mx-auto" style="max-width: 700px;">خطوات بسيطة لأثر يدوم طويلاً</p>
+        </div>
+    </div>
+</header>
+
+<div class="container journey-container">
+
+    <!-- الخطوة 1 -->
+    <div class="journey-step odd step-1">
+        <div class="step-card reveal">
+            <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+            <h3>إنشاء حساب</h3>
+            <p class="text-muted">انضم لأسرة إحياء كمتبرع أو منشأة صحية في دقائق معدودة وبكل أمان.</p>
+        </div>
+        <div class="step-badge">1</div>
+        <div class="empty"></div>
+    </div>
+
+    <!-- الخطوة 2 -->
+    <div class="journey-step even step-2">
+        <div class="empty"></div>
+        <div class="step-badge">2</div>
+        <div class="step-card reveal">
+            <div class="step-icon"><i class="fas fa-map-marked-alt"></i></div>
+            <h3>تحديد الاحتياج</h3>
+            <p class="text-muted">ابحث عن حالات التبرع القريبة منك أو اطلب فصيلة دم محددة لمستشفى معين.</p>
+        </div>
+    </div>
+
+    <!-- الخطوة 3 -->
+    <div class="journey-step odd step-3">
+        <div class="step-card reveal">
+            <div class="step-icon"><i class="fas fa-hospital-symbol"></i></div>
+            <h3>زيارة المركز</h3>
+            <p class="text-muted">توجه لمركز التبرع المعتمد بكل سهولة مع دعم تقني يوجهك طوال الطريق.</p>
+        </div>
+        <div class="step-badge">3</div>
+        <div class="empty"></div>
+    </div>
+
+    <!-- الخطوة 4 -->
+    <div class="journey-step even step-4">
+        <div class="empty"></div>
+        <div class="step-badge">4</div>
+        <div class="step-card reveal">
+            <div class="step-icon"><i class="fas fa-medal"></i></div>
+            <h3>بطل إحياء</h3>
+            <p class="text-muted">أتممت المهمة! الآن أنت بطل في لوحة الشرف وصاحب أثر عظيم في حياة الآخرين.</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function reveal() {
+        var reveals = document.querySelectorAll(".reveal");
+        for (var i = 0; i < reveals.length; i++) {
+            var windowHeight = window.innerHeight;
+            var elementTop = reveals[i].getBoundingClientRect().top;
+            if (elementTop < windowHeight - 100) reveals[i].classList.add("active");
+        }
+    }
+    window.addEventListener("scroll", reveal);
+    reveal();
+</script>
+{% endblock %}

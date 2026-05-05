@@ -1,0 +1,92 @@
+{% extends 'main/base.html' %}
+{% block title %} الشروط والأحكام | منصة إحياء {% endblock %}
+
+{% block extra_css %}
+<style>
+    /* نستخدم نفس الـ CSS لضمان التناسق */
+    :root { --primary-blue: #1a56db; --sky-light: #e0f2fe; }
+    body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; direction: rtl; }
+    
+    .legal-hero {
+        padding: 140px 0 100px;
+        background-color: var(--sky-light);
+        color: var(--primary-blue);
+        text-align: center;
+        border-bottom-left-radius: 50% 20%;
+        border-bottom-right-radius: 50% 20%;
+        margin-top: -100px;
+    }
+    .legal-hero h1 { font-size: 3.5rem; font-weight: 900; }
+
+    .legal-content {
+        max-width: 900px;
+        margin: -50px auto 100px;
+        background: white;
+        padding: 60px;
+        border-radius: 40px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+    }
+    .term-item {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px dashed #e5e7eb;
+    }
+    .term-number {
+        min-width: 40px; height: 40px;
+        background: var(--primary-blue);
+        color: white;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold;
+    }
+    .term-text h4 { color: #1f2937; font-weight: 800; margin-bottom: 8px; }
+    .term-text p { color: #6b7280; line-height: 1.6; }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="legal-hero">
+    <div class="container">
+        <h1>الشروط والأحكام</h1>
+        <p class="lead">القواعد التي تنظم استخدامك لمنصة إحياء</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="legal-content">
+        <div class="term-item">
+            <div class="term-number">٠١</div>
+            <div class="term-text">
+                <h4>أهلية الاستخدام</h4>
+                <p>باستخدامك للمنصة، تقر بأنك تبلغ من العمر السن القانوني للتبرع أو تملك موافقة ولي الأمر، وأن جميع المعلومات المدخلة صحيحة تماماً.</p>
+            </div>
+        </div>
+
+        <div class="term-item">
+            <div class="term-number">٠٢</div>
+            <div class="term-text">
+                <h4>المسؤولية الطبية</h4>
+                <p>منصة إحياء هي وسيط تقني لتسهيل الوصول للمتبرعين؛ القرار النهائي الطبي والموافقة على التبرع هي مسؤولية الطاقم الطبي في المنشأة الصحية.</p>
+            </div>
+        </div>
+
+        <div class="term-item">
+            <div class="term-number">٠٣</div>
+            <div class="term-text">
+                <h4>السلوك الأخلاقي</h4>
+                <p>يُمنع منعاً باتاً استخدام المنصة لأغراض تجارية أو طلب مبالغ مالية مقابل التبرع. التبرع في إحياء عمل تطوعي إنساني بحت.</p>
+            </div>
+        </div>
+
+        <div class="term-item">
+            <div class="term-number">٠٤</div>
+            <div class="term-text">
+                <h4>التعديلات</h4>
+                <p>تحتفظ إحياء بالحق في تحديث هذه الشروط بما يتماشى مع الأنظمة الصحية في المملكة، وسيتم إخطار المستخدمين بأي تغييرات جوهرية.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

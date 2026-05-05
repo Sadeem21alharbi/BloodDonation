@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-إحياء | منصة التبرع بالدم
+إحياء | منصة التبرع بالدم الذكية
 {% endblock %}
 
 {% block extra_css %}
@@ -12,194 +12,138 @@
         --sky-blue: #3282b8;
         --light-blue: #bbe1fa;
         --white: #ffffff;
-        --bg-soft: #f4f9ff;
+        --bg-soft: #f8fbff;
+        --hospital-green: #34a853;
     }
 
+    body {
+        background-color: var(--white);
+        font-family: 'Tajawal', sans-serif;
+        direction: rtl;
+        overflow-x: hidden;
+    }
+
+    /* إزالة الخطوط نهائياً */
+    a, a:hover {
+        text-decoration: none !important;
+    }
+
+    /* --- Hero Section --- */
     .hero-section {
-        background: linear-gradient(135deg, var(--deep-blue) 0%, var(--sky-blue) 100%) !important;
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
         color: white !important;
-        padding: 160px 0 120px !important; 
+        padding: 180px 0 140px !important; 
         text-align: center;
-        margin-top: -80px;
+        margin-top: -100px;
+        position: relative;
+        overflow: hidden;
+        clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
     }
 
-    .hero-title {
-        font-size: 3.2rem;
-        font-weight: 800;
-        margin-bottom: 20px;
-        color: white !important;
-    }
-
-    .hero-subtitle {
-        font-size: 1.25rem;
-        opacity: 0.9;
-        margin-bottom: 40px;
-        color: white !important;
-    }
+    .hero-title { font-size: 4rem; font-weight: 900; margin-bottom: 25px; color: white !important; }
+    .hero-subtitle { font-size: 1.4rem; opacity: 0.9; margin-bottom: 45px; color: white !important; }
 
     .btn-white-rounded {
         background-color: var(--white) !important;
         color: var(--deep-blue) !important;
-        padding: 15px 40px;
+        padding: 18px 50px;
         border-radius: 50px;
-        font-weight: 700;
-        text-decoration: none;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        font-weight: 800;
         display: inline-block;
-        transition: 0.3s;
+        transition: 0.4s;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
 
-    .btn-white-rounded:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    }
-
-    .services-area {
-        margin-top: -60px; 
-        padding-bottom: 60px;
-    }
+    /* --- كروت الخدمات العلوية --- */
+    .services-area { margin-top: -80px; padding-bottom: 80px; position: relative; z-index: 10; }
 
     .service-card {
         background: var(--white);
-        border-radius: 30px; 
-        padding: 40px 30px;
+        border-radius: 40px; 
+        padding: 50px 30px;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        transition: 0.3s;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        transition: 0.5s ease;
         height: 100%;
-        border: none;
+        border: 1px solid rgba(0,0,0,0.02);
     }
 
     .service-card:hover {
-        transform: translateY(-10px);
+        transform: translateY(-15px);
+        box-shadow: 0 30px 60px rgba(26, 86, 219, 0.15);
     }
 
     .icon-box-rect {
-        width: 65px;
-        height: 65px;
+        width: 80px; height: 80px;
         background-color: var(--light-blue);
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 25px;
-        font-size: 1.8rem;
+        border-radius: 25px;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 30px;
+        font-size: 2.2rem;
         color: var(--deep-blue);
     }
 
-    .importance-section {
-        padding: 80px 0;
-        background-color: var(--white);
+    /* --- قسم اختيار المستخدم (المنطقة اللي فيها المشكلة) --- */
+    .user-selection-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        max-width: 1000px;
+        margin: 50px auto 0;
     }
 
-    .importance-card-horizontal {
-        background: var(--bg-soft);
-        border-radius: 20px;
-        padding: 25px 20px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-        border-right: 6px solid var(--sky-blue); 
-        transition: 0.3s;
+    /* توحيد التصميم والأنيميشن للكارتين */
+    .selection-card {
+        background: #fdfdfd;
+        border: 2px solid #f0f0f0;
+        border-radius: 40px;
+        padding: 60px 40px;
+        text-align: center;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        cursor: pointer;
         height: 100%;
-    }
-
-    .importance-card-horizontal:hover {
-        background-color: var(--light-blue);
-        transform: translateX(-5px);
-    }
-
-    .icon-circle-blue {
-        min-width: 50px;
-        height: 50px;
-        background-color: var(--sky-blue);
-        border-radius: 50%;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 1.2rem;
     }
-    
-    h4, h6 { font-family: 'Tajawal', sans-serif; color: var(--deep-blue); }
 
-    /* --- قسم تحديد نوع المستخدم --- */
-.user-selection-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.selection-card {
-    background: var(--bg-card);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 40px 30px;
-    text-align: center;
-    cursor: pointer;
-    transition: var(--transition-slow);
-    position: relative;
-    overflow: hidden;
-}
-
-.selection-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-lg);
-}
-
-.selection-card .card-icon {
-    font-size: 3rem;
-    color: var(--primary);
-    margin-bottom: 20px;
-}
-
-.selection-card h3 {
-    font-size: 1.5rem;
-    color: var(--text);
-    margin-bottom: 10px;
-}
-
-.selection-card p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    margin-bottom: 25px;
-}
-
-.auth-buttons-wrapper {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    max-height: 0;
-    opacity: 0;
-    transition: all 0.4s ease;
-    overflow: hidden;
-}
-
-.selection-card.active {
-    border-color: var(--primary);
-    background: var(--primary-light);
-}
-
-.selection-card.active .auth-buttons-wrapper {
-    max-height: 100px;
-    opacity: 1;
-    margin-top: 10px;
-}
-
-@media (max-width: 768px) {
-    .user-selection-grid {
-        grid-template-columns: 1fr;
+    /* أنيميشن الرفع عند اللمس (Hover) للكارتين */
+    .selection-card:hover {
+        border-color: var(--deep-blue);
+        background: white;
+        transform: translateY(-20px);
+        box-shadow: 0 40px 70px rgba(0, 0, 0, 0.1);
     }
-}
+
+    /* أنيميشن الأيقونة */
+    .card-icon {
+        font-size: 4.5rem;
+        margin-bottom: 25px;
+        display: block;
+        transition: 0.5s;
+    }
+
+    .selection-card:hover .card-icon {
+        transform: scale(1.1);
+    }
+
+    .donor-icon { color: var(--deep-blue); }
+    .hospital-icon { color: var(--hospital-green); }
+
+    .selection-card h3 { font-size: 2rem; font-weight: 800; color: #333; margin-bottom: 15px; }
+    .selection-card p { font-size: 1.1rem; color: #666; }
+
+    /* أنيميشن الظهور التدريجي */
+    .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) { .user-selection-grid { grid-template-columns: 1fr; } }
 </style>
 {% endblock %}
 
 {% block content %}
-
 <header class="hero-section">
     <div class="container">
         <h1 class="hero-title">تبرع بدمك.. وانقذ حياة</h1>
@@ -208,121 +152,56 @@
     </div>
 </header>
 
-<section class="services-area">
-    <div class="container">
-        <div class="row g-4 text-center">
-            <div class="col-md-4">
+<section class="services-area container">
+    <div class="row g-4 text-center">
+        <div class="col-md-4 reveal">
+            <a href="{% url 'donor:journey' %}">
                 <div class="service-card">
-                    <div class="icon-box-rect"><i class="fas fa-hospital"></i></div><h4 class="fw-bold">مراكز التبرع</h4>
-                    <p class="text-muted small">اكتشف مراكز التبرع المعتمدة والمستشفيات القريبة من موقعك.</p>
+                    <div class="icon-box-rect"><i class="fas fa-route"></i></div>
+                    <h4 class="fw-bold">رحلة المتبرع</h4>
+                    <p class="text-muted small">اكتشف خطواتك البسيطة لتصبح بطلاً.</p>
                 </div>
-            </div>
-            <div class="col-md-4">
+            </a>
+        </div>
+        <div class="col-md-4 reveal">
+            <a href="{% url 'donor:leaderboard' %}">
                 <div class="service-card">
                     <div class="icon-box-rect"><i class="fas fa-medal"></i></div>
-                    <h4 class="fw-bold">أفضل المتبرعين</h4>
-                    <p class="text-muted small">قائمة الشرف لأبطال إحياء الذين صنعوا الفرق بعطائهم المستمر ومساهماتهم الإنسانية</p>
+                    <h4 class="fw-bold">قائمة الأبطال</h4>
+                    <p class="text-muted small">لوحة الشرف لأكثر المتبرعين عطاءً.</p>
                 </div>
-            </div>
-            <div class="col-md-4">
+            </a>
+        </div>
+        <div class="col-md-4 reveal">
+            <a href="{% url 'donor:impact' %}">
                 <div class="service-card">
                     <div class="icon-box-rect"><i class="fas fa-heartbeat"></i></div>
                     <h4 class="fw-bold">أثر إحياء</h4>
-                    <p class="text-muted small">نترجم عطائكم إلى أرقام ... اكتشف كيف ساهمت منصتنا في ربط الآف المتبرعين بالمحتاجين</p>
+                    <p class="text-muted small">نترجم عطاءكم إلى أرقام وإحصائيات.</p>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 </section>
 
-<section class="importance-section">
+<!-- القسم المطلوب تعديله -->
+<section class="user-type-section" id="join" style="padding: 100px 0;">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold" style="color: var(--deep-blue);">لماذا نتبرع بالدم؟</h2>
-            <p class="text-muted">تكمن أهمية التبرع بالدم في الحفاظ على الأرواح وإنقاذ الحالات الحرجة</p>
-            <div style="width: 80px; height: 4px; background: var(--sky-blue); margin: 10px auto; border-radius: 2px;"></div>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-4">
-                <div class="importance-card-horizontal">
-                    <div class="icon-circle-blue"><i class="fas fa-car-crash"></i></div>
-                    <div>
-                        <h6 class="fw-bold mb-1">الطوارئ والحوادث</h6>
-                        <p class="small mb-0 text-muted">حوادث السيارات، الحروق الشديدة، والكوارث التي تتطلب تدخلات جراحية فورية.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="importance-card-horizontal">
-                    <div class="icon-circle-blue"><i class="fas fa-baby"></i></div>
-                    <div>
-                        <h6 class="fw-bold mb-1">مضاعفات الحمل</h6>
-                        <p class="small mb-0 text-muted">النزيف قبل أو بعد الولادة، وحالات الحمل خارج الرحم التي تهدد حياة الأم.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="importance-card-horizontal">
-                    <div class="icon-circle-blue"><i class="fas fa-user-nurse"></i></div>
-                    <div>
-                        <h6 class="fw-bold mb-1">فقر الدم الحاد</h6>
-                        <p class="small mb-0 text-muted">نقل الدم للمرضى من جميع الأعمار الذين يعانون من فقر دم حاد يهدد صحتهم.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="importance-card-horizontal">
-                    <div class="icon-circle-blue"><i class="fas fa-dna"></i></div>
-                    <div>
-                        <h6 class="fw-bold mb-1">اضطرابات الدم الموروثة</h6>
-                        <p class="small mb-0 text-muted">الثلاسيميا، فقر الدم المنجلي، واضطرابات الهيموجلوبين ونخاع العظم.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="importance-card-horizontal">
-                    <div class="icon-circle-blue"><i class="fas fa-virus-slash"></i></div>
-                    <div>
-                        <h6 class="fw-bold mb-1">مرضى السرطان</h6>
-                        <p class="small mb-0 text-muted">دعم مرضى السرطان أثناء العلاج والأشخاص الذين يعانون من نقص المناعة.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="importance-card-horizontal">
-                    <div class="icon-circle-blue"><i class="fas fa-pills"></i></div><div>
-                        <h6 class="fw-bold mb-1">صناعة الأدوية الحيوية</h6>
-                        <p class="small mb-0 text-muted">استخلاص عوامل التجلط للأشخاص المصابين بالهيموفيليا والمواد الطبية.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="user-type-section section" id="join">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="section-title">انضم إلى منصة إحياء</h2>
-            <p class="section-sub">من فضلك حدد نوع الحساب للبدء في استخدام المنصة</p>
+        <div class="text-center mb-5 reveal">
+            <h2 class="fw-bold" style="font-size: 2.8rem; color: var(--deep-blue);">انضم إلى منصة إحياء</h2>
+            <p class="text-muted">اختر نوع الحساب للبدء في استخدام المنصة</p>
         </div>
 
         <div class="user-selection-grid">
-            <!-- الكرت الأول: متبرع بالدم -->
-            <!-- جعلنا الرابط يحيط بكل المحتوى ليكون الكرت كاملاً قابلاً للضغط -->
-            <a href="{% url 'donor:login' %}" class="selection-card-link" style="text-decoration: none; color: inherit;">
+            <!-- كرت المتبرع المعدل -->
+            <a href="{% url 'donor:login' %}" class="reveal" style="display: block;">
                 <div class="selection-card">
-                    <div class="card-icon">
-                        <i class="fas fa-hand-holding-heart"></i>
+                    <div class="card-icon donor-icon">
+                        <i class="fas fa-hand-holding-heart"></i> <!-- أيقونة مضمونة الظهور -->
                     </div>
-                    <h3>متبرع بالدم</h3>
+                    <h3>أنا متبرع</h3>
                     <p>ساهم في إنقاذ الأرواح وتابع سجل تبرعاتك</p>
+                    <span class="btn btn-primary rounded-pill px-5 py-2 mt-4 fw-bold">دخول المتبرعين</span>
                 </div>
             </a>
 
@@ -335,8 +214,20 @@
                     <h3>مستشفى</h3>
                     <p>إدارة طلبات التبرع والتواصل مع المتبرعين</p>
                 </div>
+            <!-- كرت المستشفى المعدل --> 
         </div>
     </div>
 </section>
 
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 {% endblock %}

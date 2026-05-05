@@ -8,6 +8,7 @@
         --text-dark: #1e293b;
         --text-muted: #64748b;
         --danger: #e11d48;
+        --warning: #f59e0b;
     }
 
     .profile-master-card {
@@ -35,7 +36,7 @@
         margin: 0;
     }
 
-    /* منطقة الصورة الشخصية المحدثة بإحداثياتك الجديدة */
+    /* منطقة الصورة الشخصية */
     .avatar-upload-wrapper {
         position: relative;
         width: 150px;
@@ -62,8 +63,8 @@
 
     .edit-badge {
         position: absolute;
-        bottom: 30px; /* الإحداثية التي اعتمدتيها وزبطت معك */
-        right: 15px;  /* الإحداثية التي اعتمدتيها وزبطت معك */
+        bottom: 30px;
+        right: 15px;
         background: var(--primary-blue);
         color: white;
         width: 38px;
@@ -146,15 +147,36 @@
 
     .btn-save:hover { background: #1e40af; transform: translateY(-2px); }
 
+    /* منطقة الخطر */
+    .danger-zone {
+        border: 2px dashed #fee2e2;
+        padding: 25px;
+        border-radius: 18px;
+        margin-top: 50px;
+    }
+
+    .btn-delete {
+        background: white;
+        color: var(--danger);
+        border: 2px solid var(--danger);
+        padding: 10px 25px;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .btn-delete:hover { background: var(--danger); color: white; }
+
     .hidden-input { display: none; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-</style>
-
-<div class="container">
+</style><div class="container">
     <div class="profile-master-card">
         <div class="header-section">
-            <h2>تعديل الملف الشخصي</h2>
+            <div>
+                <h2>تعديل الملف الشخصي</h2>
+                <small class="text-muted"><i class="far fa-clock ms-1"></i>آخر تحديث: {{ user.last_login|date:"Y/m/d" }}</small>
+            </div>
             <i class="fas fa-user-circle fa-2x text-primary" style="opacity: 0.3;"></i>
         </div>
 
@@ -163,7 +185,8 @@
             
             <!-- قسم الصورة الشخصية -->
             <div class="avatar-upload-wrapper">
-                <div id="avatar-container">{% if user.donorprofile.image %}
+                <div id="avatar-container">
+                    {% if user.donorprofile.image %}
                         <img src="{{ user.donorprofile.image.url }}" id="image-preview" class="avatar-preview">
                     {% else %}
                         <div id="image-preview" class="avatar-preview">
@@ -183,7 +206,25 @@
                 </div>
             </div>
 
-            <!-- البيانات الأساسية المستمدة من صورة الكود image_74.png -->
+            <!-- بيانات الحساب (المطلوبة: اسم المستخدم وكلمة السر) -->
+            <div class="field-group">
+                <div class="group-title">
+                    <i class="fas fa-user-lock"></i> بيانات الحساب
+                </div>
+                <div class="custom-form-grid">
+                    <div class="input-box">
+                        <label>اسم المستخدم</label>
+                        {{ u_form.username }}
+                    </div>
+                    <div class="input-box align-self-end">
+                        <a href="{% url 'donor:password_change' %}" class="btn btn-outline-secondary btn-sm rounded-pill" style="padding: 10px;">
+                            <i class="fas fa-key ms-1"></i> تغيير كلمة المرور
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- البيانات الشخصية -->
             <div class="field-group">
                 <div class="group-title">
                     <i class="fas fa-id-card"></i> البيانات الشخصية
@@ -207,10 +248,9 @@
                     <div class="input-box"><label>المدينة</label> {{ p_form.city }}</div>
                     <div class="input-box"><label>الجنس</label> {{ p_form.gender }}</div>
                     <div class="input-box"><label>الحالة الاجتماعية</label> {{ p_form.marital_status }}</div>
-                </div>
-            </div>
+                </div></div>
 
-            <!-- الملف الصحي المستمد من صورة الكود image_74.png -->
+            <!-- الملف الصحي -->
             <div class="field-group">
                 <div class="group-title">
                     <i class="fas fa-heartbeat"></i> الملف الصحي
@@ -247,6 +287,42 @@
                 <button type="submit" class="btn-save shadow-sm">حفظ التغييرات</button>
             </div>
         </form>
+
+        <!-- منطقة حذف الحساب -->
+        <div class="danger-zone">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="text-danger fw-bold mb-1">حذف الحساب</h5>
+                    <p class="text-muted small mb-0">بمجرد حذف حسابك، سيتم مسح كافة بياناتك وسجل تبرعاتك نهائياً.</p>
+                </div>
+                <button type="button" class="btn-delete" data-bs-toggle="modal" data-bs-target="#confirmDelete">
+                    حذف الحساب
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مودال تأكيد الحذف -->
+<div class="modal fade" id="confirmDelete" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow" style="border-radius: 20px;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">تأكيد الحذف النهائي</h5>
+                <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="fas fa-exclamation-triangle text-danger mb-3" style="font-size: 3rem;"></i>
+                <p class="px-3">هل أنتِ متأكدة من رغبتك في حذف الحساب؟ لن تتمكني من التراجع عن هذه الخطوة.</p>
+            </div>
+            <div class="modal-footer border-0">
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="delete_account" class="btn btn-danger rounded-pill px-4">نعم، احذف حسابي</button>
+                </form>
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">إلغاء</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -286,11 +362,11 @@
         const medsSelect = document.querySelector('[name="takes_meds"]');
         
         if(chronicSelect) {
-            const showChronic = chronicSelect.value === 'True' || chronicSelect.value === 'yes';
+            const showChronic = chronicSelect.value === 'True'  chronicSelect.value === 'yes'  chronicSelect.value === 'True';
             document.getElementById('chronic_div').style.display = showChronic ? 'flex' : 'none';
         }
         if(medsSelect) {
-            const showMeds = medsSelect.value === 'True' || medsSelect.value === 'yes';
+            const showMeds = medsSelect.value === 'True'  medsSelect.value === 'yes'  medsSelect.value === 'True';
             document.getElementById('meds_div').style.display = showMeds ? 'flex' : 'none';
         }
     }

@@ -1,8 +1,10 @@
 <!-- templates/base.html -->
 {% load static %}
+{% load i18n %}
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+{# هنا السحر: يتحول dir إلى rtl إذا كانت اللغة عربية، و ltr إذا كانت إنجليزية #}
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,39 +16,92 @@
   <!-- CSS -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  {# تحميل نسخة Bootstrap المناسبة للاتجاه #}
+  {% if LANGUAGE_CODE == 'ar' %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+  {% else %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  {% endif %}
   
   <!-- Phosphor Icons -->
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
-
-  <style>
-    /* التعديل لمنع الخطوط تحت النصوص في الروابط بالكامل */
-    a, 
-    .nav-links a, 
-    .mobile-nav a, 
-    .footer-links a, 
-    .footer-bottom-links a, 
-    .nav-logo {
+<style>
+    /* 1. القواعد العامة */
+    a, .nav-links a, .mobile-nav a, .footer-links a, .footer-bottom-links a, .nav-logo {
       text-decoration: none !important;
     }
 
-    /* تحسين شكل الروابط عند تمرير الماوس */
-    .nav-links a:hover, 
-    .footer-links a:hover {
-      text-decoration: none !important;
-      opacity: 0.8;
-    }
-
-    /* تأكيد الخط العام للمنصة */
     body {
       font-family: 'Tajawal', sans-serif !important;
     }
-  </style>
+
+    /* 2. زر اللغة */
+    .lang-submit {
+      background: #1a56db;
+      color: white;
+      border: none;
+      padding: 5px 18px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    /* 3. السيطرة الكاملة على الاتجاه (هذا ما سيحل مشكلتك) */
+    {% if LANGUAGE_CODE == 'ar' %}
+    /* إجبار كل شيء على اليمين في العربي */
+    html[dir="rtl"] body {
+      text-align: right !important;
+      direction: rtl !important;
+    }
+    
+    /* إجبار الـ Navbar على ترتيب نفسه يمين-يسار */
+    html[dir="rtl"] .nav-inner, 
+    html[dir="rtl"] .navbar, 
+    html[dir="rtl"] .nav-links {
+      flex-direction: row !important;
+      direction: rtl !important;
+    }
+
+    /* إصلاح الهوامش التي قد تكون ثابتة في ملف الـ CSS الخاص بالهوم */
+    html[dir="rtl"] * {
+      margin-left: initial !important;
+      margin-right: initial !important;
+      float: none !important; /* إبطال أي float قديم */
+    }
+    
+    /* إجبار الحقول على اليمين */
+    html[dir="rtl"] input, 
+    html[dir="rtl"] .form-control {
+      text-align: right !important;
+    }
+
+    {% else %}
+    /* إجبار كل شيء على اليسار في الإنجليزي */
+    html[dir="ltr"] body {
+      text-align: left !important;
+      direction: ltr !important;
+    }
+    
+    html[dir="ltr"] .nav-inner {
+      flex-direction: row-reverse !important; /* قلب العناصر لتناسب الإنجليزية */
+    }
+    {% endif %}
+
+    /* تنسيق إضافي لضمان عدم تداخل اللوجو مع الزر */
+    .nav-inner {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      width: 100%;
+    }
+</style>
 
   {% block extra_css %}{% endblock %}
 </head>
 
-<body class="lang-ar">
+<body class="lang-{{ LANGUAGE_CODE }}">
 
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
@@ -62,29 +117,40 @@
 
     <!-- Desktop Nav -->
     <ul class="nav-links">
-      <li><a href="{% url 'main:home' %}" class="active">الرئيسية</a></li>
-      <li><a href="{% url 'main:about' %}">عن المنصة</a></li>
-      <li><a href="{% url 'main:works' %}">كيف يعمل</a></li>
-      <li><a href="{% url 'main:faq' %}"> الأسئلة الشائعة </a></li>
-      <li><a href="{% url 'main:home' %}#join">أنضم إلينا</a></li>
+      <li><a href="{% url 'main:home' %}">{% trans "الرئيسية" %}</a></li>
+      <li><a href="{% url 'main:about' %}">{% trans "عن المنصة" %}</a></li>
+      <li><a href="{% url 'main:works' %}">{% trans "كيف يعمل" %}</a></li>
+      <li><a href="{% url 'main:faq' %}">{% trans "الأسئلة الشائعة" %}</a></li>
+      <li><a href="{% url 'main:home' %}#join">{% trans "أنضم إلينا" %}</a></li>
     </ul>
 
     <!-- Controls -->
     <div class="nav-controls">
-      <button class="lang-toggle" id="langToggle">EN</button>
+      <!-- زر تغيير اللغة السريع -->
+      <form action="#" method="post" style="display: inline;">
+          {% csrf_token %}
+          <input name="next" type="hidden" value="{{ request.path }}">
+          {% if LANGUAGE_CODE == 'ar' %}
+              <input name="language" type="hidden" value="en">
+              <button type="submit" class="lang-submit">English</button>
+          {% else %}
+              <input name="language" type="hidden" value="ar">
+              <button type="submit" class="lang-submit">العربية</button>
+          {% endif %}
+      </form>
+      
       <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
 
-
   <!-- Mobile Nav -->
   <div class="mobile-nav" id="mobileNav">
-    <a href="{% url 'main:home' %}">الرئيسية</a>
-    <a href="{% url 'main:about' %}">عن المنصة</a>
-    <a href="{% url 'main:works' %}">كيف يعمل</a>
-    <a href="{% url 'main:faq' %}">الأسئلة الشائعة</a>
-    <a href="{% url 'main:home' %}#join">أنضم إلينا</a>
+    <a href="{% url 'main:home' %}">{% trans "الرئيسية" %}</a>
+    <a href="{% url 'main:about' %}">{% trans "عن المنصة" %}</a>
+    <a href="{% url 'main:works' %}">{% trans "كيف يعمل" %}</a>
+    <a href="{% url 'main:faq' %}">{% trans "الأسئلة الشائعة" %}</a>
+    <a href="{% url 'main:home' %}#join">{% trans "أنضم إلينا" %}</a>
   </div>
 
   <!-- PAGE CONTENT -->
@@ -94,106 +160,54 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="footer" id="contact">
-  <div class="container">
+  <footer class="footer" id="contact"><div class="container">
     <div class="footer-grid">
-      <!-- Brand -->
       <div class="footer-brand">
-        <a href="#" class="nav-logo" style="margin-bottom:12px; display:inline-flex;">
-          <div class="logo-icon">
-            <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="12" fill="#1a56db"/><path d="M20 8C20 8 11 16.5 11 22.5C11 27.299 15.1 31 20 31C24.9 31 29 27.299 29 22.5C29 16.5 20 8 20 8Z" fill="white"/><path d="M20 13C20 13 14.5 18.5 14.5 22.5C14.5 25.538 16.95 28 20 28C23.05 28 25.5 25.538 25.5 22.5C25.5 18.5 20 13 20 13Z" fill="#e11d48"/><path d="M17 22H23M20 19V25" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </div>
-          <div class="logo-text-wrap">
-            <div class="logo-ar">إحياء</div>
-            <div class="logo-en">Ehyaa Platform</div>
-          </div>
-        </a>
-        <p class="footer-desc" data-t="footer_desc">منصة إحياء تربط المتبرعين بالدم مع المستشفيات في المملكة العربية السعودية.</p>
+        <div class="logo-text-wrap">
+          <div class="logo-ar">إحياء</div>
+          <div class="logo-en">Ehyaa Platform</div>
+        </div>
+        <p class="footer-desc">{% trans "منصة إحياء تربط المتبرعين بالدم مع المستشفيات في المملكة العربية السعودية." %}</p>
       </div>
 
-      <!-- Quick Links -->
       <div>
-        <h4 class="footer-col-title" data-t="quick_links">روابط سريعة</h4>
+        <h4 class="footer-col-title">{% trans "روابط سريعة" %}</h4>
         <nav class="footer-links">
-          <a href="#" data-t="nav_home">الرئيسية</a>
-          <a href="{% url 'main:about' %}" data-t="nav_about">عن المنصة</a><a href="{% url 'main:works' %}" data-t="nav_how">كيف يعمل</a>
-          <a href="{% url 'main:faq' %}" data-t="nav_faq">الأسئلة الشائعة</a>
-          <a href="{% url 'main:home' %}#join">أنضم إلينا</a>
+          <a href="{% url 'main:home' %}">{% trans "الرئيسية" %}</a>
+          <a href="{% url 'main:about' %}">{% trans "عن المنصة" %}</a>
+          <a href="{% url 'main:home' %}#join">{% trans "أنضم إلينا" %}</a>
         </nav>
       </div>
 
-      <!-- For Donors -->
       <div>
-        <h4 class="footer-col-title" data-t="for_donors">للمتبرعين</h4>
+        <h4 class="footer-col-title">{% trans "للمتبرعين" %}</h4>
         <nav class="footer-links">
-          <a href="{% url 'donor:register' %}" data-t="donor_register">تسجيل متبرع</a>
-          <a href="{% url 'main:guide' %}#guide" data-t="donor_guide">دليل التبرع</a>
-          <a href="{% url 'main:guide' %}#terms" data-t="eligibility">شروط التبرع</a>
-          <a href="{% url 'main:guide' %}#blood" data-t="blood_info">فصائل الدم</a>
+          <a href="{% url 'donor:register' %}">{% trans "تسجيل متبرع" %}</a>
+          <a href="{% url 'main:guide' %}#terms">{% trans "شروط التبرع" %}</a>
         </nav>
       </div>
 
-      <!-- Contact -->
       <div>
-        <h4 class="footer-col-title" data-t="contact_us">تواصل معنا</h4>
+        <h4 class="footer-col-title">{% trans "تواصل معنا" %}</h4>
         <div class="footer-contact">
-          <div class="contact-row">
-            <span class="ci">📍</span>
-            <span data-t="addr">الرياض، المملكة العربية السعودية</span>
-          </div>
-          <div class="contact-row">
-            <span class="ci">📞</span>
-            <span dir="ltr">+966 11 000 0000</span>
-          </div>
-          <div class="contact-row">
-            <span class="ci">✉️</span>
-            <span dir="ltr">info@ehyaa.sa</span>
-          </div>
-          <div class="contact-row">
-            <span class="ci">🕐</span>
-            <span>24/7</span>
-          </div>
+          <div class="contact-row"><span>📍</span> <span>{% trans "الرياض، المملكة العربية السعودية" %}</span></div>
+          <div class="contact-row"><span>📞</span> <span dir="ltr">+966 11 000 0000</span></div>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
       <p class="footer-copy">
-        © 2025 إحياء | Ehyaa.<span data-t="rights">جميع الحقوق محفوظة</span>.
-        <a href="#" style="text-decoration:none;">Made with ❤️ in Saudi Arabia</a>
+        © 2025 إحياء | Ehyaa. <span>{% trans "جميع الحقوق محفوظة" %}</span>.
       </p>
-      <div class="footer-bottom-links">
-        <a href="{% url 'main:privacy' %}" data-t="privacy">سياسة الخصوصية</a>
-        <a href="{% url 'main:terms' %}" data-t="terms">الشروط والأحكام</a>
-      </div>
     </div>
   </div>
 </footer>
-
-  <!-- Scroll Top -->
-  <button class="scroll-top" id="scrollTop">↑</button>
 
   <!-- JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{% static 'js/script.js' %}"></script>
 
-  <script>
-    // الرسالة الخاصة بالزوار عند الضغط على أيقونة الملف الشخصي
-    function guestProfileAlert() {
-      alert("لتعديل ملفك الشخصي انشئ حساب اوقم بتسجيل الدخول");
-    }
-
-    // إخفاء رسائل التنبيه (Alerts) تلقائياً بعد 5 ثوانٍ
-    setTimeout(function() {
-        let alerts = document.querySelectorAll('.alert');
-        alerts.forEach(function(alert) {
-            let bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        });
-    }, 5000);
-  </script>
-
   {% block extra_js %}{% endblock %}
-
 </body>
 </html>

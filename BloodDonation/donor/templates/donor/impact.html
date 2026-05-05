@@ -101,6 +101,7 @@
         border-right: 5px solid var(--ihya-blue);
         margin-bottom: 20px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+        height: 100%;
     }
 
     /* أنيميشن */
@@ -119,32 +120,32 @@
 <section class="impact-hero">
     <div class="container hero-content">
         <h1 class="display-4 fw-bold mb-3">أثر عطائكم</h1>
-        <p class="lead">كل قطرة دم تبرعت بها رسمت أملاً جديداً.. إليك لغة الأرقام التي صنعتها</p>
+        <p class="lead">كل قطرة دم تبرعت بها رسمت أملاً جديداً.. إليك لغة الأرقام التي صنعتموها</p>
     </div>
 </section>
 
 <div class="container" style="margin-top: -60px; position: relative; z-index: 5;">
     <div class="row g-4 justify-content-center">
-        <!-- عداد 1 -->
+        <!-- عداد التبرعات (وحدات الدم) -->
         <div class="col-md-4 reveal">
             <div class="stat-box">
                 <div class="icon-circle"><i class="fas fa-tint"></i></div>
-                <span class="stat-number" data-target="4580">0</span>
+                <span class="stat-number" data-target="{{ total_donations }}">0</span>
                 <span class="stat-label">وحدة دم تم جمعها</span>
             </div>
         </div>
-        <!-- عداد 2 -->
+        <!-- عداد الحالات التي تم إنقاذها (طلبات الدم المكتملة) -->
         <div class="col-md-4 reveal">
             <div class="stat-box">
                 <div class="icon-circle" style="color: var(--urgent-red); background: #fce8e6;"><i class="fas fa-heartbeat"></i></div>
-                <span class="stat-number" data-target="1240" style="color: var(--urgent-red);">0</span>
+                <span class="stat-number" data-target="{{ saved_lives }}" style="color: var(--urgent-red);">0</span>
                 <span class="stat-label">حالة حرجة تم إنقاذها</span>
             </div>
         </div>
-        <!-- عداد 3 -->
-        <div class="col-md-4 reveal">
-            <div class="stat-box">
-                <div class="icon-circle" style="color: var(--success-green); background: #e6f4ea;"><i class="fas fa-users"></i></div><span class="stat-number" data-target="8900" style="color: var(--success-green);">0</span>
+        <!-- عداد المستخدمين (المتبرعون المسجلون) -->
+        <div class="col-md-4 reveal"><div class="stat-box">
+                <div class="icon-circle" style="color: var(--success-green); background: #e6f4ea;"><i class="fas fa-users"></i></div>
+                <span class="stat-number" data-target="{{ total_donors }}" style="color: var(--success-green);">0</span>
                 <span class="stat-label">متبرع مسجل في إحياء</span>
             </div>
         </div>
@@ -157,21 +158,22 @@
         <p class="text-muted">لحظات غيرت حياة الكثيرين بفضل الله ثم بفضلكم</p>
     </div>
 
-    <div class="row">
+    <div class="row g-4">
+        {% for story in latest_stories %}
         <div class="col-md-6 reveal">
-            <div class="story-card">
-                <h5 class="fw-bold text-primary">استجابة في وقت قياسي</h5>
-                <p>تم تأمين فصيلة دم نادرة لمريض في مدينة الرياض خلال أقل من 45 دقيقة من إطلاق النداء عبر المنصة.</p>
-                <small class="text-muted">أبريل 2026</small>
+            <div class="story-card" {% if forloop.last %}style="border-right-color: var(--success-green);"{% endif %}>
+                <h5 class="fw-bold {% if forloop.last %}text-success{% else %}text-primary{% endif %}">
+                    {{ story.title|default:"استجابة ناجحة" }}
+                </h5>
+                <p>{{ story.description }}</p>
+                <small class="text-muted">{{ story.date|date:"F Y" }}</small>
             </div>
         </div>
-        <div class="col-md-6 reveal">
-            <div class="story-card" style="border-right-color: var(--success-green);">
-                <h5 class="fw-bold text-success">تغطية حملة التبرع الجامعية</h5>
-                <p>ساهمت إحياء في تنظيم وربط 300 متبرع شاب بمراكز التبرع المتنقلة خلال يوم واحد فقط.</p>
-                <small class="text-muted">مايو 2026</small>
-            </div>
+        {% empty %}
+        <div class="col-12 text-center text-muted reveal">
+            <p>سيتم عرض قصص النجاح هنا قريباً عند اكتمال أولى عمليات التبرع عبر المنصة.</p>
         </div>
+        {% endfor %}
     </div>
 </section>
 
@@ -182,7 +184,7 @@
             نحن لا نقوم بمجرد ربط المتبرع بالمحتاج، نحن نبني جسراً من الأمل، ونستخدم التقنية لضمان ألا تُفقد حياة بسبب نقص في المعلومات أو تأخر في الوصول.
         </p>
         <div class="mt-4">
-            <a href="{% url 'main:home' %}#join" class="btn btn-primary btn-lg rounded-pill px-5 py-3">كن جزءاً من الأثر الآن</a>
+            <a href="{% url 'donor:register' %}" class="btn btn-primary btn-lg rounded-pill px-5 py-3">كن جزءاً من الأثر الآن</a>
         </div>
     </div>
 </section>
@@ -192,22 +194,20 @@
     const counters = document.querySelectorAll('.stat-number');
     const speed = 200;
 
-    const startCounters = () => {
-        counters.forEach(counter => {
-            const updateCount = () => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
-                const inc = target / speed;
+    const startCounters = (counterElement) => {
+        const target = +counterElement.getAttribute('data-target');
+        const updateCount = () => {
+            const count = +counterElement.innerText.replace('+', '');
+            const inc = target / speed;
 
-                if (count < target) {
-                    counter.innerText = Math.ceil(count + inc);
-                    setTimeout(updateCount, 1);
-                } else {
-                    counter.innerText = target + "+";
-                }
-            };
-            updateCount();
-        });
+            if (count < target) {
+                counterElement.innerText = Math.ceil(count + inc);
+                setTimeout(updateCount, 15);
+            } else {
+                counterElement.innerText = target + "+";
+            }
+        };
+        updateCount();
     }
 
     // تفعيل الأنيميشن عند ظهور العناصر
@@ -219,8 +219,9 @@
             if (elementTop < windowHeight - 100) {
                 if (!reveals[i].classList.contains("active")) {
                     reveals[i].classList.add("active");
-                    if (reveals[i].querySelector('.stat-number')) {
-                        startCounters();
+                    const counter = reveals[i].querySelector('.stat-number');
+                    if (counter) {
+                        startCounters(counter);
                     }
                 }
             }

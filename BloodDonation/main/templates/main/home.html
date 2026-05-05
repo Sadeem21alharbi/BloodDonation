@@ -1,8 +1,9 @@
 {% extends 'main/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
-إحياء | منصة التبرع بالدم الذكية
+{% trans "إحياء | منصة التبرع بالدم الذكية" %}
 {% endblock %}
 
 {% block extra_css %}
@@ -19,7 +20,7 @@
     body {
         background-color: var(--white);
         font-family: 'Tajawal', sans-serif;
-        direction: rtl;
+        /* إزالة الاتجاه الثابت ليعتمد على ملف base.html */
         overflow-x: hidden;
     }
 
@@ -83,7 +84,7 @@
         color: var(--deep-blue);
     }
 
-    /* --- قسم اختيار المستخدم (المنطقة اللي فيها المشكلة) --- */
+    /* --- قسم اختيار المستخدم --- */
     .user-selection-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -92,7 +93,6 @@
         margin: 50px auto 0;
     }
 
-    /* توحيد التصميم والأنيميشن للكارتين */
     .selection-card {
         background: #fdfdfd;
         border: 2px solid #f0f0f0;
@@ -109,7 +109,6 @@
         justify-content: center;
     }
 
-    /* أنيميشن الرفع عند اللمس (Hover) للكارتين */
     .selection-card:hover {
         border-color: var(--deep-blue);
         background: white;
@@ -117,7 +116,6 @@
         box-shadow: 0 40px 70px rgba(0, 0, 0, 0.1);
     }
 
-    /* أنيميشن الأيقونة */
     .card-icon {
         font-size: 4.5rem;
         margin-bottom: 25px;
@@ -135,7 +133,6 @@
     .selection-card h3 { font-size: 2rem; font-weight: 800; color: #333; margin-bottom: 15px; }
     .selection-card p { font-size: 1.1rem; color: #666; }
 
-    /* أنيميشن الظهور التدريجي */
     .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
     .reveal.show { opacity: 1; transform: translateY(0); }
 
@@ -145,10 +142,9 @@
 
 {% block content %}
 <header class="hero-section">
-    <div class="container">
-        <h1 class="hero-title">تبرع بدمك.. وانقذ حياة</h1>
-        <p class="hero-subtitle">نحن هنا لنربط المتبرعين بالمحتاجين بكل سهولة وأمان عبر أحدث التقنيات.</p>
-        <a href="#join" class="btn-white-rounded">ابدأ الآن <i class="fas fa-heart ms-2"></i></a>
+    <div class="container"><h1 class="hero-title">{% trans "تبرع بدمك.. وانقذ حياة" %}</h1>
+        <p class="hero-subtitle">{% trans "نحن هنا لنربط المتبرعين بالمحتاجين بكل سهولة وأمان عبر أحدث التقنيات." %}</p>
+        <a href="#join" class="btn-white-rounded">{% trans "ابدأ الآن" %} <i class="fas fa-heart ms-2"></i></a>
     </div>
 </header>
 
@@ -158,8 +154,8 @@
             <a href="{% url 'donor:journey' %}">
                 <div class="service-card">
                     <div class="icon-box-rect"><i class="fas fa-route"></i></div>
-                    <h4 class="fw-bold">رحلة المتبرع</h4>
-                    <p class="text-muted small">اكتشف خطواتك البسيطة لتصبح بطلاً.</p>
+                    <h4 class="fw-bold">{% trans "رحلة المتبرع" %}</h4>
+                    <p class="text-muted small">{% trans "اكتشف خطواتك البسيطة لتصبح بطلاً." %}</p>
                 </div>
             </a>
         </div>
@@ -167,8 +163,8 @@
             <a href="{% url 'donor:leaderboard' %}">
                 <div class="service-card">
                     <div class="icon-box-rect"><i class="fas fa-medal"></i></div>
-                    <h4 class="fw-bold">قائمة الأبطال</h4>
-                    <p class="text-muted small">لوحة الشرف لأكثر المتبرعين عطاءً.</p>
+                    <h4 class="fw-bold">{% trans "قائمة الأبطال" %}</h4>
+                    <p class="text-muted small">{% trans "لوحة الشرف لأكثر المتبرعين عطاءً." %}</p>
                 </div>
             </a>
         </div>
@@ -176,44 +172,41 @@
             <a href="{% url 'donor:impact' %}">
                 <div class="service-card">
                     <div class="icon-box-rect"><i class="fas fa-heartbeat"></i></div>
-                    <h4 class="fw-bold">أثر إحياء</h4>
-                    <p class="text-muted small">نترجم عطاءكم إلى أرقام وإحصائيات.</p>
+                    <h4 class="fw-bold">{% trans "أثر إحياء" %}</h4>
+                    <p class="text-muted small">{% trans "نترجم عطاءكم إلى أرقام وإحصائيات." %}</p>
                 </div>
             </a>
         </div>
     </div>
 </section>
 
-<!-- القسم المطلوب تعديله -->
 <section class="user-type-section" id="join" style="padding: 100px 0;">
     <div class="container">
         <div class="text-center mb-5 reveal">
-            <h2 class="fw-bold" style="font-size: 2.8rem; color: var(--deep-blue);">انضم إلى منصة إحياء</h2>
-            <p class="text-muted">اختر نوع الحساب للبدء في استخدام المنصة</p>
+            <h2 class="fw-bold" style="font-size: 2.8rem; color: var(--deep-blue);">{% trans "انضم إلى منصة إحياء" %}</h2>
+            <p class="text-muted">{% trans "اختر نوع الحساب للبدء في استخدام المنصة" %}</p>
         </div>
 
         <div class="user-selection-grid">
-            <!-- كرت المتبرع المعدل -->
             <a href="{% url 'donor:login' %}" class="reveal" style="display: block;">
                 <div class="selection-card">
                     <div class="card-icon donor-icon">
-                        <i class="fas fa-hand-holding-heart"></i> <!-- أيقونة مضمونة الظهور -->
+                        <i class="fas fa-hand-holding-heart"></i>
                     </div>
-                    <h3>أنا متبرع</h3>
-                    <p>ساهم في إنقاذ الأرواح وتابع سجل تبرعاتك</p>
-                    <span class="btn btn-primary rounded-pill px-5 py-2 mt-4 fw-bold">دخول المتبرعين</span>
+                    <h3>{% trans "أنا متبرع" %}</h3>
+                    <p>{% trans "ساهم في إنقاذ الأرواح وتابع سجل تبرعاتك" %}</p>
+                    <span class="btn btn-primary rounded-pill px-5 py-2 mt-4 fw-bold">{% trans "دخول المتبرعين" %}</span>
                 </div>
             </a>
 
-            <!-- كرت المستشفى المعدل -->
             <div class="reveal">
                 <div class="selection-card">
                     <div class="card-icon hospital-icon">
-                        <i class="fas fa-hospital-alt"></i> <!-- أيقونة مضمونة الظهور -->
+                        <i class="fas fa-hospital-alt"></i>
                     </div>
-                    <h3>مستشفى / مركز</h3>
-                    <p>إدارة طلبات الدم والوصول للمتبرعين بسرعة</p>
-                    <span class="btn btn-success rounded-pill px-5 py-2 mt-4 fw-bold">بوابة المستشفيات</span>
+                    <h3>{% trans "مستشفى / مركز" %}</h3>
+                    <p>{% trans "إدارة طلبات الدم والوصول للمتبرعين بسرعة" %}</p>
+                    <span class="btn btn-success rounded-pill px-5 py-2 mt-4 fw-bold">{% trans "بوابة المستشفيات" %}</span>
                 </div>
             </div>
         </div>

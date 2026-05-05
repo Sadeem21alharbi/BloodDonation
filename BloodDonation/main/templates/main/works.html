@@ -1,8 +1,9 @@
 {% extends 'main/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
-كيف يعمل | منصة إحياء
+{% trans "كيف يعمل | منصة إحياء" %}
 {% endblock %}
 
 {% block extra_css %}
@@ -20,7 +21,7 @@
     body {
         font-family: 'Tajawal', sans-serif;
         background-color: #fdfdfd;
-        direction: rtl;
+        /* تمت إزالة direction: rtl ليعتمد على base.html */
         overflow-x: hidden;
     }
 
@@ -36,8 +37,8 @@
     }
 
     .works-hero h1 {
-        font-size: 4rem; /* نفس قياس من نحن */
-        font-weight: 900; /* جعل الخط عريض جداً */
+        font-size: 4rem; 
+        font-weight: 900; 
         letter-spacing: -1px;
         margin-bottom: 20px;
     }
@@ -69,7 +70,7 @@
         border-radius: 35px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         transition: 0.5s ease;
-        border-top: 5px solid #eee; /* سيتغير حسب الخطوة */
+        border-top: 5px solid #eee;
     }
 
     /* تخصيص ألوان كل خطوة */
@@ -89,14 +90,18 @@
     .step-4 .step-badge { background: var(--color-step-4); }
     .step-4 .step-icon { color: var(--color-step-4); }
 
-    .journey-step.odd .step-card { grid-column: 1; text-align: right; }
-    .journey-step.even .step-card { grid-column: 3; text-align: right; }
+    /* محاذاة الكروت بناءً على لغة الصفحة */
+    [dir="rtl"] .journey-step.odd .step-card { grid-column: 1; text-align: right; }
+    [dir="rtl"] .journey-step.even .step-card { grid-column: 3; text-align: right; }
+
+    [dir="ltr"] .journey-step.odd .step-card { grid-column: 3; text-align: left; }
+    [dir="ltr"] .journey-step.even .step-card { grid-column: 1; text-align: left; }
 
     .step-badge {
         grid-column: 2;
         width: 60px; height: 60px;
         color: white;
-        border-radius: 20px; /* شكل مربع منحني عصري */
+        border-radius: 20px;
         display: flex; align-items: center; justify-content: center;
         font-size: 1.5rem; font-weight: bold;
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
@@ -111,7 +116,6 @@
 
     .step-card h3 { color: var(--text-dark); font-weight: 800; }
 
-    /* أنيميشن عند التحويم */
     .step-card:hover {
         transform: translateY(-15px);
         box-shadow: 0 20px 40px rgba(0,0,0,0.1);
@@ -130,11 +134,11 @@
 {% endblock %}
 
 {% block content %}
-<header class="works-hero">
-    <div class="container">
+<header class="works-hero"><div class="container">
         <div class="reveal active">
-            <span class="badge rounded-pill bg-white text-primary px-4 py-2 mb-3 fw-bold shadow-sm">كيف يعمل</span><h1>رحلة العطاء في إحياء</h1>
-            <p class="lead mx-auto" style="max-width: 700px;">خطوات بسيطة لأثر يدوم طويلاً</p>
+            <span class="badge rounded-pill bg-white text-primary px-4 py-2 mb-3 fw-bold shadow-sm">{% trans "كيف يعمل" %}</span>
+            <h1>{% trans "رحلة العطاء في إحياء" %}</h1>
+            <p class="lead mx-auto" style="max-width: 700px;">{% trans "خطوات بسيطة لأثر يدوم طويلاً" %}</p>
         </div>
     </div>
 </header>
@@ -145,8 +149,8 @@
     <div class="journey-step odd step-1">
         <div class="step-card reveal">
             <div class="step-icon"><i class="fas fa-user-plus"></i></div>
-            <h3>إنشاء حساب</h3>
-            <p class="text-muted">انضم لأسرة إحياء كمتبرع أو منشأة صحية في دقائق معدودة وبكل أمان.</p>
+            <h3>{% trans "إنشاء حساب" %}</h3>
+            <p class="text-muted">{% trans "انضم لأسرة إحياء كمتبرع أو منشأة صحية في دقائق معدودة وبكل أمان." %}</p>
         </div>
         <div class="step-badge">1</div>
         <div class="empty"></div>
@@ -158,8 +162,8 @@
         <div class="step-badge">2</div>
         <div class="step-card reveal">
             <div class="step-icon"><i class="fas fa-map-marked-alt"></i></div>
-            <h3>تحديد الاحتياج</h3>
-            <p class="text-muted">ابحث عن حالات التبرع القريبة منك أو اطلب فصيلة دم محددة لمستشفى معين.</p>
+            <h3>{% trans "تحديد الاحتياج" %}</h3>
+            <p class="text-muted">{% trans "ابحث عن حالات التبرع القريبة منك أو اطلب فصيلة دم محددة لمستشفى معين." %}</p>
         </div>
     </div>
 
@@ -167,8 +171,8 @@
     <div class="journey-step odd step-3">
         <div class="step-card reveal">
             <div class="step-icon"><i class="fas fa-hospital-symbol"></i></div>
-            <h3>زيارة المركز</h3>
-            <p class="text-muted">توجه لمركز التبرع المعتمد بكل سهولة مع دعم تقني يوجهك طوال الطريق.</p>
+            <h3>{% trans "زيارة المركز" %}</h3>
+            <p class="text-muted">{% trans "توجه لمركز التبرع المعتمد بكل سهولة مع دعم تقني يوجهك طوال الطريق." %}</p>
         </div>
         <div class="step-badge">3</div>
         <div class="empty"></div>
@@ -180,8 +184,8 @@
         <div class="step-badge">4</div>
         <div class="step-card reveal">
             <div class="step-icon"><i class="fas fa-medal"></i></div>
-            <h3>بطل إحياء</h3>
-            <p class="text-muted">أتممت المهمة! الآن أنت بطل في لوحة الشرف وصاحب أثر عظيم في حياة الآخرين.</p>
+            <h3>{% trans "بطل إحياء" %}</h3>
+            <p class="text-muted">{% trans "أتممت المهمة! الآن أنت بطل في لوحة الشرف وصاحب أثر عظيم في حياة الآخرين." %}</p>
         </div>
     </div>
 

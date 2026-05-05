@@ -9,6 +9,10 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # السطر الضروري لتفعيل تبديل اللغة (AR/EN)
+    path('i18n/', include('django.conf.urls.i18n')),
+    
     path('', include('main.urls')), # تطبيق الصفحة الرئيسية
     path('donor/', include('donor.urls', namespace='donor')), # ربط تطبيق المتبرع
     path('hospital/', include('hospital.urls')), # ربط تطبيق المستشفى

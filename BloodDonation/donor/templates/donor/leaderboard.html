@@ -10,6 +10,7 @@
         --silver: #bdc3c7;
         --bronze: #cd7f32;
         --soft-bg: #f8f9fa;
+        --ihya-light-blue: #e8f0fe;
     }
 
     body {
@@ -18,7 +19,6 @@
         direction: rtl;
     }
 
-    /* هيدر الصفحة */
     .leaderboard-hero {
         background: linear-gradient(135deg, var(--ihya-blue) 0%, var(--ihya-dark) 100%);
         padding: 80px 0 150px;
@@ -34,7 +34,6 @@
         text-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    /* منصة التتويج (Top 3) */
     .podium-container {
         margin-top: -100px;
         display: flex;
@@ -59,11 +58,7 @@
 
     .podium-card:hover { transform: translateY(-10px); }
 
-    .podium-card.rank-1 { 
-        height: 280px; 
-        border: 3px solid var(--gold);
-        z-index: 3;
-    }
+    .podium-card.rank-1 { height: 280px; border: 3px solid var(--gold); z-index: 3; }
     .podium-card.rank-2 { height: 240px; border: 3px solid var(--silver); }
     .podium-card.rank-3 { height: 220px; border: 3px solid var(--bronze); }
 
@@ -97,7 +92,6 @@
         color: var(--gold);
     }
 
-    /* قائمة بقية الأبطال */
     .leaderboard-list {
         max-width: 900px;
         margin: 0 auto 100px;
@@ -117,31 +111,13 @@
 
     .list-item:hover { background: var(--ihya-light-blue); }
 
-    .rank-number {
-        font-size: 1.2rem;
-        font-weight: 800;
-        color: #9aa0a6;
-        width: 40px;
-    }
+    .rank-number { font-size: 1.2rem; font-weight: 800; color: #9aa0a6; width: 40px; }
 
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        flex: 1;
-    }
+    .user-info { display: flex; align-items: center; gap: 15px; flex: 1; }
 
-    .user-info img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
+    .user-info img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
 
-    .user-name {
-        font-weight: 700;
-        color: var(--text-main);
-    }
+    .user-name { font-weight: 700; color: #1e293b; }
 
     .donation-count {
         background: var(--ihya-light-blue);
@@ -152,7 +128,6 @@
         font-size: 0.9rem;
     }
 
-    /* أنيميشن */
     .animate-up {
         animation: fadeInUp 0.8s ease forwards;
         opacity: 0;
@@ -164,74 +139,81 @@
     }
 </style>
 
-<!-- هيدر الصفحة -->
 <section class="leaderboard-hero">
     <div class="container">
         <h1 class="animate-up">لوحة الأبطال</h1>
         <p class="lead animate-up" style="animation-delay: 0.1s;">تكريماً لمن وهبوا الحياة لغيرهم بعطائهم المستمر</p>
-    </div></section>
+    </div>
+</section>
 
 <div class="container">
-    <!-- منصة التتويج -->
     <div class="podium-container">
         <!-- المركز الثاني -->
-        <div class="podium-card rank-2 animate-up" style="animation-delay: 0.3s;">
-            <div class="avatar-wrapper">
-                <img src="https://ui-avatars.com/api/?name=Ali+Ahmed&background=random" alt="User">
+        {% for donor in top_donors|slice:"1:2" %}
+        <div class="podium-card rank-2 animate-up" style="animation-delay: 0.3s;"><div class="avatar-wrapper">
+                {% if donor.profile_picture %}
+                    <img src="{{ donor.profile_picture.url }}" alt="User">
+                {% else %}
+                    <img src="https://ui-avatars.com/api/?name={{ donor.user.username }}&background=random" alt="User">
+                {% endif %}
             </div>
-            <h5 class="user-name">علي أحمد</h5>
-            <div class="donation-count">15 تبرع</div>
+            <h5 class="user-name">{{ donor.user.username }}</h5>
+            <div class="donation-count">{{ donor.points }} نقطة</div>
         </div>
+        {% endfor %}
 
         <!-- المركز الأول -->
+        {% for donor in top_donors|slice:"0:1" %}
         <div class="podium-card rank-1 animate-up" style="animation-delay: 0.2s;">
             <i class="fas fa-crown crown-icon"></i>
             <div class="avatar-wrapper">
-                <img src="https://ui-avatars.com/api/?name=Sadeem+Abdullah&background=1a73e8&color=fff" alt="User">
+                {% if donor.profile_picture %}
+                    <img src="{{ donor.profile_picture.url }}" alt="User">
+                {% else %}
+                    <img src="https://ui-avatars.com/api/?name={{ donor.user.username }}&background=1a73e8&color=fff" alt="User">
+                {% endif %}
             </div>
-            <h5 class="user-name"> سارة خالد </h5>
-            <div class="donation-count">24 تبرع</div>
+            <h5 class="user-name">{{ donor.user.username }}</h5>
+            <div class="donation-count">{{ donor.points }} نقطة</div>
         </div>
+        {% endfor %}
 
         <!-- المركز الثالث -->
+        {% for donor in top_donors|slice:"2:3" %}
         <div class="podium-card rank-3 animate-up" style="animation-delay: 0.4s;">
             <div class="avatar-wrapper">
-                <img src="https://ui-avatars.com/api/?name=Sara+Mohamed&background=random" alt="User">
+                {% if donor.profile_picture %}
+                    <img src="{{ donor.profile_picture.url }}" alt="User">
+                {% else %}
+                    <img src="https://ui-avatars.com/api/?name={{ donor.user.username }}&background=random" alt="User">
+                {% endif %}
             </div>
-            <h5 class="user-name">سارة محمد</h5>
-            <div class="donation-count">12 تبرع</div>
+            <h5 class="user-name">{{ donor.user.username }}</h5>
+            <div class="donation-count">{{ donor.points }} نقطة</div>
         </div>
+        {% endfor %}
     </div>
 
-    <!-- القائمة الكاملة -->
     <div class="leaderboard-list animate-up" style="animation-delay: 0.5s;">
+        {% for donor in top_donors|slice:"3:" %}
         <div class="list-item">
-            <span class="rank-number">#4</span>
+            <span class="rank-number">#{{ forloop.counter|add:3 }}</span>
             <div class="user-info">
-                <img src="https://ui-avatars.com/api/?name=M+Alharbi" alt="User">
-                <span class="user-name">محمد الحربي</span>
+                {% if donor.profile_picture %}
+                    <img src="{{ donor.profile_picture.url }}" alt="User">
+                {% else %}
+                    <img src="https://ui-avatars.com/api/?name={{ donor.user.username }}&background=random" alt="User">
+                {% endif %}
+                <span class="user-name">{{ donor.user.username }}</span>
             </div>
-            <div class="donation-count">9 تبرعات</div>
+            <div class="donation-count">{{ donor.points }} نقطة</div>
         </div>
-
-        <div class="list-item">
-            <span class="rank-number">#5</span>
-            <div class="user-info">
-                <img src="https://ui-avatars.com/api/?name=Fahad+K" alt="User">
-                <span class="user-name">فهد خالد</span>
-            </div>
-            <div class="donation-count">7 تبرعات</div>
-        </div>
-
-        <div class="list-item">
-            <span class="rank-number">#6</span>
-            <div class="user-info">
-                <img src="https://ui-avatars.com/api/?name=Noura+S" alt="User">
-                <span class="user-name">نورة سعد</span>
-            </div>
-            <div class="donation-count">5 تبرعات</div>
-        </div>
+        {% empty %}
+            {% if top_donors|length <= 3 and top_donors|length > 0 %}
+            {% else %}
+                <div class="p-5 text-center text-muted">لوحة الأبطال بانتظار المتبرعين الأوائل..</div>
+            {% endif %}
+        {% endfor %}
     </div>
 </div>
-
 {% endblock %}

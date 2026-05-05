@@ -7,63 +7,39 @@
 <style>
 /* ═══════════════════════════════════════════════════
    DONOR RESPONSES PAGE — page-specific styles only
-   All base tokens from hospital_dashboard.css
 ═══════════════════════════════════════════════════ */
 
 .dr-main { display: flex; flex-direction: column; gap: 28px; }
 
-/* ── Page Header ── */
 .dr-header {
   display: flex; align-items: flex-start;
   justify-content: space-between; gap: 16px; flex-wrap: wrap;
 }
-
-.dr-header-title {
-  font-size: 26px; font-weight: 800;
-  color: var(--text); line-height: 1.2;
-}
-
-.dr-header-sub {
-  color: var(--text-muted); font-size: 13px;
-  margin-top: 5px; display: flex; align-items: center; gap: 8px;
-}
-
-.dr-header-sub .dot {
-  width: 4px; height: 4px;
-  border-radius: 50%; background: var(--text-light);
-  display: inline-block; flex-shrink: 0;
-}
-
+.dr-header-title  { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1.2; }
+.dr-header-sub    { color: var(--text-muted); font-size: 13px; margin-top: 5px; display: flex; align-items: center; gap: 8px; }
+.dr-header-sub .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text-light); flex-shrink: 0; }
 .dr-header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-/* ── Stats ── */
+/* Stats */
 .dr-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 18px;
 }
-
 .dr-stat {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: 20px 22px;
-  border: 1px solid var(--border-card);
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 20px 22px; border: 1px solid var(--border-card);
   box-shadow: var(--shadow-card);
   display: flex; flex-direction: column; gap: 14px;
   transition: transform var(--transition), box-shadow var(--transition);
 }
-
 .dr-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(26,86,219,.13); }
-
 .dr-stat-top { display: flex; align-items: center; justify-content: space-between; }
-
 .dr-stat-icon {
-  width: 48px; height: 48px;
-  border-radius: 14px;
+  width: 48px; height: 48px; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
   color: #fff; font-size: 18px; flex-shrink: 0;
 }
-
 .si-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow: 0 4px 12px rgba(37,99,235,.28); }
 .si-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); box-shadow: 0 4px 12px rgba(245,158,11,.28); }
 .si-violet { background: linear-gradient(135deg,#8b5cf6,#7c3aed); box-shadow: 0 4px 12px rgba(139,92,246,.28); }
@@ -76,43 +52,28 @@
   font-size: 11.5px; font-weight: 700;
   padding: 4px 9px; border-radius: var(--radius-pill);
 }
-
-.dr-stat-trend i { font-size: 9px; }
-.trend-up   { background: #dcfce7; color: #16a34a; }
-.trend-down { background: #fee2e2; color: #dc2626; }
-.trend-neu  { background: var(--bg); color: var(--text-muted); }
+.trend-up  { background: #dcfce7; color: #16a34a; }
+.trend-down{ background: #fee2e2; color: #dc2626; }
+.trend-neu { background: var(--bg); color: var(--text-muted); }
 
 .dr-stat-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1; }
 .dr-stat-label { color: var(--text-muted); font-size: 12.5px; margin-top: 3px; }
-
-.dr-stat-bar {
-  height: 5px; background: var(--border);
-  border-radius: var(--radius-pill); overflow: hidden;
-}
-
+.dr-stat-bar { height: 5px; background: var(--border); border-radius: var(--radius-pill); overflow: hidden; }
 .dr-stat-bar-fill { height: 100%; border-radius: var(--radius-pill); }
-.sbf-blue   { background: linear-gradient(90deg,#2563eb,#60a5fa); width: 68%; }
-.sbf-amber  { background: linear-gradient(90deg,#f59e0b,#fcd34d); width: 40%; }
-.sbf-violet { background: linear-gradient(90deg,#8b5cf6,#c4b5fd); width: 72%; }
-.sbf-green  { background: linear-gradient(90deg,#10b981,#6ee7b7); width: 55%; }
-.sbf-red    { background: linear-gradient(90deg,#ef4444,#fca5a5); width: 22%; }
-.sbf-teal   { background: linear-gradient(90deg,#14b8a6,#5eead4); width: 62%; }
+.sbf-blue   { background: linear-gradient(90deg,#2563eb,#60a5fa); }
+.sbf-amber  { background: linear-gradient(90deg,#f59e0b,#fcd34d); }
+.sbf-violet { background: linear-gradient(90deg,#8b5cf6,#c4b5fd); }
+.sbf-green  { background: linear-gradient(90deg,#10b981,#6ee7b7); }
+.sbf-red    { background: linear-gradient(90deg,#ef4444,#fca5a5); }
+.sbf-teal   { background: linear-gradient(90deg,#14b8a6,#5eead4); }
 
-/* ── Filter ── */
+/* Filter */
 .dr-filter {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card);
   padding: 18px 22px;
 }
-
-.dr-filter-row {
-  display: flex; align-items: center;
-  gap: 10px; flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-
+.dr-filter-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
 .dr-search {
   display: flex; align-items: center; gap: 8px;
   background: var(--bg); border: 1.5px solid var(--border);
@@ -120,125 +81,72 @@
   flex: 1; min-width: 200px; max-width: 320px;
   transition: border-color var(--transition);
 }
-
 .dr-search:focus-within { border-color: var(--primary); }
 .dr-search i { font-size: 13px; color: var(--text-light); flex-shrink: 0; }
-
 .dr-search input {
   border: none; background: transparent;
-  font-family: inherit; font-size: 13px;
-  color: var(--text); outline: none; width: 100%;
+  font-family: inherit; font-size: 13px; color: var(--text); outline: none; width: 100%;
 }
-
 .dr-search input::placeholder { color: var(--text-light); }
-
 .dr-select {
-  padding: 9px 13px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text);
-  font-family: inherit; font-size: 12.5px; font-weight: 500;
-  cursor: pointer; outline: none;
-  transition: border-color var(--transition);
+  padding: 9px 13px; border-radius: var(--radius);
+  border: 1.5px solid var(--border); background: var(--bg-card);
+  color: var(--text); font-family: inherit; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; outline: none; transition: border-color var(--transition);
 }
-
 .dr-select:hover, .dr-select:focus { border-color: var(--primary); }
-
 .dr-chips { display: flex; gap: 7px; flex-wrap: wrap; }
-
 .dr-chip {
   padding: 7px 14px; border-radius: var(--radius-pill);
   background: var(--bg); border: 1.5px solid var(--border);
-  font-size: 12px; font-weight: 700;
-  cursor: pointer; color: var(--text-muted);
-  transition: all var(--transition);
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  text-decoration: none; transition: all var(--transition);
 }
-
 .dr-chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
 .dr-chip.active { background: var(--primary-gradient); color: #fff; border-color: transparent; box-shadow: 0 2px 8px rgba(26,86,219,.22); }
 
-/* ── Card ── */
+/* Card / Table */
 .dr-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card); overflow: hidden;
 }
-
 .dr-card-head {
-  padding: 20px 24px;
-  display: flex; align-items: center;
-  justify-content: space-between; gap: 12px;
-  border-bottom: 1px solid var(--border-card);
+  padding: 20px 24px; display: flex; align-items: center;
+  justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border-card);
 }
-
 .dr-card-title { font-size: 16px; font-weight: 800; color: var(--text); }
 .dr-card-sub   { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
 .dr-card-foot {
-  padding: 14px 24px;
-  border-top: 1px solid var(--border);
-  background: var(--bg);
-  display: flex; align-items: center;
-  justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 14px 24px; border-top: 1px solid var(--border); background: var(--bg);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
 }
 
-/* ── Table ── */
 .dr-table-wrap { overflow-x: auto; }
-
 .dr-table { width: 100%; border-collapse: collapse; }
-
 .dr-table thead tr { border-bottom: 2px solid var(--border); }
-
 .dr-table th {
-  padding: 11px 12px;
-  text-align: left;
-  font-size: 10.5px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .07em;
-  color: var(--text-light); white-space: nowrap;
-  background: var(--bg);
+  padding: 11px 12px; text-align: left;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--text-light); white-space: nowrap; background: var(--bg);
 }
-
-.dr-table tbody tr {
-  border-bottom: 1px solid var(--border-card);
-  transition: background var(--transition);
-}
-
+.dr-table tbody tr { border-bottom: 1px solid var(--border-card); transition: background var(--transition); }
 .dr-table tbody tr:hover { background: rgba(26,86,219,.025); }
 .dr-table tbody tr:last-child { border-bottom: none; }
+.dr-table td { padding: 13px 12px; font-size: 13.5px; vertical-align: middle; color: var(--text); }
 
-.dr-table td {
-  padding: 13px 12px;
-  font-size: 13.5px; vertical-align: middle; color: var(--text);
-}
-
-/* Resp ID */
-.resp-id   { font-weight: 800; font-size: 13px; color: var(--text); }
+.resp-id   { font-weight: 800; font-size: 13px; }
 .resp-type { font-size: 11.5px; color: var(--text-muted); margin-top: 3px; }
 
-/* Donor cell */
+/* Donor avatar */
 .dr-donor-cell { display: flex; align-items: center; gap: 10px; }
-
 .dr-av {
-  width: 38px; height: 38px;
-  border-radius: 12px;
+  width: 38px; height: 38px; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  color: #fff; font-weight: 700; font-size: 12px;
-  flex-shrink: 0;
+  color: #fff; font-weight: 700; font-size: 12px; flex-shrink: 0;
 }
-
-.da-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); }
-.da-violet { background: linear-gradient(135deg,#8b5cf6,#7c3aed); }
-.da-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); }
-.da-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); }
-.da-red    { background: linear-gradient(135deg,#ef4444,#dc2626); }
-.da-green  { background: linear-gradient(135deg,#10b981,#059669); }
-.da-pink   { background: linear-gradient(135deg,#ec4899,#db2777); }
-
+/* Cycle through colors based on id — set via inline style in template */
 .dr-d-name  { font-weight: 700; font-size: 13.5px; color: var(--text); }
-.dr-d-phone { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+.dr-d-email { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
 
 /* Blood badges */
 .dr-blood {
@@ -246,14 +154,12 @@
   padding: 5px 11px; border-radius: var(--radius-pill);
   font-size: 12px; font-weight: 800; color: #fff; white-space: nowrap;
 }
-
-.bb-red    { background: linear-gradient(135deg,#ef4444,#dc2626); box-shadow: 0 2px 7px rgba(239,68,68,.28); }
-.bb-violet { background: linear-gradient(135deg,#8b5cf6,#7c3aed); box-shadow: 0 2px 7px rgba(139,92,246,.28); }
-.bb-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); box-shadow: 0 2px 7px rgba(20,184,166,.28); }
-.bb-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); box-shadow: 0 2px 7px rgba(245,158,11,.28); }
-.bb-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow: 0 2px 7px rgba(37,99,235,.28); }
-.bb-green  { background: linear-gradient(135deg,#10b981,#059669); box-shadow: 0 2px 7px rgba(16,185,129,.28); }
-.bb-pink   { background: linear-gradient(135deg,#ec4899,#db2777); box-shadow: 0 2px 7px rgba(236,72,153,.28); }
+.bb-red    { background: linear-gradient(135deg,#ef4444,#dc2626); }
+.bb-violet { background: linear-gradient(135deg,#8b5cf6,#7c3aed); }
+.bb-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); }
+.bb-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); }
+.bb-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); }
+.bb-green  { background: linear-gradient(135deg,#10b981,#059669); }
 
 /* Urgency */
 .dr-urgency {
@@ -261,7 +167,6 @@
   padding: 5px 10px; border-radius: var(--radius-pill);
   font-size: 11.5px; font-weight: 700;
 }
-
 .urg-high { background: #fee2e2; color: #b91c1c; }
 .urg-med  { background: #fef3c7; color: #92400e; }
 .urg-low  { background: #dcfce7; color: #166534; }
@@ -272,13 +177,7 @@
   padding: 6px 11px; border-radius: var(--radius-pill);
   font-size: 11.5px; font-weight: 700; white-space: nowrap;
 }
-
-.dr-status::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%; flex-shrink: 0;
-}
-
+.dr-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .sp-pending::before   { background: #f59e0b; }
 .sp-pending   { background: #fef3c7; color: #92400e; }
 .sp-inprog::before    { background: #2563eb; }
@@ -288,265 +187,97 @@
 .sp-rejected::before  { background: #ef4444; }
 .sp-rejected  { background: #fee2e2; color: #991b1b; }
 .sp-completed::before { background: #059669; }
-.sp-completed { background: linear-gradient(135deg,rgba(16,185,129,.12),rgba(5,150,105,.08)); color: #065f46; }
+.sp-completed { background: #ccfbf1; color: #065f46; }
 
-/* Location cell */
-.dr-location {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 12.5px; color: var(--text-muted);
-}
+/* Req link */
+.dr-req-link { font-weight: 700; color: var(--primary); font-size: 13px; text-decoration: none; }
+.dr-req-link:hover { opacity: .75; }
 
-/* Date cell */
+/* Date */
 .dr-date { font-size: 12.5px; color: var(--text-muted); white-space: nowrap; }
 .dr-date span { display: block; font-size: 11px; color: var(--text-light); margin-top: 2px; }
 
-/* Req link */
-.dr-req-link {
-  font-weight: 700; color: var(--primary); font-size: 13px;
-  transition: opacity var(--transition);
-}
-
-.dr-req-link:hover { opacity: .75; }
-
-/* Action buttons */
+/* Actions */
 .dr-actions { display: flex; align-items: center; gap: 5px; }
-
 .dr-act {
-  width: 32px; height: 32px;
-  border-radius: 9px;
-  border: 1.5px solid var(--border);
-  background: var(--bg-card);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 12px; color: var(--text-muted);
-  transition: all var(--transition);
-  text-decoration: none;
-  position: relative;
-}
-
-.dr-act:hover             { background: var(--bg); border-color: #94a3b8; color: var(--text); }
-.dr-act.view:hover        { background: #dbeafe; border-color: #93c5fd;  color: #1d4ed8; }
-.dr-act.accept:hover      { background: #dcfce7; border-color: #86efac;  color: #16a34a; }
-.dr-act.reject:hover      { background: #fee2e2; border-color: #fca5a5;  color: #dc2626; }
-.dr-act.progress-b:hover  { background: #ede9fe; border-color: #c4b5fd;  color: #7c3aed; }
-.dr-act.complete:hover    { background: #ccfbf1; border-color: #5eead4;  color: #0d9488; }
-.dr-act.danger:hover      { background: #fee2e2; border-color: #fca5a5;  color: #dc2626; }
-
-.dr-act[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  bottom: calc(100% + 6px); left: 50%;
-  transform: translateX(-50%);
-  background: #0f172a; color: #fff;
-  font-size: 10px; font-weight: 600;
-  padding: 4px 8px; border-radius: 6px;
-  white-space: nowrap; pointer-events: none; z-index: 20;
-}
-
-/* Pagination */
-.dr-pagination { display: flex; align-items: center; gap: 5px; }
-
-.pg-btn {
-  width: 34px; height: 34px; border-radius: 9px;
+  width: 32px; height: 32px; border-radius: 9px;
   border: 1.5px solid var(--border); background: var(--bg-card);
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 12.5px; font-weight: 700;
-  color: var(--text-muted); transition: all var(--transition);
-  text-decoration: none;
+  cursor: pointer; font-size: 12px; color: var(--text-muted);
+  transition: all var(--transition); text-decoration: none; position: relative;
+}
+.dr-act:hover             { background: var(--bg); border-color: #94a3b8; color: var(--text); }
+.dr-act.view:hover        { background: #dbeafe; border-color: #93c5fd; color: #1d4ed8; }
+.dr-act.accept:hover      { background: #dcfce7; border-color: #86efac; color: #16a34a; }
+.dr-act.reject:hover      { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+.dr-act.progress-b:hover  { background: #ede9fe; border-color: #c4b5fd; color: #7c3aed; }
+.dr-act.complete:hover    { background: #ccfbf1; border-color: #5eead4; color: #0d9488; }
+.dr-act.danger:hover      { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+.dr-act[title]:hover::after {
+  content: attr(title);
+  position: absolute; bottom: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a; color: #fff;
+  font-size: 10px; font-weight: 600; padding: 4px 8px;
+  border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 20;
 }
 
-.pg-btn:hover  { background: var(--bg); }
-.pg-btn.active { background: var(--primary-gradient); color: #fff; border-color: transparent; box-shadow: 0 2px 8px rgba(26,86,219,.22); }
-.pg-sep { padding: 0 4px; color: var(--text-light); font-size: 13px; }
-
-/* ── Bottom grid ── */
-.dr-bottom-grid {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 22px;
-  align-items: start;
-}
-
-/* ── Donor Detail Card ── */
-.dr-detail-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-}
-
-.dr-detail-hero {
-  background: var(--primary-gradient);
-  padding: 24px;
-  display: flex; align-items: center;
-  gap: 16px; color: #fff; flex-wrap: wrap;
-}
-
-.dr-detail-avatar {
-  width: 60px; height: 60px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.2);
-  border: 2px solid rgba(255,255,255,.3);
+/* Inline status-change form */
+.dr-act-form { display: inline; }
+.dr-act-form button {
+  width: 32px; height: 32px; border-radius: 9px;
+  border: 1.5px solid var(--border); background: var(--bg-card);
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px; font-weight: 800; color: #fff;
-  flex-shrink: 0;
+  cursor: pointer; font-size: 12px; color: var(--text-muted);
+  transition: all var(--transition); position: relative;
+  font-family: inherit; padding: 0;
+}
+.dr-act-form.accept button:hover  { background: #dcfce7; border-color: #86efac; color: #16a34a; }
+.dr-act-form.reject button:hover  { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+.dr-act-form.inprog button:hover  { background: #ede9fe; border-color: #c4b5fd; color: #7c3aed; }
+.dr-act-form.complete button:hover{ background: #ccfbf1; border-color: #5eead4; color: #0d9488; }
+.dr-act-form.danger button:hover  { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+
+/* Tooltip on form buttons */
+.dr-act-form button[title]:hover::after {
+  content: attr(title);
+  position: absolute; bottom: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a; color: #fff;
+  font-size: 10px; font-weight: 600; padding: 4px 8px;
+  border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 20;
 }
 
-.dr-detail-hero-info { flex: 1; min-width: 0; }
-.dr-detail-hero-name { font-size: 18px; font-weight: 800; line-height: 1.2; }
-.dr-detail-hero-meta {
-  font-size: 12.5px; opacity: .88;
-  margin-top: 4px; display: flex; gap: 12px; flex-wrap: wrap;
-}
-
-.dr-detail-hero-status {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 12px; border-radius: var(--radius-pill);
-  font-size: 11.5px; font-weight: 700;
-  background: rgba(255,255,255,.18);
-  border: 1px solid rgba(255,255,255,.25);
-  color: #fff;
-  white-space: nowrap; flex-shrink: 0;
-}
-
-.dr-detail-body {
-  padding: 20px 24px;
-  display: flex; flex-direction: column; gap: 18px;
-}
-
-.dr-detail-section-label {
-  font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .08em;
-  color: var(--text-light); margin-bottom: 10px; display: block;
-}
-
-.dr-detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.dr-detail-field-label { font-size: 11.5px; color: var(--text-muted); margin-bottom: 3px; }
-.dr-detail-field-value { font-size: 13.5px; font-weight: 700; color: var(--text); }
-
-.dr-elig-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 12px; border-radius: var(--radius-pill);
-  font-size: 12px; font-weight: 700;
-}
-
-.elig-ok { background: #dcfce7; color: #166534; }
-.elig-no { background: #fee2e2; color: #991b1b; }
-
-.dr-note {
-  background: var(--bg);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  font-size: 12.5px; color: var(--text-muted);
-  line-height: 1.6;
-  border-left: 3px solid var(--primary);
-}
-
-[dir="rtl"] .dr-note { border-left: none; border-right: 3px solid var(--primary); }
-
-.dr-detail-footer {
-  padding: 14px 24px;
-  border-top: 1px solid var(--border);
-  display: flex; gap: 8px; flex-wrap: wrap;
-  background: var(--bg);
-}
-
-/* ── Soft button helpers ── */
-.hd-btn-soft-green  { background: #dcfce7; color: #16a34a; border: none; }
-.hd-btn-soft-green:hover  { background: #bbf7d0; }
-.hd-btn-soft-blue   { background: rgba(37,99,235,.10); color: var(--primary); border: none; }
-.hd-btn-soft-blue:hover   { background: rgba(37,99,235,.18); }
-.hd-btn-soft-red    { background: #fee2e2; color: #dc2626; border: none; }
-.hd-btn-soft-red:hover    { background: #fecaca; }
-.hd-btn-soft-teal   { background: #ccfbf1; color: #0d9488; border: none; }
-.hd-btn-soft-teal:hover   { background: #99f6e4; }
-
-/* ── Timeline ── */
-.dr-timeline-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-}
-
-.dr-timeline-head {
-  padding: 20px 22px;
-  border-bottom: 1px solid var(--border-card);
-}
-
-.dr-timeline-body {
-  padding: 20px 22px;
-  display: flex; flex-direction: column;
-}
-
-.tl-item {
-  display: flex; gap: 14px;
-  padding-bottom: 22px; position: relative;
-}
-
-.tl-item:last-child { padding-bottom: 0; }
-
-.tl-item:not(:last-child)::before {
-  content: '';
-  position: absolute;
-  left: 17px; top: 36px;
-  width: 2px; bottom: 0;
-  background: var(--border); z-index: 0;
-}
-
-[dir="rtl"] .tl-item:not(:last-child)::before { left: auto; right: 17px; }
-
-.tl-icon {
-  width: 36px; height: 36px;
-  border-radius: 11px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; z-index: 1; font-size: 14px;
-}
-
-.ti-blue   { background: #dbeafe; color: #2563eb; }
-.ti-amber  { background: #fef3c7; color: #d97706; }
-.ti-violet { background: #ede9fe; color: #7c3aed; }
-.ti-green  { background: #dcfce7; color: #16a34a; }
-.ti-teal   { background: #ccfbf1; color: #0d9488; }
-.ti-gray   { background: #f1f5f9; color: #64748b; }
-
-.tl-content { flex: 1; }
-.tl-title { font-weight: 700; font-size: 13.5px; color: var(--text); }
-.tl-desc  { font-size: 12.5px; color: var(--text-muted); margin-top: 3px; line-height: 1.55; }
-.tl-time  { font-size: 11px; color: var(--text-light); margin-top: 5px; }
-
-/* ── Empty state ── */
+/* Empty */
 .dr-empty { text-align: center; padding: 60px 24px; }
 .dr-empty-icon {
   width: 80px; height: 80px; border-radius: 24px;
-  background: var(--primary-light);
-  border: 1px solid rgba(26,86,219,.12);
+  background: var(--primary-light); border: 1px solid rgba(26,86,219,.12);
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 20px; font-size: 2rem;
 }
-
 .dr-empty-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
-.dr-empty-sub   { font-size: 13.5px; color: var(--text-muted); max-width: 320px; margin: 0 auto 20px; line-height: 1.65; }
+.dr-empty-sub { font-size: 13.5px; color: var(--text-muted); max-width: 320px; margin: 0 auto; line-height: 1.65; }
 
-/* ── Responsive ── */
-@media (max-width: 1200px) { .dr-bottom-grid { grid-template-columns: 1fr; } }
-
-@media (max-width: 768px) {
-  .dr-header      { flex-direction: column; }
-  .dr-stats       { grid-template-columns: repeat(2, 1fr); }
-  .dr-filter-row  { flex-direction: column; align-items: stretch; }
-  .dr-search      { max-width: 100%; }
-  .dr-detail-grid { grid-template-columns: 1fr; }
-  .dr-detail-hero { flex-direction: column; align-items: flex-start; }
-  .dr-table td, .dr-table th { padding: 10px 10px; }
+/* Messages */
+.msg-success {
+  background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600;
+}
+.msg-error {
+  background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600;
 }
 
+@media (max-width: 768px) {
+  .dr-header { flex-direction: column; }
+  .dr-stats  { grid-template-columns: repeat(2, 1fr); }
+  .dr-filter-row { flex-direction: column; align-items: stretch; }
+  .dr-search { max-width: 100%; }
+  .dr-table td, .dr-table th { padding: 10px 8px; }
+}
 @media (max-width: 480px) {
   .dr-stats { grid-template-columns: 1fr 1fr; }
   .dr-header-title { font-size: 20px; }
@@ -558,58 +289,61 @@
 {% block content %}
 <div class="dr-main">
 
-  <!-- ═══════════════════════════════
-       PAGE HEADER
-  ════════════════════════════════ -->
+  {% for msg in messages %}
+    <div class="{% if msg.tags == 'success' %}msg-success{% else %}msg-error{% endif %}">
+      <i class="fas {% if msg.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+      {{ msg }}
+    </div>
+  {% endfor %}
+
+  <!-- ═══ HEADER ═══ -->
   <div class="dr-header hd-fade-in-up">
     <div>
       <div class="dr-header-title">Donor Responses</div>
       <div class="dr-header-sub">
-        <span>156 total responses</span>
+        <span>{{ total_responses }} total responses</span>
         <span class="dot"></span>
-        <span>Last updated: May 2, 2025 · 10:24 AM</span>
+        <span>Last updated: {% now "M d, Y · h:i A" %}</span>
       </div>
     </div>
     <div class="dr-header-actions">
-      <button class="hd-btn hd-btn-ghost hd-btn-sm">
-        <i class="fas fa-filter"></i> Filter
-      </button>
-      <button class="hd-btn hd-btn-ghost hd-btn-sm">
+      <button class="hd-btn hd-btn-ghost hd-btn-sm" onclick="window.print()">
         <i class="fas fa-download"></i> Export
       </button>
-      <button class="hd-btn hd-btn-primary hd-btn-sm">
+      <button class="hd-btn hd-btn-ghost hd-btn-sm" onclick="location.reload()">
         <i class="fas fa-rotate-right"></i> Refresh
       </button>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════
-       STATS
-  ════════════════════════════════ -->
+  <!-- ═══ STATS ═══ -->
   <div class="dr-stats hd-fade-in-up delay-1">
 
     <div class="dr-stat">
       <div class="dr-stat-top">
         <div class="dr-stat-icon si-blue"><i class="fas fa-users"></i></div>
-        <span class="dr-stat-trend trend-up"><i class="fas fa-arrow-up"></i> +18%</span>
+        <span class="dr-stat-trend trend-neu">All</span>
       </div>
       <div>
-        <div class="dr-stat-value">156</div>
+        <div class="dr-stat-value">{{ total_responses }}</div>
         <div class="dr-stat-label">Total Responses</div>
       </div>
-      <div class="dr-stat-bar"><div class="dr-stat-bar-fill sbf-blue"></div></div>
+      <div class="dr-stat-bar"><div class="dr-stat-bar-fill sbf-blue" style="width:100%;"></div></div>
     </div>
 
     <div class="dr-stat">
       <div class="dr-stat-top">
         <div class="dr-stat-icon si-amber"><i class="fas fa-clock"></i></div>
-        <span class="dr-stat-trend trend-up"><i class="fas fa-arrow-up"></i> +8</span>
+        <span class="dr-stat-trend trend-neu">Pending</span>
       </div>
       <div>
-        <div class="dr-stat-value">38</div>
-        <div class="dr-stat-label">Pending</div>
+        <div class="dr-stat-value">{{ pending_count }}</div>
+        <div class="dr-stat-label">Pending Review</div>
       </div>
-      <div class="dr-stat-bar"><div class="dr-stat-bar-fill sbf-amber"></div></div>
+      <div class="dr-stat-bar">
+        <div class="dr-stat-bar-fill sbf-amber"
+             style="width:{% if total_responses %}{% widthratio pending_count total_responses 100 %}{% else %}0{% endif %}%;"></div>
+      </div>
     </div>
 
     <div class="dr-stat">
@@ -618,623 +352,351 @@
         <span class="dr-stat-trend trend-neu">Active</span>
       </div>
       <div>
-        <div class="dr-stat-value">24</div>
+        <div class="dr-stat-value">{{ inprog_count }}</div>
         <div class="dr-stat-label">In Progress</div>
       </div>
-      <div class="dr-stat-bar"><div class="dr-stat-bar-fill sbf-violet"></div></div>
+      <div class="dr-stat-bar">
+        <div class="dr-stat-bar-fill sbf-violet"
+             style="width:{% if total_responses %}{% widthratio inprog_count total_responses 100 %}{% else %}0{% endif %}%;"></div>
+      </div>
     </div>
 
     <div class="dr-stat">
       <div class="dr-stat-top">
         <div class="dr-stat-icon si-green"><i class="fas fa-circle-check"></i></div>
-        <span class="dr-stat-trend trend-up"><i class="fas fa-arrow-up"></i> +11%</span>
+        <span class="dr-stat-trend trend-up"><i class="fas fa-arrow-up"></i> Done</span>
       </div>
       <div>
-        <div class="dr-stat-value">61</div>
+        <div class="dr-stat-value">{{ accepted_count }}</div>
         <div class="dr-stat-label">Accepted</div>
       </div>
-      <div class="dr-stat-bar"><div class="dr-stat-bar-fill sbf-green"></div></div>
+      <div class="dr-stat-bar">
+        <div class="dr-stat-bar-fill sbf-green"
+             style="width:{% if total_responses %}{% widthratio accepted_count total_responses 100 %}{% else %}0{% endif %}%;"></div>
+      </div>
     </div>
 
     <div class="dr-stat">
       <div class="dr-stat-top">
         <div class="dr-stat-icon si-red"><i class="fas fa-circle-xmark"></i></div>
-        <span class="dr-stat-trend trend-down"><i class="fas fa-arrow-down"></i> −3%</span>
+        <span class="dr-stat-trend trend-down"><i class="fas fa-arrow-down"></i> Out</span>
       </div>
       <div>
-        <div class="dr-stat-value">18</div>
+        <div class="dr-stat-value">{{ rejected_count }}</div>
         <div class="dr-stat-label">Rejected</div>
       </div>
-      <div class="dr-stat-bar"><div class="dr-stat-bar-fill sbf-red"></div></div>
+      <div class="dr-stat-bar">
+        <div class="dr-stat-bar-fill sbf-red"
+             style="width:{% if total_responses %}{% widthratio rejected_count total_responses 100 %}{% else %}0{% endif %}%;"></div>
+      </div>
     </div>
 
     <div class="dr-stat">
       <div class="dr-stat-top">
         <div class="dr-stat-icon si-teal"><i class="fas fa-droplet"></i></div>
-        <span class="dr-stat-trend trend-up"><i class="fas fa-arrow-up"></i> +6%</span>
+        <span class="dr-stat-trend trend-up"><i class="fas fa-arrow-up"></i> Done</span>
       </div>
       <div>
-        <div class="dr-stat-value">15</div>
+        <div class="dr-stat-value">{{ completed_count }}</div>
         <div class="dr-stat-label">Completed</div>
       </div>
-      <div class="dr-stat-bar"><div class="dr-stat-bar-fill sbf-teal"></div></div>
-    </div>
-
-  </div>
-
-  <!-- ═══════════════════════════════
-       FILTER & SEARCH
-  ════════════════════════════════ -->
-  <div class="dr-filter hd-fade-in-up delay-2">
-    <div class="dr-filter-row">
-      <div class="dr-search">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Search by donor name, ID, or request…" />
+      <div class="dr-stat-bar">
+        <div class="dr-stat-bar-fill sbf-teal"
+             style="width:{% if total_responses %}{% widthratio completed_count total_responses 100 %}{% else %}0{% endif %}%;"></div>
       </div>
-      <select class="dr-select">
-        <option>All Blood Types</option>
-        <option>A+</option><option>A−</option>
-        <option>B+</option><option>B−</option>
-        <option>AB+</option><option>AB−</option>
-        <option>O+</option><option>O−</option>
-      </select>
-      <select class="dr-select">
-        <option>All Urgency</option>
-        <option>🔴 High</option>
-        <option>🟡 Medium</option>
-        <option>🟢 Low</option>
-      </select>
-      <input type="date" class="dr-select" />
-      <select class="dr-select">
-        <option>Sort: Newest First</option>
-        <option>Sort: Oldest First</option>
-        <option>Sort: Status</option>
-        <option>Sort: Blood Type</option>
-      </select>
     </div>
-    <div class="dr-chips">
-      <button class="dr-chip active">All (156)</button>
-      <button class="dr-chip">Pending (38)</button>
-      <button class="dr-chip">In Progress (24)</button>
-      <button class="dr-chip">Accepted (61)</button>
-      <button class="dr-chip">Rejected (18)</button>
-      <button class="dr-chip">Completed (15)</button>
-    </div>
+
   </div>
 
-  <!-- ═══════════════════════════════
-       RESPONSES TABLE
-  ════════════════════════════════ -->
+  <!-- ═══ FILTER ═══ -->
+  <form method="GET" action="">
+    <div class="dr-filter hd-fade-in-up delay-2">
+      <div class="dr-filter-row">
+        <div class="dr-search">
+          <i class="fas fa-search"></i>
+          <input type="text" name="q" placeholder="Search by donor name or request ID…"
+                 value="{{ request.GET.q }}" />
+        </div>
+        <select class="dr-select" name="blood_type" onchange="this.form.submit()">
+          <option value="">All Blood Types</option>
+          {% for val, label in blood_type_choices %}
+            <option value="{{ val }}" {% if request.GET.blood_type == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <select class="dr-select" name="urgency" onchange="this.form.submit()">
+          <option value="">All Urgency</option>
+          <option value="high"   {% if request.GET.urgency == 'high'   %}selected{% endif %}>🔴 High</option>
+          <option value="medium" {% if request.GET.urgency == 'medium' %}selected{% endif %}>🟡 Medium</option>
+          <option value="low"    {% if request.GET.urgency == 'low'    %}selected{% endif %}>🟢 Low</option>
+        </select>
+        <select class="dr-select" name="status" onchange="this.form.submit()">
+          <option value="">All Statuses</option>
+          {% for val, label in status_choices %}
+            <option value="{{ val }}" {% if request.GET.status == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="hd-btn hd-btn-primary hd-btn-sm">
+          <i class="fas fa-search"></i> Search
+        </button>
+        {% if request.GET.q or request.GET.blood_type or request.GET.urgency or request.GET.status %}
+          <a href="{% url 'hospital:responses' %}" class="hd-btn hd-btn-ghost hd-btn-sm">
+            <i class="fas fa-xmark"></i> Clear
+          </a>
+        {% endif %}
+      </div>
+      <!-- Status chips -->
+      <div class="dr-chips">
+        <a href="{% url 'hospital:responses' %}"
+           class="dr-chip {% if not request.GET.status %}active{% endif %}">
+          All ({{ total_responses }})
+        </a>
+        <a href="?status=pending"
+           class="dr-chip {% if request.GET.status == 'pending' %}active{% endif %}">
+          Pending ({{ pending_count }})
+        </a>
+        <a href="?status=inprog"
+           class="dr-chip {% if request.GET.status == 'inprog' %}active{% endif %}">
+          In Progress ({{ inprog_count }})
+        </a>
+        <a href="?status=accepted"
+           class="dr-chip {% if request.GET.status == 'accepted' %}active{% endif %}">
+          Accepted ({{ accepted_count }})
+        </a>
+        <a href="?status=rejected"
+           class="dr-chip {% if request.GET.status == 'rejected' %}active{% endif %}">
+          Rejected ({{ rejected_count }})
+        </a>
+        <a href="?status=completed"
+           class="dr-chip {% if request.GET.status == 'completed' %}active{% endif %}">
+          Completed ({{ completed_count }})
+        </a>
+      </div>
+    </div>
+  </form>
+
+  <!-- ═══ TABLE ═══ -->
   <div class="dr-card hd-fade-in-up delay-3">
     <div class="dr-card-head">
       <div>
         <div class="dr-card-title">All Donor Responses</div>
-        <div class="dr-card-sub">Showing 8 of 156 · Workflow: Pending → In Progress → Accepted / Rejected → Completed</div>
+        <div class="dr-card-sub">
+          Showing {{ responses|length }} of {{ total_responses }} &mdash;
+          Workflow: Pending → In Progress → Accepted / Rejected → Completed
+        </div>
       </div>
-      <button class="hd-btn hd-btn-ghost hd-btn-sm">
-        <i class="fas fa-table-columns"></i> Columns
-      </button>
     </div>
 
     <div class="dr-table-wrap">
       <table class="dr-table">
         <thead>
           <tr>
-            <th>Response ID</th>
+            <th>#</th>
             <th>Donor</th>
             <th>Blood</th>
-            <th>Request ID</th>
+            <th>Request</th>
             <th>Type</th>
             <th>Urgency</th>
             <th>Date</th>
-            <th>Location</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-
-          <!-- Row 1 -->
+          {% for resp in responses %}
+          {% with donor=resp.donor %}
           <tr>
+
+            <!-- ID -->
             <td>
-              <div class="resp-id">#RES-1056</div>
-              <div class="resp-type">Response</div>
+              <div class="resp-id">#{{ resp.id }}</div>
             </td>
+
+            <!-- Donor -->
             <td>
               <div class="dr-donor-cell">
-                <div class="dr-av da-blue">AK</div>
+                <div class="dr-av" style="background: linear-gradient(135deg,
+                  {% cycle '#2563eb,#1d4ed8' '#8b5cf6,#7c3aed' '#14b8a6,#0d9488' '#f59e0b,#d97706' '#ef4444,#dc2626' '#10b981,#059669' %}
+                );">
+                  {{ donor.first_name|first|upper }}{{ donor.last_name|first|upper }}
+                  {% if not donor.first_name and not donor.last_name %}
+                    {{ donor.username|first|upper }}
+                  {% endif %}
+                </div>
                 <div>
-                  <div class="dr-d-name">Ahmed Al-Khalidi</div>
-                  <div class="dr-d-phone">+966 50 123 4567</div>
+                  <div class="dr-d-name">
+                    {{ donor.get_full_name|default:donor.username }}
+                  </div>
+                  <div class="dr-d-email">{{ donor.email|default:"—" }}</div>
                 </div>
               </div>
             </td>
-            <td><span class="dr-blood bb-red">O−</span></td>
-            <td><span class="dr-req-link">#REQ-0841</span></td>
-            <td style="font-size:12.5px;color:var(--text-muted);">Emergency Case</td>
-            <td><span class="dr-urgency urg-high">🔴 High</span></td>
-            <td class="dr-date">May 1, 2025<span>10:18 AM</span></td>
+
+            <!-- Blood type from the linked request -->
             <td>
-              <span class="dr-location">
-                <i class="fas fa-location-dot" style="font-size:11px;color:var(--primary);"></i>
-                Riyadh
-              </span>
+              <span class="dr-blood
+                {% with bt=resp.request.blood_type %}
+                  {% if bt == 'A+' or bt == 'A-' %}bb-red
+                  {% elif bt == 'B+' or bt == 'B-' %}bb-violet
+                  {% elif bt == 'O+' or bt == 'O-' %}bb-teal
+                  {% elif bt == 'AB+' or bt == 'AB-' %}bb-amber
+                  {% else %}bb-blue{% endif %}
+                {% endwith %}
+              ">{{ resp.request.blood_type }}</span>
             </td>
-            <td><span class="dr-status sp-inprog">In Progress</span></td>
+
+            <!-- Request link -->
             <td>
-              <div class="dr-actions">
-                <button class="dr-act view" title="View Details"><i class="fas fa-eye"></i></button>
-                <button class="dr-act accept" title="Accept"><i class="fas fa-check"></i></button>
-                <button class="dr-act reject" title="Reject"><i class="fas fa-xmark"></i></button>
-                <button class="dr-act complete" title="Mark Completed"><i class="fas fa-droplet"></i></button>
-                <button class="dr-act danger" title="Delete"><i class="fas fa-trash"></i></button>
+              <a href="{% url 'hospital:request_detail' request_id=resp.request.id %}"
+                 class="dr-req-link">{{ resp.request.request_id }}</a>
+              <div style="font-size:11.5px;color:var(--text-muted);margin-top:2px;">
+                {{ resp.request.title|truncatechars:22 }}
               </div>
             </td>
-          </tr>
 
-          <!-- Row 2 -->
-          <tr>
-            <td>
-              <div class="resp-id">#RES-1055</div>
-              <div class="resp-type">Response</div>
+            <!-- Request type -->
+            <td style="font-size:12.5px;color:var(--text-muted);">
+              {{ resp.request.get_request_type_display }}
             </td>
+
+            <!-- Urgency from request -->
             <td>
-              <div class="dr-donor-cell">
-                <div class="dr-av da-violet">SM</div>
-                <div>
-                  <div class="dr-d-name">Sara Al-Mutairi</div>
-                  <div class="dr-d-phone">+966 55 987 6543</div>
+              {% if resp.request.urgency == 'high' %}
+                <span class="dr-urgency urg-high">🔴 High</span>
+              {% elif resp.request.urgency == 'medium' %}
+                <span class="dr-urgency urg-med">🟡 Medium</span>
+              {% else %}
+                <span class="dr-urgency urg-low">🟢 Low</span>
+              {% endif %}
+            </td>
+
+            <!-- Date responded -->
+            <td class="dr-date">
+              {{ resp.responded_at|date:"M d, Y" }}
+              <span>{{ resp.responded_at|time:"h:i A" }}</span>
+            </td>
+
+            <!-- Status -->
+            <td>
+              <span class="dr-status sp-{{ resp.status }}">
+                {{ resp.get_status_display }}
+              </span>
+            </td>
+
+            <!-- Actions: inline POST forms for status changes -->
+            <td>
+              <div class="dr-actions">
+
+                <!-- View detail -->
+                <a href="{% url 'hospital:donor_response_detail' response_id=resp.id %}"
+                   class="dr-act view" title="View Details">
+                  <i class="fas fa-eye"></i>
+                </a>
+
+                {% if resp.status == 'pending' %}
+                  <!-- Mark In Progress -->
+                  <form class="dr-act-form inprog" method="post"
+                        action="{% url 'hospital:update_response_status' response_id=resp.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="inprog">
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button type="submit" title="Mark In Progress"><i class="fas fa-wave-square"></i></button>
+                  </form>
+                  <!-- Accept -->
+                  <form class="dr-act-form accept" method="post"
+                        action="{% url 'hospital:update_response_status' response_id=resp.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="accepted">
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button type="submit" title="Accept"><i class="fas fa-check"></i></button>
+                  </form>
+                  <!-- Reject -->
+                  <form class="dr-act-form reject" method="post"
+                        action="{% url 'hospital:update_response_status' response_id=resp.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="rejected">
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button type="submit" title="Reject"><i class="fas fa-xmark"></i></button>
+                  </form>
+
+                {% elif resp.status == 'inprog' %}
+                  <form class="dr-act-form accept" method="post"
+                        action="{% url 'hospital:update_response_status' response_id=resp.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="accepted">
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button type="submit" title="Accept"><i class="fas fa-check"></i></button>
+                  </form>
+                  <form class="dr-act-form reject" method="post"
+                        action="{% url 'hospital:update_response_status' response_id=resp.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="rejected">
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button type="submit" title="Reject"><i class="fas fa-xmark"></i></button>
+                  </form>
+                  <form class="dr-act-form complete" method="post"
+                        action="{% url 'hospital:update_response_status' response_id=resp.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="completed">
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button type="submit" title="Mark Completed"><i class="fas fa-droplet"></i></button>
+                  </form>
+
+                {% elif resp.status == 'accepted' %}
+                  <form class="dr-act-form complete" method="post"
+                        action="{% url 'hospital:update_response_status' response_id=resp.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="completed">
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button type="submit" title="Mark Completed"><i class="fas fa-droplet"></i></button>
+                  </form>
+                  <form class="dr-act-form reject" method="post"
+                        action="{% url 'hospital:update_response_status' response_id=resp.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="rejected">
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button type="submit" title="Reject"><i class="fas fa-xmark"></i></button>
+                  </form>
+                {% endif %}
+
+                <!-- Delete -->
+                <a href="{% url 'hospital:delete_donor_response' response_id=resp.id %}"
+                   class="dr-act danger" title="Delete">
+                  <i class="fas fa-trash"></i>
+                </a>
+
+              </div>
+            </td>
+
+          </tr>
+          {% endwith %}
+          {% empty %}
+          <tr>
+            <td colspan="9">
+              <div class="dr-empty">
+                <div class="dr-empty-icon">🩸</div>
+                <div class="dr-empty-title">No donor responses found.</div>
+                <div class="dr-empty-sub">
+                  {% if request.GET.q or request.GET.status or request.GET.urgency or request.GET.blood_type %}
+                    No responses match your current filters. Try clearing them.
+                  {% else %}
+                    Donor responses will appear here once donors start responding to your requests.
+                  {% endif %}
                 </div>
               </div>
             </td>
-            <td><span class="dr-blood bb-violet">AB+</span></td>
-            <td><span class="dr-req-link">#REQ-0840</span></td>
-            <td style="font-size:12.5px;color:var(--text-muted);">Blood Bank Refill</td>
-            <td><span class="dr-urgency urg-med">🟡 Medium</span></td>
-            <td class="dr-date">Apr 29, 2025<span>2:44 PM</span></td>
-            <td>
-              <span class="dr-location">
-                <i class="fas fa-location-dot" style="font-size:11px;color:var(--primary);"></i>
-                Jeddah
-              </span>
-            </td>
-            <td><span class="dr-status sp-pending">Pending</span></td>
-            <td>
-              <div class="dr-actions">
-                <button class="dr-act view" title="View Details"><i class="fas fa-eye"></i></button>
-                <button class="dr-act progress-b" title="Mark In Progress"><i class="fas fa-wave-square"></i></button>
-                <button class="dr-act accept" title="Accept"><i class="fas fa-check"></i></button>
-                <button class="dr-act reject" title="Reject"><i class="fas fa-xmark"></i></button>
-                <button class="dr-act danger" title="Delete"><i class="fas fa-trash"></i></button>
-              </div>
-            </td>
           </tr>
-
-          <!-- Row 3 -->
-          <tr>
-            <td>
-              <div class="resp-id">#RES-1054</div>
-              <div class="resp-type">Response</div>
-            </td>
-            <td>
-              <div class="dr-donor-cell">
-                <div class="dr-av da-teal">FA</div>
-                <div>
-                  <div class="dr-d-name">Fahad Al-Anazi</div>
-                  <div class="dr-d-phone">+966 54 321 0987</div>
-                </div>
-              </div>
-            </td>
-            <td><span class="dr-blood bb-teal">B−</span></td>
-            <td><span class="dr-req-link">#REQ-0839</span></td>
-            <td style="font-size:12.5px;color:var(--text-muted);">Emergency Case</td>
-            <td><span class="dr-urgency urg-high">🔴 High</span></td>
-            <td class="dr-date">Apr 28, 2025<span>9:05 AM</span></td>
-            <td>
-              <span class="dr-location">
-                <i class="fas fa-location-dot" style="font-size:11px;color:var(--primary);"></i>
-                Riyadh
-              </span>
-            </td>
-            <td><span class="dr-status sp-accepted">Accepted</span></td>
-            <td>
-              <div class="dr-actions">
-                <button class="dr-act view" title="View Details"><i class="fas fa-eye"></i></button>
-                <button class="dr-act complete" title="Mark Completed"><i class="fas fa-droplet"></i></button>
-                <button class="dr-act reject" title="Reject"><i class="fas fa-xmark"></i></button>
-                <button class="dr-act danger" title="Delete"><i class="fas fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-
-          <!-- Row 4 -->
-          <tr>
-            <td>
-              <div class="resp-id">#RES-1053</div>
-              <div class="resp-type">Response</div>
-            </td>
-            <td>
-              <div class="dr-donor-cell">
-                <div class="dr-av da-amber">NQ</div>
-                <div>
-                  <div class="dr-d-name">Noura Al-Qahtani</div>
-                  <div class="dr-d-phone">+966 56 456 7890</div>
-                </div>
-              </div>
-            </td>
-            <td><span class="dr-blood bb-amber">A+</span></td>
-            <td><span class="dr-req-link">#REQ-0838</span></td>
-            <td style="font-size:12.5px;color:var(--text-muted);">Blood Bank Refill</td>
-            <td><span class="dr-urgency urg-low">🟢 Low</span></td>
-            <td class="dr-date">Apr 25, 2025<span>11:30 AM</span></td>
-            <td>
-              <span class="dr-location">
-                <i class="fas fa-location-dot" style="font-size:11px;color:var(--primary);"></i>
-                Dammam
-              </span>
-            </td>
-            <td><span class="dr-status sp-completed">Completed</span></td>
-            <td>
-              <div class="dr-actions">
-                <button class="dr-act view" title="View Details"><i class="fas fa-eye"></i></button>
-                <button class="dr-act danger" title="Delete"><i class="fas fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-
-          <!-- Row 5 -->
-          <tr>
-            <td>
-              <div class="resp-id">#RES-1052</div>
-              <div class="resp-type">Response</div>
-            </td>
-            <td>
-              <div class="dr-donor-cell">
-                <div class="dr-av da-red">MZ</div>
-                <div>
-                  <div class="dr-d-name">Mohammed Al-Zahrani</div>
-                  <div class="dr-d-phone">+966 58 654 3210</div>
-                </div>
-              </div>
-            </td>
-            <td><span class="dr-blood bb-red">O+</span></td>
-            <td><span class="dr-req-link">#REQ-0841</span></td>
-            <td style="font-size:12.5px;color:var(--text-muted);">Emergency Case</td>
-            <td><span class="dr-urgency urg-high">🔴 High</span></td>
-            <td class="dr-date">Apr 22, 2025<span>3:15 PM</span></td>
-            <td>
-              <span class="dr-location">
-                <i class="fas fa-location-dot" style="font-size:11px;color:var(--primary);"></i>
-                Riyadh
-              </span>
-            </td>
-            <td><span class="dr-status sp-rejected">Rejected</span></td>
-            <td>
-              <div class="dr-actions">
-                <button class="dr-act view" title="View Details"><i class="fas fa-eye"></i></button>
-                <button class="dr-act danger" title="Delete"><i class="fas fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-
-          <!-- Row 6 -->
-          <tr>
-            <td>
-              <div class="resp-id">#RES-1051</div>
-              <div class="resp-type">Response</div>
-            </td>
-            <td>
-              <div class="dr-donor-cell">
-                <div class="dr-av da-green">KA</div>
-                <div>
-                  <div class="dr-d-name">Khalid Al-Otaibi</div>
-                  <div class="dr-d-phone">+966 53 789 0123</div>
-                </div>
-              </div>
-            </td>
-            <td><span class="dr-blood bb-blue">A−</span></td>
-            <td><span class="dr-req-link">#REQ-0836</span></td>
-            <td style="font-size:12.5px;color:var(--text-muted);">Surgical Prep</td>
-            <td><span class="dr-urgency urg-med">🟡 Medium</span></td>
-            <td class="dr-date">Apr 20, 2025<span>8:50 AM</span></td>
-            <td>
-              <span class="dr-location">
-                <i class="fas fa-location-dot" style="font-size:11px;color:var(--primary);"></i>
-                Mecca
-              </span>
-            </td>
-            <td><span class="dr-status sp-pending">Pending</span></td>
-            <td>
-              <div class="dr-actions">
-                <button class="dr-act view" title="View Details"><i class="fas fa-eye"></i></button>
-                <button class="dr-act progress-b" title="Mark In Progress"><i class="fas fa-wave-square"></i></button>
-                <button class="dr-act accept" title="Accept"><i class="fas fa-check"></i></button>
-                <button class="dr-act reject" title="Reject"><i class="fas fa-xmark"></i></button>
-                <button class="dr-act danger" title="Delete"><i class="fas fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-
-          <!-- Row 7 -->
-          <tr>
-            <td>
-              <div class="resp-id">#RES-1050</div>
-              <div class="resp-type">Response</div>
-            </td>
-            <td>
-              <div class="dr-donor-cell">
-                <div class="dr-av da-pink">LA</div>
-                <div>
-                  <div class="dr-d-name">Lama Al-Shehri</div>
-                  <div class="dr-d-phone">+966 59 012 3456</div>
-                </div>
-              </div>
-            </td>
-            <td><span class="dr-blood bb-green">B+</span></td>
-            <td><span class="dr-req-link">#REQ-0835</span></td>
-            <td style="font-size:12.5px;color:var(--text-muted);">Blood Bank Refill</td>
-            <td><span class="dr-urgency urg-low">🟢 Low</span></td>
-            <td class="dr-date">Apr 18, 2025<span>1:20 PM</span></td>
-            <td>
-              <span class="dr-location">
-                <i class="fas fa-location-dot" style="font-size:11px;color:var(--primary);"></i>
-                Medina
-              </span>
-            </td>
-            <td><span class="dr-status sp-inprog">In Progress</span></td>
-            <td>
-              <div class="dr-actions">
-                <button class="dr-act view" title="View Details"><i class="fas fa-eye"></i></button>
-                <button class="dr-act accept" title="Accept"><i class="fas fa-check"></i></button>
-                <button class="dr-act reject" title="Reject"><i class="fas fa-xmark"></i></button>
-                <button class="dr-act complete" title="Mark Completed"><i class="fas fa-droplet"></i></button>
-                <button class="dr-act danger" title="Delete"><i class="fas fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-
-          <!-- Row 8 -->
-          <tr>
-            <td>
-              <div class="resp-id">#RES-1049</div>
-              <div class="resp-type">Response</div>
-            </td>
-            <td>
-              <div class="dr-donor-cell">
-                <div class="dr-av da-blue">RS</div>
-                <div>
-                  <div class="dr-d-name">Rayan Al-Saud</div>
-                  <div class="dr-d-phone">+966 52 345 6789</div>
-                </div>
-              </div>
-            </td>
-            <td><span class="dr-blood bb-pink">AB−</span></td>
-            <td><span class="dr-req-link">#REQ-0834</span></td>
-            <td style="font-size:12.5px;color:var(--text-muted);">Plasma Donation</td>
-            <td><span class="dr-urgency urg-med">🟡 Medium</span></td>
-            <td class="dr-date">Apr 15, 2025<span>4:00 PM</span></td>
-            <td>
-              <span class="dr-location">
-                <i class="fas fa-location-dot" style="font-size:11px;color:var(--primary);"></i>
-                Riyadh
-              </span>
-            </td>
-            <td><span class="dr-status sp-accepted">Accepted</span></td>
-            <td>
-              <div class="dr-actions">
-                <button class="dr-act view" title="View Details"><i class="fas fa-eye"></i></button>
-                <button class="dr-act complete" title="Mark Completed"><i class="fas fa-droplet"></i></button>
-                <button class="dr-act reject" title="Reject"><i class="fas fa-xmark"></i></button>
-                <button class="dr-act danger" title="Delete"><i class="fas fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-
+          {% endfor %}
         </tbody>
       </table>
     </div>
 
     <div class="dr-card-foot">
       <div style="font-size:12.5px;color:var(--text-muted);">
-        Showing <strong style="color:var(--text);">8</strong>
-        of <strong style="color:var(--text);">156</strong> responses
-      </div>
-      <div class="dr-pagination">
-        <button class="pg-btn"><i class="fas fa-chevron-left" style="font-size:11px;"></i></button>
-        <button class="pg-btn active">1</button>
-        <button class="pg-btn">2</button>
-        <button class="pg-btn">3</button>
-        <span class="pg-sep">…</span>
-        <button class="pg-btn">20</button>
-        <button class="pg-btn"><i class="fas fa-chevron-right" style="font-size:11px;"></i></button>
+        Showing <strong style="color:var(--text);">{{ responses|length }}</strong>
+        of <strong style="color:var(--text);">{{ total_responses }}</strong> responses
       </div>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════
-       BOTTOM GRID — Detail + Timeline
-  ════════════════════════════════ -->
-  <div class="dr-bottom-grid hd-fade-in-up delay-4">
-
-    <!-- ── Donor Detail Card ── -->
-    <div class="dr-detail-card">
-      <div class="dr-detail-hero">
-        <div class="dr-detail-avatar">AK</div>
-        <div class="dr-detail-hero-info">
-          <div class="dr-detail-hero-name">Ahmed Al-Khalidi</div>
-          <div class="dr-detail-hero-meta">
-            <span>📞 +966 50 123 4567</span>
-            <span>🩸 O− Blood Type</span>
-            <span>🏥 Responding to #REQ-0841</span>
-          </div>
-        </div>
-        <span class="dr-detail-hero-status">
-          <i class="fas fa-wave-square" style="font-size:10px;"></i>
-          In Progress
-        </span>
-      </div>
-
-      <div class="dr-detail-body">
-
-        <div>
-          <span class="dr-detail-section-label">Donor Information</span>
-          <div class="dr-detail-grid">
-            <div>
-              <div class="dr-detail-field-label">Full Name</div>
-              <div class="dr-detail-field-value">Ahmed Al-Khalidi</div>
-            </div>
-            <div>
-              <div class="dr-detail-field-label">National ID</div>
-              <div class="dr-detail-field-value">1098XXXXXXX</div>
-            </div>
-            <div>
-              <div class="dr-detail-field-label">Blood Type</div>
-              <div class="dr-detail-field-value">
-                <span class="dr-blood bb-red" style="padding:4px 10px;font-size:12px;">O−</span>
-              </div>
-            </div>
-            <div>
-              <div class="dr-detail-field-label">Age</div>
-              <div class="dr-detail-field-value">34 years</div>
-            </div>
-            <div>
-              <div class="dr-detail-field-label">Last Donation</div>
-              <div class="dr-detail-field-value">Jan 15, 2025</div>
-            </div>
-            <div>
-              <div class="dr-detail-field-label">Total Donations</div>
-              <div class="dr-detail-field-value">7 times</div>
-            </div>
-            <div>
-              <div class="dr-detail-field-label">Availability</div>
-              <div class="dr-detail-field-value">Weekdays, 9AM–6PM</div>
-            </div>
-            <div>
-              <div class="dr-detail-field-label">City</div>
-              <div class="dr-detail-field-value">Riyadh</div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <span class="dr-detail-section-label">Eligibility Status</span>
-          <span class="dr-elig-badge elig-ok">
-            <i class="fas fa-circle-check" style="font-size:13px;"></i>
-            Eligible to Donate
-          </span>
-        </div>
-
-        <div>
-          <span class="dr-detail-section-label">Medical Notes</span>
-          <div class="dr-note">
-            No known medical conditions. Donor is in good health, non-smoker, and meets all eligibility criteria. Blood pressure: 118/76. Hemoglobin: 14.2 g/dL.
-          </div>
-        </div>
-
-        <div>
-          <span class="dr-detail-section-label">Donor Notes</span>
-          <div class="dr-note">
-            "I am available to donate any time this week. Please contact me as soon as possible. I have donated before at King Khalid Hospital and am familiar with the process."
-          </div>
-        </div>
-
-      </div>
-
-      <div class="dr-detail-footer">
-        <button class="hd-btn hd-btn-sm hd-btn-soft-green">
-          <i class="fas fa-check"></i> Accept Donor
-        </button>
-        <button class="hd-btn hd-btn-sm hd-btn-soft-blue">
-          <i class="fas fa-wave-square"></i> Mark In Progress
-        </button>
-        <button class="hd-btn hd-btn-sm hd-btn-soft-red">
-          <i class="fas fa-xmark"></i> Reject
-        </button>
-        <button class="hd-btn hd-btn-sm hd-btn-ghost">
-          <i class="fas fa-phone"></i> Contact Donor
-        </button>
-      </div>
-    </div>
-
-    <!-- ── Activity Timeline ── -->
-    <div class="dr-timeline-card">
-      <div class="dr-timeline-head">
-        <div class="hd-section-title">Activity Timeline</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Response #RES-1056 history</div>
-      </div>
-      <div class="dr-timeline-body">
-
-        <div class="tl-item">
-          <div class="tl-icon ti-blue"><i class="fas fa-user-plus"></i></div>
-          <div class="tl-content">
-            <div class="tl-title">Response Submitted</div>
-            <div class="tl-desc">Ahmed Al-Khalidi submitted a donor response for request #REQ-0841 (O−, 4 units).</div>
-            <div class="tl-time">May 1, 2025 · 10:18 AM</div>
-          </div>
-        </div>
-
-        <div class="tl-item">
-          <div class="tl-icon ti-amber"><i class="fas fa-clock"></i></div>
-          <div class="tl-content">
-            <div class="tl-title">Awaiting Review</div>
-            <div class="tl-desc">Response received and queued. Status set to Pending automatically.</div>
-            <div class="tl-time">May 1, 2025 · 10:18 AM</div>
-          </div>
-        </div>
-
-        <div class="tl-item">
-          <div class="tl-icon ti-violet"><i class="fas fa-wave-square"></i></div>
-          <div class="tl-content">
-            <div class="tl-title">Marked In Progress</div>
-            <div class="tl-desc">Hospital coordinator reviewed the response and initiated the donor verification process.</div>
-            <div class="tl-time">May 1, 2025 · 11:45 AM</div>
-          </div>
-        </div>
-
-        <div class="tl-item">
-          <div class="tl-icon ti-blue"><i class="fas fa-phone"></i></div>
-          <div class="tl-content">
-            <div class="tl-title">Donor Contacted</div>
-            <div class="tl-desc">Coordinator called donor to confirm availability and appointment scheduling.</div>
-            <div class="tl-time">May 1, 2025 · 2:10 PM</div>
-          </div>
-        </div>
-
-        <div class="tl-item">
-          <div class="tl-icon ti-green"><i class="fas fa-calendar-check"></i></div>
-          <div class="tl-content">
-            <div class="tl-title">Appointment Scheduled</div>
-            <div class="tl-desc">Donation appointment confirmed for May 3, 2025 at 10:00 AM.</div>
-            <div class="tl-time">May 1, 2025 · 3:30 PM</div>
-          </div>
-        </div>
-
-        <div class="tl-item">
-          <div class="tl-icon ti-gray"><i class="fas fa-hourglass-half"></i></div>
-          <div class="tl-content">
-            <div class="tl-title">Pending Donation</div>
-            <div class="tl-desc">Awaiting donor arrival for scheduled blood donation on May 3, 2025.</div>
-            <div class="tl-time">Expected: May 3, 2025 · 10:00 AM</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div><!-- /.dr-bottom-grid -->
-
-</div><!-- /.dr-main -->
-
-{% block extra_js %}
-<script>
-/* Filter chip toggle */
-document.querySelectorAll('.dr-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.dr-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-  });
-});
-</script>
-{% endblock %}
-
+</div>
 {% endblock %}

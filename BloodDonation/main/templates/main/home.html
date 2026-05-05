@@ -203,12 +203,17 @@
                 <div class="selection-card">
                     <div class="card-icon hospital-icon">
                         <i class="fas fa-hospital-alt"></i>
+                    
+            <!-- الكرت الثاني: مستشفى -->
+            <a href="{% url 'hospital:hospital_login' %}" class="selection-card-link" style="text-decoration: none; color: inherit;">
+                <div class="selection-card">
+                    <div class="card-icon">
+                        <i class="fas fa-hospital"></i>
                     </div>
-                    <h3>{% trans "مستشفى / مركز" %}</h3>
-                    <p>{% trans "إدارة طلبات الدم والوصول للمتبرعين بسرعة" %}</p>
-                    <span class="btn btn-success rounded-pill px-5 py-2 mt-4 fw-bold">{% trans "بوابة المستشفيات" %}</span>
+                    <h3>مستشفى</h3>
+                    <p>إدارة طلبات التبرع والتواصل مع المتبرعين</p>
                 </div>
-            </div>
+            <!-- كرت المستشفى المعدل --> 
         </div>
     </div>
 </section>

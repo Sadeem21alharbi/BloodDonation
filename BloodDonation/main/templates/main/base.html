@@ -117,15 +117,29 @@
 
     <!-- Desktop Nav -->
     <ul class="nav-links">
+<<<<<<< HEAD
       <li><a href="{% url 'main:home' %}">{% trans "الرئيسية" %}</a></li>
       <li><a href="{% url 'main:about' %}">{% trans "عن المنصة" %}</a></li>
       <li><a href="{% url 'main:works' %}">{% trans "كيف يعمل" %}</a></li>
       <li><a href="{% url 'main:faq' %}">{% trans "الأسئلة الشائعة" %}</a></li>
       <li><a href="{% url 'main:home' %}#join">{% trans "أنضم إلينا" %}</a></li>
+=======
+      <li><a href="{% url 'main:home' %}" class="active">الرئيسية</a></li>
+      <li><a href="{% url 'main:about' %}">عن المنصة</a></li>
+      <li><a href="{% url 'main:works' %}">كيف يعمل</a></li>
+      <li><a href="{% url 'main:faq' %}"> الأسئلة الشائعة </a></li>
+      <li><a href="{% url 'main:home' %}#join">أنضم إلينا</a></li>
+      {% if user.is_authenticated %}
+        {% if user.hospital_profile %} 
+          <li><a href="{% url 'hospital:requests' %}">طلبات الدم</a></li>
+        {% endif %}
+      {% endif %}
+>>>>>>> 3251d23ca9b01f1ae563b553c6cf9f28e64d1442
     </ul>
 
     <!-- Controls -->
     <div class="nav-controls">
+<<<<<<< HEAD
       <!-- زر تغيير اللغة السريع -->
       <form action="#" method="post" style="display: inline;">
           {% csrf_token %}
@@ -139,6 +153,10 @@
           {% endif %}
       </form>
       
+=======
+      <button class="lang-toggle" id="langToggle">EN</button>
+
+>>>>>>> 3251d23ca9b01f1ae563b553c6cf9f28e64d1442
       <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
     </div>
   </div>

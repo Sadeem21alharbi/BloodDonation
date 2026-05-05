@@ -1,0 +1,379 @@
+<!--hospital/delete_donation_request.html-->
+
+{% extends 'hospital/base.html' %}
+
+{% block title %}Delete Request #{{ request_obj.id }} | Ehyaa{% endblock %}
+{% block page_title %}Delete Donation Request{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ═══════════════════════════════════════════════════
+   DELETE CONFIRMATION PAGE
+═══════════════════════════════════════════════════ */
+
+.del-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ── Breadcrumb / back bar ── */
+.del-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ── Danger card ── */
+.del-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid #fca5a5;
+  box-shadow: 0 4px 24px rgba(239,68,68,.10);
+  overflow: hidden;
+}
+
+/* Hero strip */
+.del-hero {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  padding: 26px 30px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: #fff;
+}
+
+.del-hero-icon {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.30);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+
+.del-hero-title {
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.del-hero-sub {
+  font-size: 13px;
+  opacity: .88;
+  margin-top: 4px;
+}
+
+/* Warning banner */
+.del-warning {
+  margin: 22px 26px 0;
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  color: #991b1b;
+  line-height: 1.6;
+}
+
+.del-warning-icon {
+  font-size: 16px;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.del-warning strong { font-weight: 800; }
+
+/* Summary block */
+.del-summary {
+  margin: 20px 26px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.del-summary-head {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--text-light);
+  background: var(--bg-card);
+}
+
+.del-summary-rows {
+  padding: 6px 0;
+}
+
+.del-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border-card);
+  gap: 10px;
+}
+
+.del-summary-row:last-child { border-bottom: none; }
+
+.del-row-label { color: var(--text-muted); flex-shrink: 0; }
+.del-row-value { font-weight: 700; color: var(--text); text-align: right; }
+
+/* Blood badge (reuse) */
+.rq-blood {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 4px 11px; border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 800; color: #fff;
+  white-space: nowrap;
+}
+.bb-red    { background: linear-gradient(135deg,#ef4444,#dc2626); }
+.bb-violet { background: linear-gradient(135deg,#8b5cf6,#7c3aed); }
+.bb-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); }
+.bb-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); }
+.bb-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); }
+
+/* Urgency */
+.rq-urgency {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: var(--radius-pill);
+  font-size: 11.5px; font-weight: 700;
+}
+.urg-high   { background: #fee2e2; color: #b91c1c; }
+.urg-medium { background: #fef3c7; color: #92400e; }
+.urg-low    { background: #dcfce7; color: #166534; }
+
+/* Status */
+.rq-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: var(--radius-pill);
+  font-size: 11.5px; font-weight: 700; white-space: nowrap;
+}
+.rq-status::before {
+  content: ''; width: 6px; height: 6px;
+  border-radius: 50%; flex-shrink: 0;
+}
+.sp-pending   { background: #fef3c7; color: #92400e; }
+.sp-pending::before   { background: #f59e0b; }
+.sp-active    { background: #dbeafe; color: #1d4ed8; }
+.sp-active::before    { background: #2563eb; }
+.sp-completed { background: #dcfce7; color: #065f46; }
+.sp-completed::before { background: #059669; }
+.sp-cancelled { background: #f1f5f9; color: #475569; }
+.sp-cancelled::before { background: #94a3b8; }
+.sp-inprog    { background: #ede9fe; color: #6d28d9; }
+.sp-inprog::before    { background: #8b5cf6; }
+
+/* ── Action footer ── */
+.del-footer {
+  padding: 18px 26px;
+  border-top: 1px solid var(--border-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: var(--bg);
+}
+
+.del-footer-hint {
+  font-size: 12px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.del-footer-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Delete confirm button */
+.btn-danger-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(239,68,68,.30);
+  transition: all var(--transition);
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.btn-danger-confirm:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 5px 18px rgba(239,68,68,.40);
+  transform: translateY(-1px);
+}
+
+.btn-danger-confirm:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(239,68,68,.25);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .del-hero { flex-direction: column; text-align: center; }
+  .del-footer { flex-direction: column; align-items: stretch; }
+  .del-footer-btns { flex-direction: column; }
+  .btn-danger-confirm, .hd-btn { justify-content: center; text-align: center; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="del-wrapper">
+
+    <!-- ── Top bar ── -->
+    <div class="del-topbar">
+        <a href="{% url 'hospital:requests' %}" class="hd-btn hd-btn-secondary hd-btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+        <a href="{% url 'hospital:request_detail' request_obj.id %}" class="hd-btn hd-btn-secondary hd-btn-sm">
+            <i class="fas fa-eye"></i> View Details
+        </a>
+    </div>
+
+    <!-- ── Danger card ── -->
+    <div class="del-card">
+
+        <!-- Hero -->
+        <div class="del-hero">
+            <div class="del-hero-icon">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            <div>
+                <div class="del-hero-title">Delete Donation Request</div>
+                <div class="del-hero-sub">Request #{{ request_obj.id }} &mdash; {{ request_obj.title }}</div>
+            </div>
+        </div>
+
+        <!-- Warning banner -->
+        <div class="del-warning">
+            <i class="fas fa-exclamation-triangle del-warning-icon"></i>
+            <span>
+                <strong>This action cannot be undone.</strong>
+                Deleting this request will permanently remove all associated data,
+                including notes and activity history. Please review the request details below
+                before confirming.
+            </span>
+        </div>
+
+        <!-- Summary of the request being deleted -->
+        <div class="del-summary">
+            <div class="del-summary-head">
+                <i class="fas fa-clipboard-list" style="margin-right:6px;"></i> Request Summary
+            </div>
+            <div class="del-summary-rows">
+
+                <div class="del-summary-row">
+                    <span class="del-row-label">Request ID</span>
+                    <span class="del-row-value">#{{ request_obj.id }}</span>
+                </div>
+
+                <div class="del-summary-row">
+                    <span class="del-row-label">Title</span>
+                    <span class="del-row-value">{{ request_obj.title }}</span>
+                </div>
+
+                <div class="del-summary-row">
+                    <span class="del-row-label">Department</span>
+                    <span class="del-row-value">{{ request_obj.department }}</span>
+                </div>
+
+                <div class="del-summary-row">
+                    <span class="del-row-label">Blood Type</span>
+                    <span class="rq-blood
+                        {% if request_obj.blood_type in 'A+,A-' %}bb-red
+                        {% elif request_obj.blood_type in 'B+,B-' %}bb-violet
+                        {% elif request_obj.blood_type in 'O+,O-' %}bb-teal
+                        {% elif request_obj.blood_type in 'AB+,AB-' %}bb-amber
+                        {% else %}bb-blue{% endif %}">
+                        {{ request_obj.blood_type }}
+                    </span>
+                </div>
+
+                <div class="del-summary-row">
+                    <span class="del-row-label">Required Units</span>
+                    <span class="del-row-value">{{ request_obj.required_units }} Units</span>
+                </div>
+
+                <div class="del-summary-row">
+                    <span class="del-row-label">Urgency</span>
+                    <span class="rq-urgency
+                        {% if request_obj.urgency == 'HIGH' %}urg-high
+                        {% elif request_obj.urgency == 'MEDIUM' %}urg-medium
+                        {% else %}urg-low{% endif %}">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ request_obj.get_urgency_display }}
+                    </span>
+                </div>
+
+                <div class="del-summary-row">
+                    <span class="del-row-label">Status</span>
+                    <span class="rq-status
+                        {% if request_obj.status == 'PENDING' or request_obj.status == 'pending' %}sp-pending
+                        {% elif request_obj.status == 'ACTIVE' or request_obj.status == 'active' %}sp-active
+                        {% elif request_obj.status == 'COMPLETED' or request_obj.status == 'completed' %}sp-completed
+                        {% elif request_obj.status == 'CANCELLED' or request_obj.status == 'cancelled' %}sp-cancelled
+                        {% else %}sp-inprog{% endif %}">
+                        {{ request_obj.get_status_display }}
+                    </span>
+                </div>
+
+                <div class="del-summary-row">
+                    <span class="del-row-label">Created</span>
+                    <span class="del-row-value">{{ request_obj.created_at|date:"M d, Y H:i" }}</span>
+                </div>
+
+                {% if request_obj.created_by %}
+                <div class="del-summary-row">
+                    <span class="del-row-label">Created By</span>
+                    <span class="del-row-value">{{ request_obj.created_by.get_full_name|default:request_obj.created_by.username }}</span>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <!-- Action footer -->
+        <div class="del-footer">
+            <span class="del-footer-hint">
+                <i class="fas fa-lock"></i> This action is irreversible
+            </span>
+            <div class="del-footer-btns">
+                <a href="{% url 'hospital:request_detail' request_obj.id %}" class="hd-btn hd-btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <!-- POST form — Django requires POST for destructive actions -->
+                <form method="post" action="{% url 'hospital:request_delete' request_obj.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-danger-confirm">
+                        <i class="fas fa-trash-alt"></i> Yes, Delete Permanently
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div><!-- /del-card -->
+
+</div>
+{% endblock %}

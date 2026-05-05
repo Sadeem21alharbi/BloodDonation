@@ -6,64 +6,43 @@
 {% block extra_css %}
 <style>
 /* ═══════════════════════════════════════════════════
-   DONATION REQUESTS PAGE — page-specific styles only
-   All base tokens come from hospital_dashboard.css
+   DONATION REQUESTS PAGE — uses hd-* tokens from base
 ═══════════════════════════════════════════════════ */
 
 .rq-main { display: flex; flex-direction: column; gap: 28px; }
 
-/* ── Page Header ── */
 .rq-header {
   display: flex; align-items: flex-start;
   justify-content: space-between; gap: 16px; flex-wrap: wrap;
 }
-
-.rq-header-title {
-  font-size: 26px; font-weight: 800;
-  color: var(--text); line-height: 1.2;
-}
-
+.rq-header-title { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1.2; }
 .rq-header-sub {
   color: var(--text-muted); font-size: 13px;
   margin-top: 5px; display: flex; align-items: center; gap: 8px;
 }
-
-.rq-header-sub .dot {
-  width: 4px; height: 4px;
-  border-radius: 50%; background: var(--text-light);
-  display: inline-block; flex-shrink: 0;
-}
-
+.rq-header-sub .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text-light); flex-shrink: 0; }
 .rq-header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-/* ── Stats Grid ── */
+/* Stats */
 .rq-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 18px;
 }
-
 .rq-stat {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: 20px 22px;
-  border: 1px solid var(--border-card);
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 20px 22px; border: 1px solid var(--border-card);
   box-shadow: var(--shadow-card);
   display: flex; flex-direction: column; gap: 14px;
   transition: transform var(--transition), box-shadow var(--transition);
 }
-
 .rq-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(26,86,219,.13); }
-
 .rq-stat-top { display: flex; align-items: center; justify-content: space-between; }
-
 .rq-stat-icon {
-  width: 48px; height: 48px;
-  border-radius: 14px;
+  width: 48px; height: 48px; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
   color: #fff; font-size: 18px; flex-shrink: 0;
 }
-
 .si-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow: 0 4px 12px rgba(37,99,235,.28); }
 .si-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); box-shadow: 0 4px 12px rgba(20,184,166,.28); }
 .si-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); box-shadow: 0 4px 12px rgba(245,158,11,.28); }
@@ -76,20 +55,13 @@
   font-size: 11.5px; font-weight: 700;
   padding: 4px 9px; border-radius: var(--radius-pill);
 }
-
 .rq-stat-trend i { font-size: 9px; }
-.trend-up   { background: #dcfce7; color: #16a34a; }
-.trend-down { background: #fee2e2; color: #dc2626; }
-.trend-neu  { background: var(--bg); color: var(--text-muted); }
-
+.trend-up  { background: #dcfce7; color: #16a34a; }
+.trend-down{ background: #fee2e2; color: #dc2626; }
+.trend-neu { background: var(--bg); color: var(--text-muted); }
 .rq-stat-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1; }
 .rq-stat-label { color: var(--text-muted); font-size: 12.5px; margin-top: 3px; }
-
-.rq-stat-bar {
-  height: 5px; background: var(--border);
-  border-radius: var(--radius-pill); overflow: hidden;
-}
-
+.rq-stat-bar { height: 5px; background: var(--border); border-radius: var(--radius-pill); overflow: hidden; }
 .rq-stat-bar-fill { height: 100%; border-radius: var(--radius-pill); }
 .sbf-blue   { background: linear-gradient(90deg,#2563eb,#60a5fa); width: 72%; }
 .sbf-teal   { background: linear-gradient(90deg,#14b8a6,#5eead4); width: 65%; }
@@ -98,21 +70,13 @@
 .sbf-red    { background: linear-gradient(90deg,#ef4444,#fca5a5); width: 18%; }
 .sbf-violet { background: linear-gradient(90deg,#8b5cf6,#c4b5fd); width: 30%; }
 
-/* ── Filter Section ── */
+/* Filter */
 .rq-filter {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card);
   padding: 18px 22px;
 }
-
-.rq-filter-row {
-  display: flex; align-items: center;
-  gap: 10px; flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-
+.rq-filter-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
 .rq-search {
   display: flex; align-items: center; gap: 8px;
   background: var(--bg); border: 1.5px solid var(--border);
@@ -120,131 +84,84 @@
   flex: 1; min-width: 200px; max-width: 300px;
   transition: border-color var(--transition);
 }
-
 .rq-search:focus-within { border-color: var(--primary); }
 .rq-search i { font-size: 13px; color: var(--text-light); flex-shrink: 0; }
-
 .rq-search input {
   border: none; background: transparent;
-  font-family: inherit; font-size: 13px;
-  color: var(--text); outline: none; width: 100%;
+  font-family: inherit; font-size: 13px; color: var(--text); outline: none; width: 100%;
 }
-
 .rq-search input::placeholder { color: var(--text-light); }
-
 .rq-select {
-  padding: 9px 13px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text);
-  font-family: inherit; font-size: 12.5px; font-weight: 500;
-  cursor: pointer; outline: none;
-  transition: border-color var(--transition);
+  padding: 9px 13px; border-radius: var(--radius);
+  border: 1.5px solid var(--border); background: var(--bg-card);
+  color: var(--text); font-family: inherit; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; outline: none; transition: border-color var(--transition);
 }
-
 .rq-select:hover, .rq-select:focus { border-color: var(--primary); }
-
 .rq-chips { display: flex; gap: 7px; flex-wrap: wrap; }
-
 .rq-chip {
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
+  padding: 7px 14px; border-radius: var(--radius-pill);
   background: var(--bg); border: 1.5px solid var(--border);
-  font-size: 12px; font-weight: 700;
-  cursor: pointer; color: var(--text-muted);
+  font-size: 12px; font-weight: 700; cursor: pointer; color: var(--text-muted);
   transition: all var(--transition);
 }
-
 .rq-chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
 .rq-chip.active { background: var(--primary-gradient); color: #fff; border-color: transparent; box-shadow: 0 2px 8px rgba(26,86,219,.22); }
 
-/* ── Card ── */
+/* Card */
 .rq-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-  transition: box-shadow var(--transition);
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card); overflow: hidden;
 }
-
 .rq-card-head {
-  padding: 20px 24px;
-  display: flex; align-items: center;
-  justify-content: space-between; gap: 12px;
-  border-bottom: 1px solid var(--border-card);
+  padding: 20px 24px; display: flex; align-items: center;
+  justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border-card);
 }
-
 .rq-card-title { font-size: 16px; font-weight: 800; color: var(--text); }
 .rq-card-sub   { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
 .rq-card-foot {
-  padding: 14px 24px;
-  border-top: 1px solid var(--border);
-  background: var(--bg);
-  display: flex; align-items: center;
-  justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 14px 24px; border-top: 1px solid var(--border); background: var(--bg);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
 }
 
-/* ── Table ── */
-.rq-table-wrap { overflow-x: auto; padding: 0 24px 0; }
-
+/* Table */
+.rq-table-wrap { overflow-x: auto; }
 .rq-table { width: 100%; border-collapse: collapse; }
-
 .rq-table thead tr { border-bottom: 2px solid var(--border); }
-
 .rq-table th {
-  padding: 11px 12px;
-  text-align: left;
-  font-size: 10.5px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .07em;
-  color: var(--text-light);
-  white-space: nowrap;
-  background: var(--bg);
+  padding: 11px 14px; text-align: left;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--text-light); white-space: nowrap; background: var(--bg);
 }
-
-.rq-table tbody tr {
-  border-bottom: 1px solid var(--border-card);
-  transition: background var(--transition);
-}
-
+.rq-table tbody tr { border-bottom: 1px solid var(--border-card); transition: background var(--transition); }
 .rq-table tbody tr:hover { background: rgba(26,86,219,.025); }
 .rq-table tbody tr:last-child { border-bottom: none; }
+.rq-table td { padding: 13px 14px; font-size: 13.5px; vertical-align: middle; color: var(--text); }
 
-.rq-table td {
-  padding: 13px 12px;
-  font-size: 13.5px; vertical-align: middle;
-  color: var(--text);
-}
-
-.req-id   { font-weight: 800; font-size: 13px; }
+.req-id   { font-weight: 800; font-size: 13px; color: var(--primary); }
 .req-type { font-size: 11.5px; color: var(--text-muted); margin-top: 3px; }
 
-/* Blood badge */
+/* Blood badges */
 .rq-blood {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 5px 11px; border-radius: var(--radius-pill);
-  font-size: 12px; font-weight: 800; color: #fff;
-  white-space: nowrap;
+  font-size: 12px; font-weight: 800; color: #fff; white-space: nowrap;
 }
+.bb-red    { background: linear-gradient(135deg,#ef4444,#dc2626); }
+.bb-violet { background: linear-gradient(135deg,#8b5cf6,#7c3aed); }
+.bb-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); }
+.bb-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); }
+.bb-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); }
 
-.bb-red    { background: linear-gradient(135deg,#ef4444,#dc2626); box-shadow: 0 2px 7px rgba(239,68,68,.28); }
-.bb-violet { background: linear-gradient(135deg,#8b5cf6,#7c3aed); box-shadow: 0 2px 7px rgba(139,92,246,.28); }
-.bb-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); box-shadow: 0 2px 7px rgba(20,184,166,.28); }
-.bb-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); box-shadow: 0 2px 7px rgba(245,158,11,.28); }
-.bb-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow: 0 2px 7px rgba(37,99,235,.28); }
-
-/* Urgency labels */
+/* Urgency */
 .rq-urgency {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 5px 10px; border-radius: var(--radius-pill);
   font-size: 11.5px; font-weight: 700;
 }
-
 .urg-high   { background: #fee2e2; color: #b91c1c; }
 .urg-medium { background: #fef3c7; color: #92400e; }
-.urg-low    { background: #dcfce7; color: #166534; }
+.urg-low    { background: #dcfce7; color: #166634; }
 
 /* Status pills */
 .rq-status {
@@ -252,348 +169,99 @@
   padding: 6px 11px; border-radius: var(--radius-pill);
   font-size: 11.5px; font-weight: 700; white-space: nowrap;
 }
-
-.rq-status::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%; flex-shrink: 0;
-}
-
+.rq-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .sp-pending   { background: #fef3c7; color: #92400e; }
 .sp-pending::before   { background: #f59e0b; }
 .sp-active    { background: #dbeafe; color: #1d4ed8; }
 .sp-active::before    { background: #2563eb; }
-.sp-inprog    { background: #ede9fe; color: #6d28d9; }
-.sp-inprog::before    { background: #8b5cf6; }
+.sp-in_progress { background: #ede9fe; color: #6d28d9; }
+.sp-in_progress::before { background: #8b5cf6; }
 .sp-completed { background: #dcfce7; color: #065f46; }
 .sp-completed::before { background: #059669; }
 .sp-cancelled { background: #f1f5f9; color: #475569; }
 .sp-cancelled::before { background: #94a3b8; }
 .sp-emergency { background: #fee2e2; color: #991b1b; }
 .sp-emergency::before { background: #ef4444; }
+.sp-closed    { background: #f1f5f9; color: #475569; }
+.sp-closed::before    { background: #94a3b8; }
 
 /* Response pill */
 .rq-resp {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 10px;
-  background: var(--bg); border: 1.5px solid var(--border);
-  border-radius: var(--radius-pill);
-  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  padding: 5px 10px; background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill); font-size: 12px; font-weight: 700; color: var(--text-muted);
 }
 
-/* Dept cell */
+/* Dept / Date cells */
 .rq-dept { font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
 .rq-date { font-size: 12.5px; color: var(--text-muted); white-space: nowrap; }
 .rq-date span { display: block; font-size: 11px; color: var(--text-light); margin-top: 2px; }
 
 /* Action buttons */
-.rq-actions { display: flex; align-items: center; gap: 6px; }
-
+.rq-actions { display: flex; align-items: center; gap: 5px; }
 .rq-act {
-  width: 32px; height: 32px;
-  border-radius: 9px;
-  border: 1.5px solid var(--border);
-  background: var(--bg-card);
+  width: 32px; height: 32px; border-radius: 9px;
+  border: 1.5px solid var(--border); background: var(--bg-card);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; font-size: 12px; color: var(--text-muted);
-  transition: all var(--transition);
-  text-decoration: none;
-  position: relative;
+  transition: all var(--transition); text-decoration: none; position: relative;
 }
-
-.rq-act:hover               { background: var(--bg);              border-color: #94a3b8;  color: var(--text); }
-.rq-act.view:hover          { background: #dbeafe; border-color: #93c5fd;  color: #1d4ed8; }
-.rq-act.edit:hover          { background: #fef3c7; border-color: #fcd34d;  color: #d97706; }
-.rq-act.dup:hover           { background: #ede9fe; border-color: #c4b5fd;  color: #7c3aed; }
-.rq-act.close-r:hover       { background: #ccfbf1; border-color: #5eead4;  color: #0d9488; }
-.rq-act.danger:hover        { background: #fee2e2; border-color: #fca5a5;  color: #dc2626; }
-
+.rq-act:hover               { background: var(--bg); border-color: #94a3b8; color: var(--text); }
+.rq-act.view:hover          { background: #dbeafe; border-color: #93c5fd; color: #1d4ed8; }
+.rq-act.edit:hover          { background: #fef3c7; border-color: #fcd34d; color: #d97706; }
+.rq-act.close-r:hover       { background: #ccfbf1; border-color: #5eead4; color: #0d9488; }
+.rq-act.danger:hover        { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
 .rq-act[title]:hover::after {
   content: attr(title);
-  position: absolute;
-  bottom: calc(100% + 6px); left: 50%;
+  position: absolute; bottom: calc(100% + 6px); left: 50%;
   transform: translateX(-50%);
   background: #0f172a; color: #fff;
-  font-size: 10px; font-weight: 600;
-  padding: 4px 8px; border-radius: 6px;
-  white-space: nowrap; pointer-events: none; z-index: 20;
+  font-size: 10px; font-weight: 600; padding: 4px 8px;
+  border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 20;
 }
 
 /* Pagination */
 .rq-pagination { display: flex; align-items: center; gap: 5px; }
-
 .pg-btn {
-  width: 34px; height: 34px;
-  border-radius: 9px;
-  border: 1.5px solid var(--border);
-  background: var(--bg-card);
+  width: 34px; height: 34px; border-radius: 9px;
+  border: 1.5px solid var(--border); background: var(--bg-card);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; font-size: 12.5px; font-weight: 700;
-  color: var(--text-muted); transition: all var(--transition);
-  text-decoration: none;
+  color: var(--text-muted); transition: all var(--transition); text-decoration: none;
 }
-
 .pg-btn:hover  { background: var(--bg); }
-.pg-btn.active { background: var(--primary-gradient); color: #fff; border-color: transparent; box-shadow: 0 2px 8px rgba(26,86,219,.22); }
+.pg-btn.active { background: var(--primary-gradient); color: #fff; border-color: transparent; }
 
-/* ── Empty State ── */
-.rq-empty {
-  text-align: center; padding: 64px 24px;
-}
-
+/* Empty */
+.rq-empty { text-align: center; padding: 64px 24px; }
 .rq-empty-icon {
-  width: 82px; height: 82px;
-  border-radius: 24px;
-  background: var(--primary-light);
-  border: 1px solid rgba(26,86,219,.12);
+  width: 82px; height: 82px; border-radius: 24px;
+  background: var(--primary-light); border: 1px solid rgba(26,86,219,.12);
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 20px; font-size: 2rem;
 }
-
 .rq-empty-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
 .rq-empty-sub   { font-size: 13.5px; color: var(--text-muted); max-width: 340px; margin: 0 auto 22px; line-height: 1.65; }
 
-/* ── Bottom Grid: Form + Detail ── */
-.rq-bottom-grid {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 22px;
-  align-items: start;
+/* Success / error messages */
+.msg-success {
+  background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600;
 }
-
-/* ── Form Card ── */
-.rq-form-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
+.msg-error {
+  background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600;
 }
-
-.rq-form-hero {
-  background: var(--primary-gradient);
-  padding: 20px 26px; color: #fff;
-  display: flex; align-items: center; gap: 14px;
-}
-
-.rq-form-hero-icon {
-  width: 48px; height: 48px;
-  border-radius: 14px;
-  background: rgba(255,255,255,.18);
-  border: 1.5px solid rgba(255,255,255,.28);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; flex-shrink: 0;
-}
-
-.rq-form-hero-title { font-size: 17px; font-weight: 800; }
-.rq-form-hero-sub   { font-size: 12.5px; opacity: .88; margin-top: 3px; }
-
-.rq-form-body { padding: 24px 26px; }
-
-.rq-section-label {
-  font-size: 10.5px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .08em;
-  color: var(--text-light); margin: 0 0 14px;
-  display: block;
-}
-
-.rq-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px; margin-bottom: 20px;
-}
-
-.rq-form-group { display: flex; flex-direction: column; gap: 5px; }
-.rq-form-group.full { grid-column: span 2; }
-
-.rq-label {
-  font-size: 12px; font-weight: 700; color: var(--text-muted);
-}
-
-.rq-label .req { color: var(--red); margin-left: 2px; }
-
-.rq-input,
-.rq-select-f,
-.rq-textarea {
-  padding: 10px 14px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  font-family: inherit; font-size: 13px;
-  outline: none; width: 100%;
-  transition: border-color var(--transition), box-shadow var(--transition);
-}
-
-.rq-input:focus,
-.rq-select-f:focus,
-.rq-textarea:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(26,86,219,.10);
-  background: var(--bg-card);
-}
-
-.rq-input::placeholder, .rq-textarea::placeholder { color: var(--text-light); }
-.rq-textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
-.rq-select-f { cursor: pointer; }
-.rq-hint { font-size: 11px; color: var(--text-light); }
-
-.rq-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-
-.rq-form-footer {
-  padding: 16px 26px;
-  border-top: 1px solid var(--border);
-  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
-  background: var(--bg);
-}
-
-/* ── Detail Side Card ── */
-.rq-detail-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-}
-
-.rq-detail-hero {
-  background: var(--primary-gradient);
-  padding: 20px 22px; color: #fff;
-}
-
-.rq-detail-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,.18);
-  border: 1px solid rgba(255,255,255,.28);
-  border-radius: var(--radius-pill);
-  padding: 4px 10px;
-  font-size: 11px; font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.rq-detail-title { font-size: 16px; font-weight: 800; line-height: 1.3; }
-
-.rq-detail-meta {
-  font-size: 12px; opacity: .88; margin-top: 6px;
-  display: flex; gap: 10px; flex-wrap: wrap;
-}
-
-.rq-detail-body {
-  padding: 18px 22px;
-  display: flex; flex-direction: column; gap: 18px;
-}
-
-.rq-detail-section-label {
-  font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .08em;
-  color: var(--text-light); margin-bottom: 8px; display: block;
-}
-
-.rq-detail-rows { display: flex; flex-direction: column; gap: 10px; }
-
-.rq-detail-row {
-  display: flex; align-items: flex-start;
-  justify-content: space-between; gap: 10px; font-size: 13px;
-}
-
-.rq-detail-row-label { color: var(--text-muted); flex-shrink: 0; }
-.rq-detail-row-value { font-weight: 700; color: var(--text); text-align: right; }
-
-.rq-progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
-.rq-progress-label strong { color: var(--text); }
-
-.rq-note {
-  background: var(--bg);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  font-size: 12.5px; color: var(--text-muted);
-  line-height: 1.6;
-  border-left: 3px solid var(--primary);
-}
-
-[dir="rtl"] .rq-note { border-left: none; border-right: 3px solid var(--primary); }
-
-.rq-detail-footer {
-  padding: 14px 22px;
-  border-top: 1px solid var(--border);
-  display: flex; gap: 8px; flex-wrap: wrap;
-  background: var(--bg);
-}
-
-/* ── Soft buttons ── */
-.hd-btn-soft-blue   { background: rgba(37,99,235,.10); color: var(--primary); border: none; }
-.hd-btn-soft-blue:hover   { background: rgba(37,99,235,.18); }
-.hd-btn-soft-amber  { background: #fef3c7; color: #d97706; border: none; }
-.hd-btn-soft-amber:hover  { background: #fde68a; }
-.hd-btn-soft-green  { background: #dcfce7; color: #16a34a; border: none; }
-.hd-btn-soft-green:hover  { background: #bbf7d0; }
-
-/* ── Timeline ── */
-.rq-timeline-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-}
-
-.rq-timeline-head { padding: 20px 24px; border-bottom: 1px solid var(--border-card); }
-
-.rq-timeline-body {
-  padding: 20px 24px;
-  display: flex; flex-direction: column;
-}
-
-.tl-item {
-  display: flex; gap: 14px;
-  padding-bottom: 22px; position: relative;
-}
-
-.tl-item:last-child { padding-bottom: 0; }
-
-.tl-item:not(:last-child)::before {
-  content: '';
-  position: absolute;
-  left: 17px; top: 36px;
-  width: 2px; bottom: 0;
-  background: var(--border); z-index: 0;
-}
-
-[dir="rtl"] .tl-item:not(:last-child)::before { left: auto; right: 17px; }
-
-.tl-icon {
-  width: 36px; height: 36px;
-  border-radius: 11px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; z-index: 1; font-size: 14px;
-}
-
-.ti-blue   { background: #dbeafe; color: #2563eb; }
-.ti-amber  { background: #fef3c7; color: #d97706; }
-.ti-violet { background: #ede9fe; color: #7c3aed; }
-.ti-green  { background: #dcfce7; color: #16a34a; }
-.ti-red    { background: #fee2e2; color: #dc2626; }
-.ti-teal   { background: #ccfbf1; color: #0d9488; }
-.ti-gray   { background: #f1f5f9; color: #64748b; }
-
-.tl-content { flex: 1; }
-.tl-title { font-weight: 700; font-size: 13.5px; color: var(--text); }
-.tl-desc  { font-size: 12.5px; color: var(--text-muted); margin-top: 3px; line-height: 1.55; }
-.tl-time  { font-size: 11px; color: var(--text-light); margin-top: 5px; }
-
-/* ── Responsive ── */
-@media (max-width: 1200px) { .rq-bottom-grid { grid-template-columns: 1fr; } }
 
 @media (max-width: 768px) {
-  .rq-header { flex-direction: column; }
-  .rq-stats { grid-template-columns: repeat(2, 1fr); }
-  .rq-filter-row { flex-direction: column; align-items: stretch; }
-  .rq-search { max-width: 100%; }
-  .rq-form-grid { grid-template-columns: 1fr; }
-  .rq-form-group.full { grid-column: span 1; }
+  .rq-header    { flex-direction: column; }
+  .rq-stats     { grid-template-columns: repeat(2, 1fr); }
+  .rq-filter-row{ flex-direction: column; align-items: stretch; }
+  .rq-search    { max-width: 100%; }
   .rq-table td, .rq-table th { padding: 10px 10px; }
 }
-
 @media (max-width: 480px) {
   .rq-stats { grid-template-columns: 1fr 1fr; }
   .rq-header-title { font-size: 20px; }
@@ -605,44 +273,47 @@
 {% block content %}
 <div class="rq-main">
 
-  <!-- ═══════════════════════════════
-       PAGE HEADER
-  ════════════════════════════════ -->
+  <!-- Django messages -->
+  {% for msg in messages %}
+    <div class="{% if msg.tags == 'success' %}msg-success{% else %}msg-error{% endif %}">
+      <i class="fas {% if msg.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+      {{ msg }}
+    </div>
+  {% endfor %}
+
+  <!-- ═══ PAGE HEADER ═══ -->
   <div class="rq-header hd-fade-in-up">
     <div>
       <div class="rq-header-title">Donation Requests</div>
       <div class="rq-header-sub">
-        <span>{{ requests.count|default:"84" }} total requests</span>
+        <span>{{ total_requests }} total requests</span>
         <span class="dot"></span>
-        <span>Last updated: {{ last_updated|default:"May 3, 2025 · 09:41 AM" }}</span>
+        <span>Last updated: {% now "M d, Y · h:i A" %}</span>
       </div>
     </div>
     <div class="rq-header-actions">
-      <button class="hd-btn hd-btn-ghost hd-btn-sm">
+      <button class="hd-btn hd-btn-ghost hd-btn-sm" onclick="window.print()">
         <i class="fas fa-download"></i> Export
       </button>
-      <button class="hd-btn hd-btn-ghost hd-btn-sm">
+      <button class="hd-btn hd-btn-ghost hd-btn-sm" onclick="location.reload()">
         <i class="fas fa-rotate-right"></i> Refresh
       </button>
-      <button class="hd-btn hd-btn-primary hd-btn-sm"
-              onclick="document.getElementById('create-form').scrollIntoView({behavior:'smooth'})">
-        <i class="fas fa-plus"></i> Create New Request
-      </button>
+      <a href="{% url 'hospital:request_create' %}" class="hd-btn hd-btn-primary hd-btn-sm">
+        <i class="fas fa-plus"></i> New Request
+      </a>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════
-       STATS
-  ════════════════════════════════ -->
+  <!-- ═══ STATS ═══ -->
   <div class="rq-stats hd-fade-in-up delay-1">
 
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-blue"><i class="fas fa-file-medical"></i></div>
-        <span class="rq-stat-trend trend-up"><i class="fas fa-arrow-up"></i> +12%</span>
+        <span class="rq-stat-trend trend-neu">All</span>
       </div>
       <div>
-        <div class="rq-stat-value">{{ total_requests|default:"84" }}</div>
+        <div class="rq-stat-value">{{ total_requests }}</div>
         <div class="rq-stat-label">Total Requests</div>
       </div>
       <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-blue"></div></div>
@@ -654,7 +325,7 @@
         <span class="rq-stat-trend trend-neu">Active</span>
       </div>
       <div>
-        <div class="rq-stat-value">{{ active_requests|default:"18" }}</div>
+        <div class="rq-stat-value">{{ active_count }}</div>
         <div class="rq-stat-label">Active Requests</div>
       </div>
       <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-teal"></div></div>
@@ -663,10 +334,10 @@
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-amber"><i class="fas fa-clock"></i></div>
-        <span class="rq-stat-trend trend-up"><i class="fas fa-arrow-up"></i> +4</span>
+        <span class="rq-stat-trend trend-neu">Pending</span>
       </div>
       <div>
-        <div class="rq-stat-value">{{ pending_requests|default:"23" }}</div>
+        <div class="rq-stat-value">{{ pending_count }}</div>
         <div class="rq-stat-label">Pending</div>
       </div>
       <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-amber"></div></div>
@@ -675,10 +346,10 @@
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-green"><i class="fas fa-circle-check"></i></div>
-        <span class="rq-stat-trend trend-up"><i class="fas fa-arrow-up"></i> +8%</span>
+        <span class="rq-stat-trend trend-up"><i class="fas fa-arrow-up"></i> Done</span>
       </div>
       <div>
-        <div class="rq-stat-value">{{ completed_requests|default:"43" }}</div>
+        <div class="rq-stat-value">{{ completed_count }}</div>
         <div class="rq-stat-label">Completed</div>
       </div>
       <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-green"></div></div>
@@ -687,11 +358,11 @@
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-red"><i class="fas fa-triangle-exclamation"></i></div>
-        <span class="rq-stat-trend trend-down"><i class="fas fa-arrow-down"></i> −2</span>
+        <span class="rq-stat-trend trend-down"><i class="fas fa-arrow-down"></i> Urgent</span>
       </div>
       <div>
-        <div class="rq-stat-value">{{ emergency_requests|default:"7" }}</div>
-        <div class="rq-stat-label">Emergency</div>
+        <div class="rq-stat-value">{{ emergency_count }}</div>
+        <div class="rq-stat-label">Emergency (High)</div>
       </div>
       <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-red"></div></div>
     </div>
@@ -699,10 +370,10 @@
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-violet"><i class="fas fa-droplet"></i></div>
-        <span class="rq-stat-trend trend-up"><i class="fas fa-arrow-up"></i> +5%</span>
+        <span class="rq-stat-trend trend-neu">Units</span>
       </div>
       <div>
-        <div class="rq-stat-value">{{ total_units|default:"1,248" }}</div>
+        <div class="rq-stat-value">{{ total_units }}</div>
         <div class="rq-stat-label">Blood Units Requested</div>
       </div>
       <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-violet"></div></div>
@@ -710,86 +381,87 @@
 
   </div>
 
-  <!-- ═══════════════════════════════
-       FILTER & SEARCH
-  ════════════════════════════════ -->
-  <div class="rq-filter hd-fade-in-up delay-2">
-    <div class="rq-filter-row">
-      <div class="rq-search">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Search by ID, type, department…"
-               name="q" value="{{ request.GET.q }}" />
+  <!-- ═══ FILTER ═══ -->
+  <form method="GET" action="">
+    <div class="rq-filter hd-fade-in-up delay-2">
+      <div class="rq-filter-row">
+        <div class="rq-search">
+          <i class="fas fa-search"></i>
+          <input type="text" name="q" placeholder="Search by title, type, department…"
+                 value="{{ request.GET.q }}" />
+        </div>
+        <select class="rq-select" name="blood_type" onchange="this.form.submit()">
+          <option value="">All Blood Types</option>
+          {% for val, label in blood_type_choices %}
+            <option value="{{ val }}" {% if request.GET.blood_type == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <select class="rq-select" name="urgency" onchange="this.form.submit()">
+          <option value="">All Urgency</option>
+          <option value="high"   {% if request.GET.urgency == 'high'   %}selected{% endif %}>🔴 High</option>
+          <option value="medium" {% if request.GET.urgency == 'medium' %}selected{% endif %}>🟡 Medium</option>
+          <option value="low"    {% if request.GET.urgency == 'low'    %}selected{% endif %}>🟢 Low</option>
+        </select>
+        <select class="rq-select" name="status" onchange="this.form.submit()">
+          <option value="">All Statuses</option>
+          <option value="pending"     {% if request.GET.status == 'pending'     %}selected{% endif %}>Pending</option>
+          <option value="active"      {% if request.GET.status == 'active'      %}selected{% endif %}>Active</option>
+          <option value="in_progress" {% if request.GET.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+          <option value="completed"   {% if request.GET.status == 'completed'   %}selected{% endif %}>Completed</option>
+          <option value="cancelled"   {% if request.GET.status == 'cancelled'   %}selected{% endif %}>Cancelled</option>
+          <option value="emergency"   {% if request.GET.status == 'emergency'   %}selected{% endif %}>Emergency</option>
+        </select>
+        <button type="submit" class="hd-btn hd-btn-primary hd-btn-sm">
+          <i class="fas fa-search"></i> Search
+        </button>
+        {% if request.GET.q or request.GET.blood_type or request.GET.urgency or request.GET.status %}
+          <a href="{% url 'hospital:requests' %}" class="hd-btn hd-btn-ghost hd-btn-sm">
+            <i class="fas fa-xmark"></i> Clear
+          </a>
+        {% endif %}
       </div>
-
-      <select class="rq-select" name="blood_type">
-        <option value="">All Blood Types</option>
-        <option value="A+"  {% if request.GET.blood_type == "A+"  %}selected{% endif %}>A+</option>
-        <option value="A-"  {% if request.GET.blood_type == "A-"  %}selected{% endif %}>A−</option>
-        <option value="B+"  {% if request.GET.blood_type == "B+"  %}selected{% endif %}>B+</option>
-        <option value="B-"  {% if request.GET.blood_type == "B-"  %}selected{% endif %}>B−</option>
-        <option value="AB+" {% if request.GET.blood_type == "AB+" %}selected{% endif %}>AB+</option>
-        <option value="AB-" {% if request.GET.blood_type == "AB-" %}selected{% endif %}>AB−</option>
-        <option value="O+"  {% if request.GET.blood_type == "O+"  %}selected{% endif %}>O+</option>
-        <option value="O-"  {% if request.GET.blood_type == "O-"  %}selected{% endif %}>O−</option>
-      </select>
-
-      <select class="rq-select" name="urgency">
-        <option value="">All Urgency</option>
-        <option value="high"   {% if request.GET.urgency == "high"   %}selected{% endif %}>🔴 High</option>
-        <option value="medium" {% if request.GET.urgency == "medium" %}selected{% endif %}>🟡 Medium</option>
-        <option value="low"    {% if request.GET.urgency == "low"    %}selected{% endif %}>🟢 Low</option>
-      </select>
-
-      <select class="rq-select" name="status">
-        <option value="">All Statuses</option>
-        <option value="pending"   {% if request.GET.status == "pending"   %}selected{% endif %}>Pending</option>
-        <option value="active"    {% if request.GET.status == "active"    %}selected{% endif %}>Active</option>
-        <option value="inprog"    {% if request.GET.status == "inprog"    %}selected{% endif %}>In Progress</option>
-        <option value="completed" {% if request.GET.status == "completed" %}selected{% endif %}>Completed</option>
-        <option value="cancelled" {% if request.GET.status == "cancelled" %}selected{% endif %}>Cancelled</option>
-      </select>
-
-      <input type="date" class="rq-select" name="date" value="{{ request.GET.date }}" />
-
-      <select class="rq-select" name="sort">
-        <option value="-created_at">Sort: Newest First</option>
-        <option value="created_at" {% if request.GET.sort == "created_at" %}selected{% endif %}>Sort: Oldest First</option>
-        <option value="urgency"    {% if request.GET.sort == "urgency"    %}selected{% endif %}>Sort: Urgency</option>
-        <option value="blood_type" {% if request.GET.sort == "blood_type" %}selected{% endif %}>Sort: Blood Type</option>
-        <option value="status"     {% if request.GET.sort == "status"     %}selected{% endif %}>Sort: Status</option>
-      </select>
+      <div class="rq-chips">
+        <a href="{% url 'hospital:requests' %}"
+           class="rq-chip {% if not request.GET.status %}active{% endif %}">
+          All ({{ total_requests }})
+        </a>
+        <a href="?status=pending"
+           class="rq-chip {% if request.GET.status == 'pending' %}active{% endif %}">
+          Pending ({{ pending_count }})
+        </a>
+        <a href="?status=active"
+           class="rq-chip {% if request.GET.status == 'active' %}active{% endif %}">
+          Active ({{ active_count }})
+        </a>
+        <a href="?status=in_progress"
+           class="rq-chip {% if request.GET.status == 'in_progress' %}active{% endif %}">
+          In Progress ({{ inprog_count }})
+        </a>
+        <a href="?status=completed"
+           class="rq-chip {% if request.GET.status == 'completed' %}active{% endif %}">
+          Completed ({{ completed_count }})
+        </a>
+        <a href="?urgency=high"
+           class="rq-chip {% if request.GET.urgency == 'high' %}active{% endif %}">
+          Emergency ({{ emergency_count }})
+        </a>
+      </div>
     </div>
+  </form>
 
-    <div class="rq-chips">
-      <button class="rq-chip active">All ({{ total_requests|default:"84" }})</button>
-      <button class="rq-chip">Pending ({{ pending_requests|default:"23" }})</button>
-      <button class="rq-chip">Active ({{ active_requests|default:"18" }})</button>
-      <button class="rq-chip">In Progress ({{ inprog_requests|default:"12" }})</button>
-      <button class="rq-chip">Completed ({{ completed_requests|default:"43" }})</button>
-      <button class="rq-chip">Emergency ({{ emergency_requests|default:"7" }})</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════
-       REQUESTS TABLE
-  ════════════════════════════════ -->
+  <!-- ═══ TABLE ═══ -->
   <div class="rq-card hd-fade-in-up delay-3">
     <div class="rq-card-head">
       <div>
         <div class="rq-card-title">All Donation Requests</div>
         <div class="rq-card-sub">
-          Showing {{ page_obj.start_index|default:"1" }}–{{ page_obj.end_index|default:"8" }}
-          of {{ total_requests|default:"84" }} requests
+          Showing {{ requests.count }} of {{ total_requests }} requests
         </div>
       </div>
       <div style="display:flex;gap:8px;">
-        <button class="hd-btn hd-btn-ghost hd-btn-sm">
-          <i class="fas fa-table-columns"></i> Columns
-        </button>
-        <button class="hd-btn hd-btn-primary hd-btn-sm"
-                onclick="document.getElementById('create-form').scrollIntoView({behavior:'smooth'})">
+        <a href="{% url 'hospital:request_create' %}" class="hd-btn hd-btn-primary hd-btn-sm">
           <i class="fas fa-plus"></i> New Request
-        </button>
+        </a>
       </div>
     </div>
 
@@ -798,7 +470,7 @@
         <thead>
           <tr>
             <th>Request ID</th>
-            <th>Type</th>
+            <th>Title / Type</th>
             <th>Blood</th>
             <th>Units</th>
             <th>Urgency</th>
@@ -810,15 +482,18 @@
           </tr>
         </thead>
         <tbody>
-
           {% for req in requests %}
           <tr>
             <td>
-              <div class="req-id">#{{ req.id }}</div>
-              <div class="req-type">{{ req.title|truncatechars:28 }}</div>
+              <div class="req-id">{{ req.request_id }}</div>
             </td>
-            <td style="font-size:12.5px;color:var(--text-muted);">{{ req.request_type }}</td>
-            <td><span class="rq-blood bb-red">{{ req.blood_type }}</span></td>
+            <td>
+              <div style="font-weight:700;font-size:13px;">{{ req.title|truncatechars:30 }}</div>
+              <div class="req-type">{{ req.get_request_type_display }}</div>
+            </td>
+            <td>
+              <span class="rq-blood bb-red">{{ req.blood_type }}</span>
+            </td>
             <td><strong style="font-size:14px;">{{ req.required_units }}</strong></td>
             <td>
               {% if req.urgency == 'high' %}
@@ -830,24 +505,12 @@
               {% endif %}
             </td>
             <td>
-              {% if req.status == 'pending' %}
-                <span class="rq-status sp-pending">Pending</span>
-              {% elif req.status == 'active' %}
-                <span class="rq-status sp-active">Active</span>
-              {% elif req.status == 'inprog' %}
-                <span class="rq-status sp-inprog">In Progress</span>
-              {% elif req.status == 'completed' %}
-                <span class="rq-status sp-completed">Completed</span>
-              {% elif req.status == 'cancelled' %}
-                <span class="rq-status sp-cancelled">Cancelled</span>
-              {% elif req.status == 'emergency' %}
-                <span class="rq-status sp-emergency">Emergency</span>
-              {% endif %}
+              <span class="rq-status sp-{{ req.status }}">{{ req.get_status_display }}</span>
             </td>
             <td>
               <span class="rq-resp">
                 <i class="fas fa-users" style="font-size:11px;"></i>
-                {{ req.donor_responses_count|default:"0" }}
+                {{ req.donor_responses_count }}
               </span>
             </td>
             <td>
@@ -862,409 +525,50 @@
             </td>
             <td>
               <div class="rq-actions">
-                <a href="{% url 'hospital:request_detail' req.id %}" class="rq-act view" title="View Details">
+                <a href="{% url 'hospital:request_detail' request_id=req.id %}"
+                   class="rq-act view" title="View Details">
                   <i class="fas fa-eye"></i>
                 </a>
-                <a href="{% url 'hospital:request_edit' req.id %}" class="rq-act edit" title="Edit">
+                <a href="{% url 'hospital:request_update' request_id=req.id %}"
+                   class="rq-act edit" title="Edit">
                   <i class="fas fa-pen"></i>
                 </a>
-                <button class="rq-act dup" title="Duplicate">
-                  <i class="fas fa-copy"></i>
-                </button>
-                <button class="rq-act close-r" title="Close Request">
-                  <i class="fas fa-circle-check"></i>
-                </button>
-                <a href="{% url 'hospital:request_delete' req.id %}" class="rq-act danger" title="Delete"
-                   onclick="return confirm('Delete request #{{ req.id }}? This cannot be undone.')">
+                <a href="{% url 'hospital:request_delete' request_id=req.id %}"
+                   class="rq-act danger" title="Delete">
                   <i class="fas fa-trash"></i>
                 </a>
               </div>
             </td>
           </tr>
-
           {% empty %}
           <tr>
             <td colspan="10">
               <div class="rq-empty">
                 <div class="rq-empty-icon">🩸</div>
-                <div class="rq-empty-title">No donation requests available.</div>
+                <div class="rq-empty-title">No donation requests found.</div>
                 <div class="rq-empty-sub">
-                  There are no donation requests yet. Create your first request to start connecting with donors.
+                  {% if request.GET.q or request.GET.status or request.GET.urgency or request.GET.blood_type %}
+                    No requests match your current filters. Try clearing them.
+                  {% else %}
+                    Create your first request to start connecting with donors.
+                  {% endif %}
                 </div>
-                <button class="hd-btn hd-btn-primary hd-btn-sm"
-                        onclick="document.getElementById('create-form').scrollIntoView({behavior:'smooth'})">
+                <a href="{% url 'hospital:request_create' %}" class="hd-btn hd-btn-primary hd-btn-sm">
                   <i class="fas fa-plus"></i> Create First Request
-                </button>
+                </a>
               </div>
             </td>
           </tr>
           {% endfor %}
-
         </tbody>
       </table>
     </div>
 
-    <!-- Pagination -->
-    {% if page_obj.has_other_pages %}
     <div class="rq-card-foot">
       <div style="font-size:12.5px;color:var(--text-muted);">
-        Showing <strong style="color:var(--text);">{{ page_obj.start_index }}</strong>–<strong style="color:var(--text);">{{ page_obj.end_index }}</strong>
-        of <strong style="color:var(--text);">{{ page_obj.paginator.count }}</strong> requests
+        Showing <strong style="color:var(--text);">{{ requests.count }}</strong>
+        of <strong style="color:var(--text);">{{ total_requests }}</strong> requests
       </div>
-      <div class="rq-pagination">
-        {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}" class="pg-btn">
-          <i class="fas fa-chevron-left" style="font-size:11px;"></i>
-        </a>
-        {% endif %}
-        {% for num in page_obj.paginator.page_range %}
-          {% if page_obj.number == num %}
-            <span class="pg-btn active">{{ num }}</span>
-          {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
-            <a href="?page={{ num }}" class="pg-btn">{{ num }}</a>
-          {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}" class="pg-btn">
-          <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-        </a>
-        {% endif %}
-      </div>
-    </div>
-    {% else %}
-    <div class="rq-card-foot">
-      <div style="font-size:12.5px;color:var(--text-muted);">
-        Showing all <strong style="color:var(--text);">{{ total_requests|default:"8" }}</strong> requests
-      </div>
-      <button class="hd-btn hd-btn-outline hd-btn-sm">View All Requests</button>
-    </div>
-    {% endif %}
-  </div>
-
-  <!-- ═══════════════════════════════
-       BOTTOM GRID — Form + Detail
-  ════════════════════════════════ -->
-<div class="rq-bottom-grid hd-fade-in-up delay-4">
-
-    <!-- ── CREATE REQUEST FORM (تم التحديث باستخدام Django Form) ── -->
-    <div class="rq-form-card" id="create-form">
-      <div class="rq-form-hero">
-        <div class="rq-form-hero-icon"><i class="fas fa-plus"></i></div>
-        <div>
-          <div class="rq-form-hero-title">Create New Donation Request</div>
-          <div class="rq-form-hero-sub">Fill in the details to post a new blood donation request</div>
-        </div>
-      </div>
-
-      <form method="POST" action="{% url 'hospital:request_create' %}" novalidate>
-        {% csrf_token %}
-
-        {# عرض الأخطاء العامة للفورم إن وجدت #}
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger">
-            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
-          </div>
-        {% endif %}
-
-        <div class="rq-form-body">
-
-          <!-- Request Info -->
-          <span class="rq-section-label">Request Information</span>
-          <div class="rq-form-grid">
-
-            <div class="rq-form-group full">
-              <label class="rq-label" for="{{ form.title.id_for_label }}">
-                {{ form.title.label }} <span class="req">*</span>
-              </label>
-              {{ form.title }}
-              {% if form.title.errors %}<span class="text-danger small">{{ form.title.errors.0 }}</span>{% endif %}
-            </div>
-
-            <div class="rq-form-group">
-              <label class="rq-label" for="{{ form.request_type.id_for_label }}">
-                {{ form.request_type.label }} <span class="req">*</span>
-              </label>
-              {{ form.request_type }}
-              {% if form.request_type.errors %}<span class="text-danger small">{{ form.request_type.errors.0 }}</span>{% endif %}
-            </div>
-
-            <div class="rq-form-group">
-              <label class="rq-label" for="{{ form.blood_type.id_for_label }}">
-                {{ form.blood_type.label }} <span class="req">*</span>
-              </label>
-              {{ form.blood_type }}
-              {% if form.blood_type.errors %}<span class="text-danger small">{{ form.blood_type.errors.0 }}</span>{% endif %}
-            </div>
-
-            <div class="rq-form-group">
-              <label class="rq-label" for="{{ form.required_units.id_for_label }}">
-                {{ form.required_units.label }} <span class="req">*</span>
-              </label>
-              {{ form.required_units }}
-              {% if form.required_units.errors %}<span class="text-danger small">{{ form.required_units.errors.0 }}</span>{% endif %}
-            </div>
-
-            <div class="rq-form-group">
-              <label class="rq-label" for="{{ form.urgency.id_for_label }}">
-                {{ form.urgency.label }} <span class="req">*</span>
-              </label>
-              {{ form.urgency }}
-              {% if form.urgency.errors %}<span class="text-danger small">{{ form.urgency.errors.0 }}</span>{% endif %}
-            </div>
-
-          </div>
-
-          <hr class="rq-divider" />
-
-          <!-- Hospital & Patient -->
-          <span class="rq-section-label">Hospital & Patient Details</span>
-          <div class="rq-form-grid">
-
-            <div class="rq-form-group">
-              <label class="rq-label" for="{{ form.department.id_for_label }}">
-                {{ form.department.label }} <span class="req">*</span>
-              </label>
-              {{ form.department }}
-              {% if form.department.errors %}<span class="text-danger small">{{ form.department.errors.0 }}</span>{% endif %}
-            </div>
-
-            <div class="rq-form-group">
-              <label class="rq-label" for="{{ form.patient_condition.id_for_label }}">
-                {{ form.patient_condition.label }}
-              </label>
-              {{ form.patient_condition }}
-            </div>
-
-            {# الحقل الجديد: رقم ملف المريض #}
-            <div class="rq-form-group">
-              <label class="rq-label" for="{{ form.patient_file_number.id_for_label }}">
-                {{ form.patient_file_number.label }}
-              </label>
-              {{ form.patient_file_number }}
-            </div>
-
-            {# الحقل الجديد: الموظف المسؤول #}
-            <div class="rq-form-group">
-              <label class="rq-label" for="{{ form.assigned_staff.id_for_label }}">
-                {{ form.assigned_staff.label }}
-              </label>
-              {{ form.assigned_staff }}
-            </div>
-
-            <div class="rq-form-group">
-              <label class="rq-label" for="{{ form.required_before.id_for_label }}">
-                {{ form.required_before.label }}
-              </label>
-              {{ form.required_before }}
-            </div>
-
-            {# الحقل الجديد: تاريخ انتهاء الطلب #}
-            <div class="rq-form-group">
-              <label class="rq-label" for="{{ form.expired_date.id_for_label }}">
-                {{ form.expired_date.label }}
-              </label>
-              {{ form.expired_date }}
-            </div>
-
-            <div class="rq-form-group full">
-              <label class="rq-label" for="{{ form.contact_number.id_for_label }}">
-                {{ form.contact_number.label }}
-              </label>
-              {{ form.contact_number }}
-              <span class="rq-hint">Contact number for this specific request.</span>
-            </div>
-
-            <div class="rq-form-group full">
-              <label class="rq-label" for="{{ form.notes.id_for_label }}">
-                {{ form.notes.label }}
-              </label>
-              {{ form.notes }}
-              <span class="rq-hint">Optional — visible to hospital staff only.</span>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="rq-form-footer">
-          <button type="submit" class="hd-btn hd-btn-primary">
-            <i class="fas fa-plus"></i> Submit Request
-          </button>
-          <button type="reset" class="hd-btn hd-btn-ghost">
-            <i class="fas fa-rotate-left"></i> Reset Form
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- ── DETAIL SIDE PANEL ── -->
-    <div class="rq-detail-card">
-      <div class="rq-detail-hero">
-        <div class="rq-detail-badge">
-          <i class="fas fa-wave-square" style="font-size:10px;"></i>
-          In Progress
-        </div>
-        <div class="rq-detail-title">Emergency O− Blood Request — ICU Ward</div>
-        <div class="rq-detail-meta">
-          <span>🩸 O− · 4 Units</span>
-          <span>📋 #REQ-0841</span>
-          <span>🔴 High Urgency</span>
-        </div>
-      </div>
-
-      <div class="rq-detail-body">
-
-        <div>
-          <span class="rq-detail-section-label">Request Details</span>
-          <div class="rq-detail-rows">
-            <div class="rq-detail-row">
-              <span class="rq-detail-row-label">Request Type</span>
-              <span class="rq-detail-row-value">Emergency Case</span>
-            </div>
-            <div class="rq-detail-row">
-              <span class="rq-detail-row-label">Department</span>
-              <span class="rq-detail-row-value">ICU</span>
-            </div>
-            <div class="rq-detail-row">
-              <span class="rq-detail-row-label">Patient Condition</span>
-              <span class="rq-detail-row-value">Critical</span>
-            </div>
-            <div class="rq-detail-row">
-              <span class="rq-detail-row-label">Required Before</span>
-              <span class="rq-detail-row-value">May 3, 2025</span>
-            </div>
-            <div class="rq-detail-row">
-              <span class="rq-detail-row-label">Assigned Staff</span>
-              <span class="rq-detail-row-value">Dr. Nasser Al-Harbi</span>
-            </div>
-            <div class="rq-detail-row">
-              <span class="rq-detail-row-label">Contact</span>
-              <span class="rq-detail-row-value">+966 11 XXX XXXX</span>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <span class="rq-detail-section-label">Donation Progress</span>
-          <div class="rq-progress-label">
-            <span>3 of 4 units fulfilled</span>
-            <strong>75%</strong>
-          </div>
-          <div class="hd-progress-track">
-            <div class="hd-progress-fill" style="width:75%"></div>
-          </div>
-        </div>
-
-        <div>
-          <span class="rq-detail-section-label">Donor Responses</span>
-          <div class="rq-detail-rows">
-            <div class="rq-detail-row">
-              <span class="rq-detail-row-label">Total Responses</span>
-              <span class="rq-detail-row-value">8</span>
-            </div>
-            <div class="rq-detail-row">
-              <span class="rq-detail-row-label">Accepted</span>
-              <span class="rq-detail-row-value" style="color:#16a34a">3</span>
-            </div>
-            <div class="rq-detail-row">
-              <span class="rq-detail-row-label">Pending Review</span>
-              <span class="rq-detail-row-value" style="color:#d97706">4</span>
-            </div>
-            <div class="rq-detail-row">
-              <span class="rq-detail-row-label">Rejected</span>
-              <span class="rq-detail-row-value" style="color:#dc2626">1</span>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <span class="rq-detail-section-label">Medical Notes</span>
-          <div class="rq-note">
-            Patient requires O− universal donor blood. All donations must be CMV-negative and irradiated. Direct crossmatch required before transfusion.
-          </div>
-        </div>
-
-      </div>
-
-      <div class="rq-detail-footer">
-        <button class="hd-btn hd-btn-sm hd-btn-soft-blue">
-          <i class="fas fa-eye"></i> View Full Details
-        </button>
-        <button class="hd-btn hd-btn-sm hd-btn-soft-amber">
-          <i class="fas fa-pen"></i> Edit
-        </button>
-        <button class="hd-btn hd-btn-sm hd-btn-soft-green">
-          <i class="fas fa-circle-check"></i> Close
-        </button>
-      </div>
-    </div>
-
-  </div><!-- /.rq-bottom-grid -->
-
-  <!-- ═══════════════════════════════
-       ACTIVITY TIMELINE
-  ════════════════════════════════ -->
-  <div class="rq-timeline-card hd-fade-in-up">
-    <div class="rq-timeline-head">
-      <div class="hd-section-title">Activity Timeline</div>
-      <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Full history for request #REQ-0841</div>
-    </div>
-
-    <div class="rq-timeline-body">
-
-      <div class="tl-item">
-        <div class="tl-icon ti-blue"><i class="fas fa-file-plus"></i></div>
-        <div class="tl-content">
-          <div class="tl-title">Request Created</div>
-          <div class="tl-desc">Emergency blood request #REQ-0841 was created by the ICU team for 4 units of O−.</div>
-          <div class="tl-time">May 1, 2025 · 08:32 AM — Dr. Nasser Al-Harbi</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-icon ti-amber"><i class="fas fa-bell"></i></div>
-        <div class="tl-content">
-          <div class="tl-title">Donors Notified</div>
-          <div class="tl-desc">Push notifications sent to 317 registered O− and O+ donors in Riyadh region.</div>
-          <div class="tl-time">May 1, 2025 · 08:35 AM — System</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-icon ti-violet"><i class="fas fa-user-check"></i></div>
-        <div class="tl-content">
-          <div class="tl-title">First Donor Response Received</div>
-          <div class="tl-desc">Ahmed Al-Khalidi responded and confirmed availability for O− donation.</div>
-          <div class="tl-time">May 1, 2025 · 10:18 AM</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-icon ti-blue"><i class="fas fa-pen-to-square"></i></div>
-        <div class="tl-content">
-          <div class="tl-title">Request Updated</div>
-          <div class="tl-desc">Status changed from Pending to In Progress. Coordinator assigned: Dr. Nasser Al-Harbi.</div>
-          <div class="tl-time">May 1, 2025 · 11:00 AM — Admin</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-icon ti-green"><i class="fas fa-circle-check"></i></div>
-        <div class="tl-content">
-          <div class="tl-title">3 Donors Accepted</div>
-          <div class="tl-desc">Three donors confirmed and scheduled. 3 of 4 required units now secured.</div>
-          <div class="tl-time">May 1, 2025 · 3:45 PM</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-icon ti-gray"><i class="fas fa-clock"></i></div>
-        <div class="tl-content">
-          <div class="tl-title">Awaiting Final Unit</div>
-          <div class="tl-desc">1 unit still needed. 4 pending responses under review. Request remains active.</div>
-          <div class="tl-time">May 2, 2025 · 09:00 AM — Ongoing</div>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -1272,13 +576,7 @@
 
 {% block extra_js %}
 <script>
-/* Filter chip toggle */
-document.querySelectorAll('.rq-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.rq-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-  });
-});
+/* Chip active state is handled via query string (server-side), no JS needed */
 </script>
 {% endblock %}
 

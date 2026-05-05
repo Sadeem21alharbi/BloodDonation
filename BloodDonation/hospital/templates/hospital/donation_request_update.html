@@ -1,0 +1,344 @@
+<!-- Edit Donation Request -->
+{% extends 'hospital/base.html' %}
+
+{% block title %}Edit Request {{ request_obj.request_id }} | Ehyaa{% endblock %}
+{% block page_title %}Edit Donation Request{% endblock %}
+
+{% block extra_css %}
+<style>
+.rq-main { display: flex; flex-direction: column; gap: 28px; }
+
+.rq-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.rq-header-title { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1.2; }
+.rq-header-sub { color: var(--text-muted); font-size: 13px; margin-top: 5px; }
+.rq-header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Meta banner */
+.rq-meta-banner {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card);
+  padding: 16px 24px;
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.rq-meta-item { display: flex; flex-direction: column; gap: 3px; }
+.rq-meta-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-light); }
+.rq-meta-value { font-size: 13.5px; font-weight: 700; color: var(--text); }
+.rq-meta-sep { width: 1px; height: 36px; background: var(--border); flex-shrink: 0; }
+
+/* Form Card */
+.rq-form-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card); overflow: hidden;
+}
+.rq-form-hero {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  padding: 22px 28px; color: #fff;
+  display: flex; align-items: center; gap: 16px;
+}
+.rq-form-hero-icon {
+  width: 50px; height: 50px; border-radius: 14px;
+  background: rgba(255,255,255,.18); border: 1.5px solid rgba(255,255,255,.28);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.rq-form-hero-title { font-size: 18px; font-weight: 800; }
+.rq-form-hero-sub   { font-size: 13px; opacity: .88; margin-top: 3px; }
+
+.rq-form-body { padding: 28px 30px; }
+
+.rq-section-label {
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-light); margin: 0 0 16px; display: block;
+}
+
+.rq-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+.rq-form-group { display: flex; flex-direction: column; gap: 6px; }
+.rq-form-group.full { grid-column: span 2; }
+
+.rq-label { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+.rq-label .req { color: var(--red); margin-left: 2px; }
+
+.rq-input,
+.rq-select-f,
+.rq-textarea {
+  padding: 10px 14px; border-radius: var(--radius);
+  border: 1.5px solid var(--border); background: var(--bg);
+  color: var(--text); font-family: inherit; font-size: 13px;
+  outline: none; width: 100%;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.rq-input:focus, .rq-select-f:focus, .rq-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(26,86,219,.10);
+  background: var(--bg-card);
+}
+.rq-input::placeholder, .rq-textarea::placeholder { color: var(--text-light); }
+.rq-textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+.rq-select-f { cursor: pointer; }
+
+/* Status field — not in DonationRequestForm so rendered manually */
+.rq-status-select {
+  padding: 10px 14px; border-radius: var(--radius);
+  border: 1.5px solid var(--border); background: var(--bg);
+  color: var(--text); font-family: inherit; font-size: 13px;
+  outline: none; width: 100%; cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.rq-status-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(26,86,219,.10);
+  background: var(--bg-card);
+}
+
+.rq-divider { border: none; border-top: 1px solid var(--border); margin: 22px 0; }
+
+.rq-form-footer {
+  padding: 18px 30px; border-top: 1px solid var(--border);
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  background: var(--bg);
+}
+
+.field-error { font-size: 11.5px; color: #dc2626; margin-top: 4px; }
+
+.form-errors {
+  background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;
+  border-radius: var(--radius); padding: 14px 18px; margin-bottom: 4px;
+}
+.form-errors strong { display: block; margin-bottom: 6px; }
+.form-errors ul { margin: 0; padding-left: 18px; font-size: 13px; }
+
+@media (max-width: 768px) {
+  .rq-header    { flex-direction: column; }
+  .rq-meta-sep  { display: none; }
+  .rq-form-grid { grid-template-columns: 1fr; }
+  .rq-form-group.full { grid-column: span 1; }
+  .rq-form-body, .rq-form-footer { padding: 20px; }
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="rq-main">
+
+  <!-- Header -->
+  <div class="rq-header hd-fade-in-up">
+    <div>
+      <div class="rq-header-title">Edit Request {{ request_obj.request_id }}</div>
+      <div class="rq-header-sub">Modify the details — changes are saved immediately</div>
+    </div>
+    <div class="rq-header-actions">
+      <a href="{% url 'hospital:request_detail' request_id=request_obj.id %}"
+         class="hd-btn hd-btn-ghost hd-btn-sm">
+        <i class="fas fa-arrow-left"></i> Back to Detail
+      </a>
+      <a href="{% url 'hospital:requests' %}" class="hd-btn hd-btn-ghost hd-btn-sm">
+        <i class="fas fa-list"></i> All Requests
+      </a>
+    </div>
+  </div>
+
+  <!-- Current request snapshot -->
+  <div class="rq-meta-banner hd-fade-in-up delay-1">
+    <div class="rq-meta-item">
+      <span class="rq-meta-label">Request ID</span>
+      <span class="rq-meta-value">{{ request_obj.request_id }}</span>
+    </div>
+    <div class="rq-meta-sep"></div>
+    <div class="rq-meta-item">
+      <span class="rq-meta-label">Blood Type</span>
+      <span class="rq-meta-value">{{ request_obj.blood_type }}</span>
+    </div>
+    <div class="rq-meta-sep"></div>
+    <div class="rq-meta-item">
+      <span class="rq-meta-label">Current Status</span>
+      <span class="rq-meta-value">{{ request_obj.get_status_display }}</span>
+    </div>
+    <div class="rq-meta-sep"></div>
+    <div class="rq-meta-item">
+      <span class="rq-meta-label">Created</span>
+      <span class="rq-meta-value">{{ request_obj.created_at|date:"M d, Y" }}</span>
+    </div>
+    <div class="rq-meta-sep"></div>
+    <div class="rq-meta-item">
+      <span class="rq-meta-label">Responses</span>
+      <span class="rq-meta-value">{{ request_obj.donor_responses_count }}</span>
+    </div>
+  </div>
+
+  <!-- Edit form -->
+  <div class="rq-form-card hd-fade-in-up delay-2">
+    <div class="rq-form-hero">
+      <div class="rq-form-hero-icon"><i class="fas fa-pen-to-square"></i></div>
+      <div>
+        <div class="rq-form-hero-title">Edit Request Details</div>
+        <div class="rq-form-hero-sub">Ensure all clinical information is accurate before saving</div>
+      </div>
+    </div>
+
+    {% if form.non_field_errors %}
+      <div class="form-errors" style="margin: 20px 30px 0;">
+        <strong><i class="fas fa-circle-exclamation"></i> Please fix the following errors:</strong>
+        <ul>{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+      </div>
+    {% endif %}
+
+    <form method="POST" novalidate>
+      {% csrf_token %}
+
+      <div class="rq-form-body">
+
+        <!-- ── Request Information ── -->
+        <span class="rq-section-label">Request Information</span>
+        <div class="rq-form-grid">
+
+          <div class="rq-form-group full">
+            <label class="rq-label" for="{{ form.title.id_for_label }}">
+              {{ form.title.label }} <span class="req">*</span>
+            </label>
+            {{ form.title }}
+            {% if form.title.errors %}<span class="field-error">{{ form.title.errors.0 }}</span>{% endif %}
+          </div>
+
+          <div class="rq-form-group">
+            <label class="rq-label" for="{{ form.request_type.id_for_label }}">
+              {{ form.request_type.label }} <span class="req">*</span>
+            </label>
+            {{ form.request_type }}
+            {% if form.request_type.errors %}<span class="field-error">{{ form.request_type.errors.0 }}</span>{% endif %}
+          </div>
+
+          <div class="rq-form-group">
+            <label class="rq-label" for="{{ form.blood_type.id_for_label }}">
+              {{ form.blood_type.label }} <span class="req">*</span>
+            </label>
+            {{ form.blood_type }}
+            {% if form.blood_type.errors %}<span class="field-error">{{ form.blood_type.errors.0 }}</span>{% endif %}
+          </div>
+
+          <div class="rq-form-group">
+            <label class="rq-label" for="{{ form.required_units.id_for_label }}">
+              {{ form.required_units.label }} <span class="req">*</span>
+            </label>
+            {{ form.required_units }}
+            {% if form.required_units.errors %}<span class="field-error">{{ form.required_units.errors.0 }}</span>{% endif %}
+          </div>
+
+          <div class="rq-form-group">
+            <label class="rq-label" for="{{ form.urgency.id_for_label }}">
+              {{ form.urgency.label }} <span class="req">*</span>
+            </label>
+            {{ form.urgency }}
+            {% if form.urgency.errors %}<span class="field-error">{{ form.urgency.errors.0 }}</span>{% endif %}
+          </div>
+
+        </div>
+
+        <hr class="rq-divider" />
+
+        <!-- ── Status (manual — excluded from form) ── -->
+        <span class="rq-section-label">Status Management</span>
+        <div class="rq-form-grid">
+          <div class="rq-form-group">
+            <label class="rq-label" for="id_status">Current Status</label>
+            <select name="status" id="id_status" class="rq-status-select">
+              <option value="pending"     {% if request_obj.status == 'pending'     %}selected{% endif %}>Pending</option>
+              <option value="active"      {% if request_obj.status == 'active'      %}selected{% endif %}>Active</option>
+              <option value="in_progress" {% if request_obj.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+              <option value="completed"   {% if request_obj.status == 'completed'   %}selected{% endif %}>Completed</option>
+              <option value="closed"      {% if request_obj.status == 'closed'      %}selected{% endif %}>Closed</option>
+              <option value="cancelled"   {% if request_obj.status == 'cancelled'   %}selected{% endif %}>Cancelled</option>
+              <option value="emergency"   {% if request_obj.status == 'emergency'   %}selected{% endif %}>Emergency</option>
+            </select>
+            <span style="font-size:11px;color:var(--text-light);">
+              Changing status will reflect immediately on the donor side.
+            </span>
+          </div>
+          <div class="rq-form-group">
+            <label class="rq-label" for="{{ form.department.id_for_label }}">
+              {{ form.department.label }}
+            </label>
+            {{ form.department }}
+          </div>
+        </div>
+
+        <hr class="rq-divider" />
+
+        <!-- ── Patient Details ── -->
+        <span class="rq-section-label">Patient Details</span>
+        <div class="rq-form-grid">
+
+          <div class="rq-form-group">
+            <label class="rq-label" for="{{ form.patient_condition.id_for_label }}">
+              {{ form.patient_condition.label }}
+            </label>
+            {{ form.patient_condition }}
+          </div>
+
+          <div class="rq-form-group">
+            <label class="rq-label" for="{{ form.patient_file_number.id_for_label }}">
+              {{ form.patient_file_number.label }}
+            </label>
+            {{ form.patient_file_number }}
+          </div>
+
+          <div class="rq-form-group">
+            <label class="rq-label" for="{{ form.assigned_staff.id_for_label }}">
+              {{ form.assigned_staff.label }}
+            </label>
+            {{ form.assigned_staff }}
+          </div>
+
+          <div class="rq-form-group">
+            <label class="rq-label" for="{{ form.required_before.id_for_label }}">
+              {{ form.required_before.label }}
+            </label>
+            {{ form.required_before }}
+          </div>
+
+          <div class="rq-form-group">
+            <label class="rq-label" for="{{ form.contact_number.id_for_label }}">
+              {{ form.contact_number.label }}
+            </label>
+            {{ form.contact_number }}
+          </div>
+
+          <div class="rq-form-group full">
+            <label class="rq-label" for="{{ form.notes.id_for_label }}">
+              {{ form.notes.label }}
+            </label>
+            {{ form.notes }}
+          </div>
+
+        </div>
+      </div><!-- /rq-form-body -->
+
+      <div class="rq-form-footer">
+        <button type="submit" class="hd-btn hd-btn-primary">
+          <i class="fas fa-floppy-disk"></i> Save Changes
+        </button>
+        <a href="{% url 'hospital:request_detail' request_id=request_obj.id %}"
+           class="hd-btn hd-btn-ghost">
+          <i class="fas fa-xmark"></i> Discard Changes
+        </a>
+      </div>
+
+    </form>
+  </div><!-- /rq-form-card -->
+
+</div><!-- /.rq-main -->
+
+{% block extra_js %}
+<script>
+/* The status field is rendered manually outside DonationRequestForm
+   because that field is excluded there.
+   The view saves it via form.save() but status won't be saved unless
+   we handle it in the view. See views note below. */
+</script>
+{% endblock %}
+
+{% endblock %}

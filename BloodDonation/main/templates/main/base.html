@@ -41,12 +41,125 @@
     body {
       font-family: 'Tajawal', sans-serif !important;
     }
+
+    /* --- تعديلات التجاوب الجديدة --- */
+    
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* زر القائمة (الهامبرغر) - يظهر فقط في الجوال */
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #1a56db;
+      background: none;
+      border: none;
+      padding: 5px;
+    }
+
+    /* القائمة الجانبية للجوال - تنسيق خاص */
+    .mobile-nav {
+      position: fixed;
+      top: 0;
+      right: -100%; /* مخفية في البداية */
+      width: 280px;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+      transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 2000; /* لضمان ظهورها فوق كل شيء */
+      display: flex;
+      flex-direction: column;
+      padding: 80px 25px;
+      gap: 15px;
+    }
+
+    .mobile-nav.active {
+      right: 0; /* تظهر عند إضافة كلاس active */
+    }
+
+    /* روابط القائمة الجوال */
+    .mobile-nav a {
+      color: #333;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 12px 15px;
+      border-radius: 10px;
+      transition: 0.3s;
+      border-bottom: 1px solid #f8f9fa;
+    }
+
+    .mobile-nav a:hover {
+      background-color: #f0f4ff;
+      color: #1a56db !important;
+    }
+
+    /* زر إغلاق القائمة الجانبية */
+    .close-menu {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 26px;
+      color: #666;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f9fa;
+      border-radius: 50%;
+    }
+
+    /* خلفية مظلمة خلف القائمة عند فتحها */
+    .nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 1500;
+      display: none;
+    }
+
+    .nav-overlay.active {
+      display: block;
+    }
+
+    /* إخفاء الروابط العلوية في الجوال وإظهار زر القائمة */
+    @media (max-width: 991px) {
+      .nav-links {
+        display: none !important;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .footer-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+      }
+      .footer-contact {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+      }
+    }
   </style>
 
   {% block extra_css %}{% endblock %}
 </head>
 
 <body class="lang-ar">
+
+<!-- Overlay for Mobile Menu -->
+<div class="nav-overlay" id="navOverlay" onclick="toggleMenu()"></div>
 
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
@@ -55,8 +168,7 @@
     <!-- Logo -->
     <a href="{% url 'main:home' %}" class="nav-logo">
       <div class="logo-text-wrap">
-        <div class="logo-ar">إحياء</div>
-        <div class="logo-en">Ehyaa Platform</div>
+        <div class="logo-ar">إحياء</div><div class="logo-en">Ehyaa Platform</div>
       </div>
     </a>
 
@@ -69,7 +181,10 @@
       <li><a href="{% url 'main:home' %}#join">أنضم إلينا</a></li>
     </ul>
 
-    <!-- Controls -->
+    <!-- Hamburger Icon for Mobile -->
+    <button class="menu-toggle" onclick="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
     
   </div>
 </nav>
@@ -77,11 +192,14 @@
 
   <!-- Mobile Nav -->
   <div class="mobile-nav" id="mobileNav">
-    <a href="{% url 'main:home' %}">الرئيسية</a>
-    <a href="{% url 'main:about' %}">عن المنصة</a>
-    <a href="{% url 'main:works' %}">كيف يعمل</a>
-    <a href="{% url 'main:faq' %}">الأسئلة الشائعة</a>
-    <a href="{% url 'main:home' %}#join">أنضم إلينا</a>
+    <div class="close-menu" onclick="toggleMenu()">
+      <i class="fas fa-times"></i>
+    </div>
+    <a href="{% url 'main:home' %}" onclick="toggleMenu()">الرئيسية</a>
+    <a href="{% url 'main:about' %}" onclick="toggleMenu()">عن المنصة</a>
+    <a href="{% url 'main:works' %}" onclick="toggleMenu()">كيف يعمل</a>
+    <a href="{% url 'main:faq' %}" onclick="toggleMenu()">الأسئلة الشائعة</a>
+    <a href="{% url 'main:home' %}#join" onclick="toggleMenu()" style="background: #1a56db; color: white !important; text-align: center; margin-top: 10px;">أنضم إلينا</a>
   </div>
 
   <!-- PAGE CONTENT -->
@@ -112,7 +230,7 @@
       <div>
         <h4 class="footer-col-title" data-t="quick_links">روابط سريعة</h4>
         <nav class="footer-links">
-          <a href="#" data-t="nav_home">الرئيسية</a>
+          <a href="{% url 'main:home' %}" data-t="nav_home">الرئيسية</a>
           <a href="{% url 'main:about' %}" data-t="nav_about">عن المنصة</a>
           <a href="{% url 'main:works' %}" data-t="nav_how">كيف يعمل</a>
           <a href="{% url 'main:faq' %}" data-t="nav_faq">الأسئلة الشائعة</a>
@@ -146,8 +264,7 @@
           <div class="contact-row">
             <span class="ci">✉️</span>
             <span dir="ltr">info@ehyaa.sa</span>
-          </div>
-          <div class="contact-row">
+          </div><div class="contact-row">
             <span class="ci">🕐</span>
             <span>24/7</span>
           </div>
@@ -176,6 +293,14 @@
   <script src="{% static 'js/script.js' %}"></script>
 
   <script>
+    // وظيفة فتح وإغلاق قائمة الجوال مع الخلفية المظلمة
+    function toggleMenu() {
+        const mobileNav = document.getElementById('mobileNav');
+        const overlay = document.getElementById('navOverlay');
+        mobileNav.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+
     // الرسالة الخاصة بالزوار عند الضغط على أيقونة الملف الشخصي
     function guestProfileAlert() {
       alert("لتعديل ملفك الشخصي انشئ حساب اوقم بتسجيل الدخول");

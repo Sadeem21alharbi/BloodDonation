@@ -1,4 +1,4 @@
-<!-- Available Requests by Sdeem - Dynamic Version -->
+<!-- Available Requests by Sdeem - Professional Version -->
 {% extends 'donor/base_donor.html' %}
 {% block content %}
 <style>
@@ -6,11 +6,12 @@
         --urgent-red: #fee2e2;
         --urgent-text: #dc2626;
         --soft-bg: #f8fafc;
+        --primary-blue: #1a56db;
     }
 
     body { background: var(--soft-bg); font-family: 'Tajawal', sans-serif; }
 
-    /* تنسيق أزرار التصفية لتكون جنب بعض وبسيطة */
+    /* تنسيق أزرار التصفية */
     .filter-section {
         background: white;
         padding: 15px 25px;
@@ -37,18 +38,24 @@
         transition: 0.3s;
     }
 
-    .filter-select:focus { border-color: #1a56db; box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1); }
+    .filter-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1); }
 
     .btn-filter-submit {
-        background: #1a56db;
+        background: var(--primary-blue);
         color: white;
         border: none;
         border-radius: 12px;
         padding: 8px 25px;
         transition: 0.3s;
+        font-weight: bold;
+    }
+    
+    .btn-filter-submit:hover {
+        background: #1141a8;
+        transform: translateY(-1px);
     }
 
-    /* شريط النداء العاجل - يظهر فقط عند وجود حالة */
+    /* شريط النداء العاجل */
     .urgent-banner {
         background: linear-gradient(90deg, #fee2e2 0%, #ffefef 100%);
         border-right: 5px solid var(--urgent-text);
@@ -61,35 +68,83 @@
         animation: fadeIn 0.5s ease;
     }
 
+    /* تنسيق البطاقات */
     .request-card {
         background: white;
         border-radius: 20px;
-        padding: 20px;
-        transition: 0.3s;
+        padding: 25px;
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         border: 1px solid #f1f5f9;
+        position: relative;
+        overflow: hidden;
     }
 
-    .request-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+    .request-card:hover { 
+        transform: translateY(-10px); 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+    }
+
+    .blood-type-badge {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--urgent-text);
+        background: #fff1f2;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+    }
+
+    .card-label {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-bottom: 2px;
+        display: block;
+    }
+
+    .card-value {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 10px;
+        display: block;
+    }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 
-<div class="container py-5" direction="rtl">
-    <h3 class="fw-bold mb-4">طلبات التبرع المتاحة</h3>
+<div class="container py-5" dir="rtl">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold m-0">طلبات التبرع المتاحة</h3>
+        <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill">إجمالي الطلبات: {{ blood_requests|length }}</span>
+    </div>
 
-    <!-- 1. شريط النداء العاجل: يظهر فقط إذا كان هناك طلبات عاجلة في الـ Context -->
+    <!-- رسائل النجاح أو التنبيه -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- 1. شريط النداء العاجل -->
     {% if urgent_requests_count > 0 %}
     <div class="urgent-banner shadow-sm">
-        <div class="ms-3 fs-3">⚠️</div>
+        <div class="ms-3 fs-2 text-danger">
+            <i class="fas fa-heartbeat animate-pulse"></i>
+        </div>
         <div>
-            <h5 class="fw-bold mb-1">كن بطلاً اليوم! 🩸</h5>
-            <p class="mb-0">هناك {{ urgent_requests_count }} حالة عاجلة في منطقتك تحتاج لمتبرعين بشكل فوري.</p>
+            <h5 class="fw-bold mb-1">حالات حرجة تحتاجك! 🩸</h5><p class="mb-0">هناك {{ urgent_requests_count }} طلب تبرع عاجل بانتظار استجابتك الفورية.</p>
         </div>
     </div>
     {% endif %}
 
-    <!-- 2. قسم التصفية: مرتب جنب بعض وبشكل أنيق -->
-    <div class="filter-section">
+    <!-- 2. قسم التصفية -->
+    <div class="filter-section border-0">
         <form method="GET" class="filter-group">
             <select name="city" class="filter-select">
                 <option value="">كل المدن 📍</option>
@@ -112,39 +167,68 @@
             </select>
 
             <button type="submit" class="btn-filter-submit">
-                <i class="fas fa-search ms-1"></i> تصفية النتائج
+                <i class="fas fa-search ms-1"></i> تصفية
             </button>
             
             {% if request.GET.city or request.GET.blood_type or request.GET.urgency %}
-            <a href="{% url 'donor:available_requests' %}" class="text-muted small text-decoration-none">إعادة ضبط</a>{% endif %}
+            <a href="{% url 'donor:available_requests' %}" class="btn btn-light rounded-pill px-3 ms-2 shadow-sm">
+                <i class="fas fa-redo-alt"></i>
+            </a>
+            {% endif %}
         </form>
     </div>
 
-    <!-- 3. عرض الطلبات من قاعدة البيانات -->
+    <!-- 3. عرض الطلبات -->
     <div class="row g-4">
-        {% for request in blood_requests %}
+        {% for req in blood_requests %}
         <div class="col-md-6 col-lg-4">
             <div class="request-card shadow-sm h-100">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <span class="badge {% if request.is_urgent %}bg-danger{% else %}bg-primary{% endif %} rounded-pill px-3">
-                        {% if request.is_urgent %}عاجل{% else %}طلب تبرع{% endif %}
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="blood-type-badge shadow-sm">
+                        {{ req.blood_type }}
+                    </div>
+                    <span class="badge {% if req.urgency == 'urgent' %}bg-danger{% else %}bg-primary{% endif %} rounded-pill px-3 py-2">
+                        {% if req.urgency == 'urgent' %}<i class="fas fa-bolt me-1"></i> عاجل{% else %}طلب تبرع{% endif %}
                     </span>
-                    <h4 class="fw-bold text-danger mb-0">{{ request.blood_type }}</h4>
                 </div>
-                <h6 class="fw-bold mb-1">{{ request.hospital_name }}</h6>
-                <p class="text-muted small mb-3"><i class="fas fa-map-marker-alt ms-1"></i> {{ request.city }}</p>
                 
-                <div class="d-grid">
-                    <a href="{% url 'donor:request_detail' request.id %}" class="btn btn-outline-primary border-2 fw-bold">تفاصيل الحالة</a>
+                <div class="mb-4">
+                    <span class="card-label">المستشفى المطلوب:</span>
+                    <span class="card-value fs-5"><i class="fas fa-hospital-alt text-muted ms-2"></i>{{ req.hospital.user.get_full_name|default:req.hospital.user.username }}</span>
+                    
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <span class="card-label">المدينة:</span>
+                            <span class="card-value"><i class="fas fa-map-marker-alt text-danger ms-1"></i> {{ req.hospital.city }}</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="card-label">الوحدات:</span>
+                            <span class="card-value"><i class="fas fa-tint text-primary ms-1"></i> {{ req.units_required }} وحدات</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'donor:apply_to_request' req.id %}" class="btn btn-danger btn-lg fw-bold rounded-pill shadow-sm">
+                        تطوع للتبرع الآن
+                    </a>
+                    <div class="text-center mt-2">
+                        <small class="text-muted"><i class="far fa-calendar-alt ms-1"></i> تاريخ النشر: {{ req.created_at|date:"Y/m/d" }}</small>
+                    </div>
                 </div>
             </div>
         </div>
         {% empty %}
-        <div class="col-12 text-center py-5">
-            <img src="/static/images/empty.svg" alt="" style="width: 150px; opacity: 0.5;">
-            <p class="text-muted mt-3">لا توجد طلبات تطابق معايير البحث حالياً.</p>
+        <div class="col-12 text-center py-5"><div class="bg-white p-5 rounded-4 shadow-sm d-inline-block">
+                <i class="fas fa-search-minus fa-3x text-muted mb-3"></i>
+                <h5 class="text-dark fw-bold">لا توجد طلبات تبرع حالياً</h5>
+                <p class="text-muted mb-0">جرب تغيير خيارات التصفية أو عد لاحقاً.</p>
+            </div>
         </div>
         {% endfor %}
     </div>
 </div>
+
+<!-- إضافة مكتبة FontAwesome للتأكد من ظهور الأيقونات -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 {% endblock %}

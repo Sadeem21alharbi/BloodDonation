@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .models import DonorProfile, DonationRecord  
+from hospital.models import DonationRequest, DonorResponse
 
 def donor_register(request):
     if request.method == 'POST':
@@ -90,35 +91,25 @@ def donor_logout(request):
     return redirect('main:home')
 
 def available_requests(request):
-    # محاولة جلب مودل BloodRequest وتفادي تعطل الكود في حال عدم وجود المودل بعد
-    try:
-        from .models import BloodRequest
-        queryset = BloodRequest.objects.all().order_by('-is_urgent', '-id')
-    except (ImportError, AttributeError):
-        queryset = None 
+    # جلب كل الطلبات بغض النظر عن الحالة ليظهر طلبك الجديد
+    queryset = DonationRequest.objects.all().order_by('-created_at')
 
-    city_query = request.GET.get('city')# تم فصل الأسطر هنا لحل مشكلة السنتاكس الظاهرة في image_101.png
+    # نظام التصفية (الفلترة)
+    city_query = request.GET.get('city')
     blood_query = request.GET.get('blood_type')
     urgency_query = request.GET.get('urgency')
-    
-    urgent_count = 0
 
-    if queryset is not None:
-        if city_query:
-            queryset = queryset.filter(city__icontains=city_query)
-        if blood_query:
-            queryset = queryset.filter(blood_type=blood_query)
-        if urgency_query == 'urgent':
-            queryset = queryset.filter(is_urgent=True)
-        
-        urgent_count = queryset.filter(is_urgent=True).count()
-    else:
-        queryset = []
+    if city_query:
+        queryset = queryset.filter(hospital__city__icontains=city_query)
+    if blood_query:
+        queryset = queryset.filter(blood_type=blood_query)
+    if urgency_query:
+        queryset = queryset.filter(urgency=urgency_query)
 
     context = {
         'blood_requests': queryset,
-        'urgent_requests_count': urgent_count,
-        'cities': ['الرياض', 'جدة', 'الدمام', 'مكة المكرمة', 'المدينة المنورة', 'أبها', 'تبوك', 'بريدة', 'الخبر', 'جازان', 'حائل', 'الجوف'],
+        'urgent_requests_count': queryset.filter(urgency='urgent').count(),
+        'cities': ['الرياض', 'جدة', 'الدمام', 'مكة المكرمة', 'المدينة المنورة', 'أبها', 'تبوك'],
         'blood_types': ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
     }
     return render(request, 'donor/available_requests.html', context)
@@ -135,7 +126,28 @@ def journey_view(request):
 def leaderboard_view(request):
     # عرض المتصدرين بناءً على النقاط (تحفيز المتبرعين)
     top_donors = DonorProfile.objects.all().order_by('-points')[:10]
-    return render(request, 'donor/leaderboard.html', {'top_donors': top_donors})
+    return render(request, 'leaderboard.html', {'top_donors': top_donors})
 
 def impact_view(request):
     return render(request, 'donor/impact.html')
+
+@login_required
+def apply_to_request(request, request_id):
+    # جلب الطلب المحدد
+    donation_request = DonationRequest.objects.get(id=request_id)
+    
+    # التأكد أن المتبرع لم يقدم على هذا الطلب من قبل
+    already_applied = DonorResponse.objects.filter(request=donation_request, donor=request.user).exists()
+    
+    if not already_applied:
+        # إنشاء التقديم (الربط بينك وبين الطلب)
+        DonorResponse.objects.create(
+            request=donation_request,
+            donor=request.user,
+            status='pending'
+        )
+        messages.success(request, 'تم إرسال طلب التقديم للمستشفى بنجاح!')
+    else:
+        messages.warning(request, 'لقد قمت بالتقديم على هذا الطلب مسبقاً.')
+        
+    return redirect('donor:available_requests')

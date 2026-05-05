@@ -1,3 +1,6 @@
+<!-- hospital/donation_requests.html   -->
+
+
 {% extends 'hospital/base.html' %}
 
 {% block title %}Donation Requests | Ehyaa{% endblock %}
@@ -59,16 +62,22 @@
 .trend-up  { background: #dcfce7; color: #16a34a; }
 .trend-down{ background: #fee2e2; color: #dc2626; }
 .trend-neu { background: var(--bg); color: var(--text-muted); }
+
+/*
+  ── Stat bar widths are computed dynamically via inline style.
+     We keep gradient classes only; width is set in the template
+     using widthratio so bars accurately reflect real data.
+*/
 .rq-stat-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1; }
 .rq-stat-label { color: var(--text-muted); font-size: 12.5px; margin-top: 3px; }
 .rq-stat-bar { height: 5px; background: var(--border); border-radius: var(--radius-pill); overflow: hidden; }
 .rq-stat-bar-fill { height: 100%; border-radius: var(--radius-pill); }
-.sbf-blue   { background: linear-gradient(90deg,#2563eb,#60a5fa); width: 72%; }
-.sbf-teal   { background: linear-gradient(90deg,#14b8a6,#5eead4); width: 65%; }
-.sbf-amber  { background: linear-gradient(90deg,#f59e0b,#fcd34d); width: 44%; }
-.sbf-green  { background: linear-gradient(90deg,#10b981,#6ee7b7); width: 58%; }
-.sbf-red    { background: linear-gradient(90deg,#ef4444,#fca5a5); width: 18%; }
-.sbf-violet { background: linear-gradient(90deg,#8b5cf6,#c4b5fd); width: 30%; }
+.sbf-blue   { background: linear-gradient(90deg,#2563eb,#60a5fa); }
+.sbf-teal   { background: linear-gradient(90deg,#14b8a6,#5eead4); }
+.sbf-amber  { background: linear-gradient(90deg,#f59e0b,#fcd34d); }
+.sbf-green  { background: linear-gradient(90deg,#10b981,#6ee7b7); }
+.sbf-red    { background: linear-gradient(90deg,#ef4444,#fca5a5); }
+.sbf-violet { background: linear-gradient(90deg,#8b5cf6,#c4b5fd); }
 
 /* Filter */
 .rq-filter {
@@ -103,7 +112,7 @@
   padding: 7px 14px; border-radius: var(--radius-pill);
   background: var(--bg); border: 1.5px solid var(--border);
   font-size: 12px; font-weight: 700; cursor: pointer; color: var(--text-muted);
-  transition: all var(--transition);
+  transition: all var(--transition); text-decoration: none;
 }
 .rq-chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
 .rq-chip.active { background: var(--primary-gradient); color: #fff; border-color: transparent; box-shadow: 0 2px 8px rgba(26,86,219,.22); }
@@ -304,9 +313,14 @@
     </div>
   </div>
 
-  <!-- ═══ STATS ═══ -->
+  <!-- ═══ STATS ═══
+       All values come from the view context.
+       Bar widths use widthratio against total_requests so they reflect real proportions.
+       Falls back to 0% when total_requests is 0 to avoid division-by-zero.
+  ═══ -->
   <div class="rq-stats hd-fade-in-up delay-1">
 
+    <!-- Total -->
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-blue"><i class="fas fa-file-medical"></i></div>
@@ -316,9 +330,12 @@
         <div class="rq-stat-value">{{ total_requests }}</div>
         <div class="rq-stat-label">Total Requests</div>
       </div>
-      <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-blue"></div></div>
+      <div class="rq-stat-bar">
+        <div class="rq-stat-bar-fill sbf-blue" style="width:100%"></div>
+      </div>
     </div>
 
+    <!-- Active -->
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-teal"><i class="fas fa-wave-square"></i></div>
@@ -328,9 +345,14 @@
         <div class="rq-stat-value">{{ active_count }}</div>
         <div class="rq-stat-label">Active Requests</div>
       </div>
-      <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-teal"></div></div>
+      <div class="rq-stat-bar">
+        <div class="rq-stat-bar-fill sbf-teal"
+             style="width:{% if total_requests %}{% widthratio active_count total_requests 100 %}%{% else %}0%{% endif %}">
+        </div>
+      </div>
     </div>
 
+    <!-- Pending -->
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-amber"><i class="fas fa-clock"></i></div>
@@ -340,33 +362,52 @@
         <div class="rq-stat-value">{{ pending_count }}</div>
         <div class="rq-stat-label">Pending</div>
       </div>
-      <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-amber"></div></div>
+      <div class="rq-stat-bar">
+        <div class="rq-stat-bar-fill sbf-amber"
+             style="width:{% if total_requests %}{% widthratio pending_count total_requests 100 %}%{% else %}0%{% endif %}">
+        </div>
+      </div>
     </div>
 
+    <!-- Completed -->
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-green"><i class="fas fa-circle-check"></i></div>
-        <span class="rq-stat-trend trend-up"><i class="fas fa-arrow-up"></i> Done</span>
+        <span class="rq-stat-trend {% if completed_count > 0 %}trend-up{% else %}trend-neu{% endif %}">
+          {% if completed_count > 0 %}<i class="fas fa-arrow-up"></i>{% endif %} Done
+        </span>
       </div>
       <div>
         <div class="rq-stat-value">{{ completed_count }}</div>
         <div class="rq-stat-label">Completed</div>
       </div>
-      <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-green"></div></div>
+      <div class="rq-stat-bar">
+        <div class="rq-stat-bar-fill sbf-green"
+             style="width:{% if total_requests %}{% widthratio completed_count total_requests 100 %}%{% else %}0%{% endif %}">
+        </div>
+      </div>
     </div>
 
+    <!-- Emergency / High urgency -->
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-red"><i class="fas fa-triangle-exclamation"></i></div>
-        <span class="rq-stat-trend trend-down"><i class="fas fa-arrow-down"></i> Urgent</span>
+        <span class="rq-stat-trend {% if emergency_count > 0 %}trend-down{% else %}trend-neu{% endif %}">
+          {% if emergency_count > 0 %}<i class="fas fa-arrow-up"></i>{% endif %} Urgent
+        </span>
       </div>
       <div>
         <div class="rq-stat-value">{{ emergency_count }}</div>
         <div class="rq-stat-label">Emergency (High)</div>
       </div>
-      <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-red"></div></div>
+      <div class="rq-stat-bar">
+        <div class="rq-stat-bar-fill sbf-red"
+             style="width:{% if total_requests %}{% widthratio emergency_count total_requests 100 %}%{% else %}0%{% endif %}">
+        </div>
+      </div>
     </div>
 
+    <!-- Total blood units requested -->
     <div class="rq-stat">
       <div class="rq-stat-top">
         <div class="rq-stat-icon si-violet"><i class="fas fa-droplet"></i></div>
@@ -376,7 +417,16 @@
         <div class="rq-stat-value">{{ total_units }}</div>
         <div class="rq-stat-label">Blood Units Requested</div>
       </div>
-      <div class="rq-stat-bar"><div class="rq-stat-bar-fill sbf-violet"></div></div>
+      <!--
+        Bar for units: we show a proportional fill capped at 100%.
+        The view should pass max_units (e.g. some practical ceiling) for this to be meaningful.
+        Fallback: static 30% visual indicator when max_units isn't provided.
+      -->
+      <div class="rq-stat-bar">
+        <div class="rq-stat-bar-fill sbf-violet"
+             style="width:{% if max_units and max_units > 0 %}{% widthratio total_units max_units 100 %}%{% else %}30%{% endif %}">
+        </div>
+      </div>
     </div>
 
   </div>
@@ -422,7 +472,7 @@
       </div>
       <div class="rq-chips">
         <a href="{% url 'hospital:requests' %}"
-           class="rq-chip {% if not request.GET.status %}active{% endif %}">
+           class="rq-chip {% if not request.GET.status and not request.GET.urgency %}active{% endif %}">
           All ({{ total_requests }})
         </a>
         <a href="?status=pending"
@@ -455,7 +505,8 @@
       <div>
         <div class="rq-card-title">All Donation Requests</div>
         <div class="rq-card-sub">
-          Showing {{ requests.count }} of {{ total_requests }} requests
+          {# requests is the filtered queryset; page_obj if paginated, else requests #}
+          Showing {{ requests|length }} of {{ total_requests }} requests
         </div>
       </div>
       <div style="display:flex;gap:8px;">
@@ -492,7 +543,17 @@
               <div class="req-type">{{ req.get_request_type_display }}</div>
             </td>
             <td>
-              <span class="rq-blood bb-red">{{ req.blood_type }}</span>
+              {# Blood-type colour: map common types to badge classes; default to red #}
+              {% with bt=req.blood_type %}
+              <span class="rq-blood
+                {% if bt == 'AB+' or bt == 'AB-' %}bb-violet
+                {% elif bt == 'O+' or bt == 'O-' %}bb-teal
+                {% elif bt == 'B+' or bt == 'B-' %}bb-amber
+                {% elif bt == 'A+' or bt == 'A-' %}bb-blue
+                {% else %}bb-red{% endif %}">
+                {{ bt }}
+              </span>
+              {% endwith %}
             </td>
             <td><strong style="font-size:14px;">{{ req.required_units }}</strong></td>
             <td>
@@ -510,6 +571,7 @@
             <td>
               <span class="rq-resp">
                 <i class="fas fa-users" style="font-size:11px;"></i>
+                {# donor_responses_count must be annotated or a property on the model #}
                 {{ req.donor_responses_count }}
               </span>
             </td>
@@ -564,11 +626,39 @@
       </table>
     </div>
 
+    <!-- ─── Footer: row count + optional pagination ─── -->
     <div class="rq-card-foot">
       <div style="font-size:12.5px;color:var(--text-muted);">
-        Showing <strong style="color:var(--text);">{{ requests.count }}</strong>
-        of <strong style="color:var(--text);">{{ total_requests }}</strong> requests
+        Showing
+        <strong style="color:var(--text);">{{ requests|length }}</strong>
+        of
+        <strong style="color:var(--text);">{{ total_requests }}</strong>
+        requests
       </div>
+
+      {# Pagination — rendered only when the view passes a page_obj #}
+      {% if page_obj and page_obj.paginator.num_pages > 1 %}
+      <div class="rq-pagination">
+        {% if page_obj.has_previous %}
+          <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}"
+             class="pg-btn"><i class="fas fa-chevron-right"></i></a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <span class="pg-btn active">{{ num }}</span>
+          {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+            <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ num }}"
+               class="pg-btn">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.next_page_number }}"
+             class="pg-btn"><i class="fas fa-chevron-left"></i></a>
+        {% endif %}
+      </div>
+      {% endif %}
     </div>
   </div>
 
@@ -576,7 +666,7 @@
 
 {% block extra_js %}
 <script>
-/* Chip active state is handled via query string (server-side), no JS needed */
+/* Chip / filter active state is handled server-side via query string — no JS needed. */
 </script>
 {% endblock %}
 

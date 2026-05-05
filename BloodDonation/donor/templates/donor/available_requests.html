@@ -1,234 +1,560 @@
-<!-- Available Requests by Sdeem - Professional Version -->
+<!-- donor/available_requests.html — redesigned to match hospital dashboard tokens -->
 {% extends 'donor/base_donor.html' %}
 {% block content %}
+
 <style>
-    :root {
-        --urgent-red: #fee2e2;
-        --urgent-text: #dc2626;
-        --soft-bg: #f8fafc;
-        --primary-blue: #1a56db;
-    }
+/* ═══════════════════════════════════════════════════
+   AVAILABLE REQUESTS — mirrors hospital hd-* tokens
+   Arabic RTL layout
+═══════════════════════════════════════════════════ */
 
-    body { background: var(--soft-bg); font-family: 'Tajawal', sans-serif; }
+/* ── Layout ── */
+.ar-main { display: flex; flex-direction: column; gap: 28px; }
 
-    /* تنسيق أزرار التصفية */
-    .filter-section {
-        background: white;
-        padding: 15px 25px;
-        border-radius: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        margin-bottom: 30px;
-    }
+/* ── Page Header ── */
+.ar-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.ar-header-title { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1.2; }
+.ar-header-sub {
+  color: var(--text-muted); font-size: 13px;
+  margin-top: 5px; display: flex; align-items: center; gap: 8px;
+}
+.ar-header-sub .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text-light); flex-shrink: 0; }
 
-    .filter-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        align-items: center;
-        justify-content: center;
-    }
+/* ── Stats Row ── */
+.ar-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 18px;
+}
+.ar-stat {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 20px 22px; border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-card);
+  display: flex; flex-direction: column; gap: 14px;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.ar-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(26,86,219,.13); }
+.ar-stat-top { display: flex; align-items: center; justify-content: space-between; }
+.ar-stat-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 18px; flex-shrink: 0;
+}
+.si-red    { background: linear-gradient(135deg,#ef4444,#dc2626); box-shadow: 0 4px 12px rgba(239,68,68,.28); }
+.si-amber  { background: linear-gradient(135deg,#f59e0b,#d97706); box-shadow: 0 4px 12px rgba(245,158,11,.28); }
+.si-blue   { background: linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow: 0 4px 12px rgba(37,99,235,.28); }
+.si-teal   { background: linear-gradient(135deg,#14b8a6,#0d9488); box-shadow: 0 4px 12px rgba(20,184,166,.28); }
+.ar-stat-badge {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 11.5px; font-weight: 700;
+  padding: 4px 9px; border-radius: var(--radius-pill);
+}
+.badge-urgent  { background: #fee2e2; color: #b91c1c; }
+.badge-neu     { background: var(--bg); color: var(--text-muted); }
+.ar-stat-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1; }
+.ar-stat-label { color: var(--text-muted); font-size: 12.5px; margin-top: 3px; }
+.ar-stat-bar   { height: 5px; background: var(--border); border-radius: var(--radius-pill); overflow: hidden; }
+.ar-stat-bar-fill { height: 100%; border-radius: var(--radius-pill); }
+.sbf-red   { background: linear-gradient(90deg,#ef4444,#fca5a5); width: 100%; }
+.sbf-amber { background: linear-gradient(90deg,#f59e0b,#fcd34d); }
+.sbf-blue  { background: linear-gradient(90deg,#2563eb,#60a5fa); }
+.sbf-teal  { background: linear-gradient(90deg,#14b8a6,#5eead4); }
 
-    .filter-select {
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 8px 15px;
-        font-size: 0.9rem;
-        min-width: 150px;
-        outline: none;
-        transition: 0.3s;
-    }
+/* ── Urgent Banner ── */
+.ar-urgent-banner {
+  background: linear-gradient(135deg, #fee2e2, #fff1f2);
+  border: 1.5px solid #fecaca;
+  border-right: 5px solid #dc2626;
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  display: flex; align-items: center; gap: 16px;
+  box-shadow: var(--shadow-card);
+  animation: hd-fade-in-up .4s ease both;
+}
+.ar-urgent-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: #fee2e2; border: 1.5px solid #fecaca;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: #dc2626; flex-shrink: 0;
+}
+.ar-urgent-title { font-size: 15px; font-weight: 800; color: #991b1b; margin-bottom: 3px; }
+.ar-urgent-sub   { font-size: 13px; color: #b91c1c; }
 
-    .filter-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1); }
+/* ── Filter Card ── */
+.ar-filter {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card);
+  padding: 18px 22px;
+}
+.ar-filter-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ar-search {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 9px 14px;
+  flex: 1; min-width: 180px; max-width: 260px;
+  transition: border-color var(--transition);
+}
+.ar-search:focus-within { border-color: var(--primary); }
+.ar-search i { font-size: 13px; color: var(--text-light); flex-shrink: 0; }
+.ar-search input {
+  border: none; background: transparent;
+  font-family: inherit; font-size: 13px; color: var(--text); outline: none; width: 100%;
+  direction: rtl;
+}
+.ar-search input::placeholder { color: var(--text-light); }
+.ar-select {
+  padding: 9px 13px; border-radius: var(--radius);
+  border: 1.5px solid var(--border); background: var(--bg-card);
+  color: var(--text); font-family: inherit; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; outline: none; transition: border-color var(--transition);
+  direction: rtl;
+}
+.ar-select:hover, .ar-select:focus { border-color: var(--primary); }
 
-    .btn-filter-submit {
-        background: var(--primary-blue);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 8px 25px;
-        transition: 0.3s;
-        font-weight: bold;
-    }
-    
-    .btn-filter-submit:hover {
-        background: #1141a8;
-        transform: translateY(-1px);
-    }
+/* ── Cards Grid ── */
+.ar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
 
-    /* شريط النداء العاجل */
-    .urgent-banner {
-        background: linear-gradient(90deg, #fee2e2 0%, #ffefef 100%);
-        border-right: 5px solid var(--urgent-text);
-        color: var(--urgent-text);
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 30px;
-        display: flex;
-        align-items: center;
-        animation: fadeIn 0.5s ease;
-    }
+/* ── Request Card ── */
+.ar-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card);
+  overflow: hidden; display: flex; flex-direction: column;
+  transition: transform var(--transition), box-shadow var(--transition);
+  position: relative;
+}
+.ar-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(26,86,219,.12); }
 
-    /* تنسيق البطاقات */
-    .request-card {
-        background: white;
-        border-radius: 20px;
-        padding: 25px;
-        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        border: 1px solid #f1f5f9;
-        position: relative;
-        overflow: hidden;
-    }
+/* urgency accent stripe */
+.ar-card::before {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 4px; height: 100%; border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+.ar-card.urg-high::before   { background: linear-gradient(180deg,#ef4444,#dc2626); }
+.ar-card.urg-medium::before { background: linear-gradient(180deg,#f59e0b,#d97706); }
+.ar-card.urg-low::before    { background: linear-gradient(180deg,#10b981,#059669); }
 
-    .request-card:hover { 
-        transform: translateY(-10px); 
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
-    }
+.ar-card-head {
+  padding: 18px 20px 14px;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  border-bottom: 1px solid var(--border-card);
+}
 
-    .blood-type-badge {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--urgent-text);
-        background: #fff1f2;
-        width: 60px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 15px;
-    }
+/* Blood badge */
+.ar-blood {
+  width: 60px; height: 60px; border-radius: 16px; flex-shrink: 0;
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border: 1.5px solid #fca5a5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 900; color: #dc2626;
+}
 
-    .card-label {
-        font-size: 0.8rem;
-        color: #64748b;
-        margin-bottom: 2px;
-        display: block;
-    }
+.ar-card-title-wrap { flex: 1; min-width: 0; }
+.ar-card-title {
+  font-size: 14.5px; font-weight: 800; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 5px;
+}
+.ar-card-id { font-size: 11.5px; color: var(--text-light); }
 
-    .card-value {
-        font-weight: 600;
-        color: #1e293b;
-        margin-bottom: 10px;
-        display: block;
-    }
+/* Urgency pill */
+.ar-urgency {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: var(--radius-pill);
+  font-size: 11.5px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+}
+.urg-high-pill   { background: #fee2e2; color: #b91c1c; }
+.urg-medium-pill { background: #fef3c7; color: #92400e; }
+.urg-low-pill    { background: #dcfce7; color: #166634; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+/* Card body — info rows */
+.ar-card-body { padding: 16px 20px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+.ar-info-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.ar-info-label {
+  font-size: 11.5px; color: var(--text-light); font-weight: 600;
+  display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+}
+.ar-info-label i { font-size: 11px; width: 14px; text-align: center; }
+.ar-info-value {
+  font-size: 13px; font-weight: 700; color: var(--text);
+  text-align: left; /* values stay LTR even in RTL layout */
+}
+
+.ar-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+
+/* Units highlight */
+.ar-units-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: var(--radius-pill);
+  background: #dbeafe; color: #1d4ed8; font-size: 12px; font-weight: 800;
+}
+
+/* Deadline badge */
+.ar-deadline {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: var(--radius-pill);
+  background: #fef3c7; color: #92400e; font-size: 12px; font-weight: 700;
+}
+
+/* Card footer */
+.ar-card-foot {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-card); background: var(--bg);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.ar-card-date { font-size: 11.5px; color: var(--text-light); display: flex; align-items: center; gap: 5px; }
+
+/* Volunteer button */
+.ar-btn-volunteer {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: var(--radius-pill);
+  background: var(--primary-gradient); color: #fff;
+  font-size: 13px; font-weight: 700; text-decoration: none;
+  box-shadow: 0 3px 10px rgba(26,86,219,.28);
+  transition: all var(--transition);
+}
+.ar-btn-volunteer:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(26,86,219,.35); color: #fff; }
+.ar-btn-volunteer.danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 3px 10px rgba(239,68,68,.28);
+}
+.ar-btn-volunteer.danger:hover { box-shadow: 0 6px 18px rgba(239,68,68,.38); }
+
+/* Status pill */
+.ar-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: var(--radius-pill);
+  font-size: 11px; font-weight: 700;
+}
+.ar-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.sp-active   { background: #dbeafe; color: #1d4ed8; }
+.sp-active::before { background: #2563eb; }
+.sp-pending  { background: #fef3c7; color: #92400e; }
+.sp-pending::before { background: #f59e0b; }
+.sp-emergency{ background: #fee2e2; color: #991b1b; }
+.sp-emergency::before { background: #ef4444; }
+
+/* ── Alert Messages ── */
+.ar-msg-success {
+  background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600;
+}
+.ar-msg-error {
+  background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600;
+}
+
+/* ── Empty State ── */
+.ar-empty { text-align: center; padding: 64px 24px; }
+.ar-empty-icon {
+  width: 82px; height: 82px; border-radius: 24px;
+  background: var(--primary-light); border: 1px solid rgba(26,86,219,.12);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; font-size: 2rem;
+}
+.ar-empty-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.ar-empty-sub   { font-size: 13.5px; color: var(--text-muted); max-width: 340px; margin: 0 auto; line-height: 1.65; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .ar-header { flex-direction: column; }
+  .ar-stats  { grid-template-columns: repeat(2, 1fr); }
+  .ar-filter-row { flex-direction: column; align-items: stretch; }
+  .ar-search { max-width: 100%; }
+  .ar-grid   { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .ar-stats { grid-template-columns: 1fr 1fr; }
+  .ar-header-title { font-size: 20px; }
+}
 </style>
 
-<div class="container py-5" dir="rtl">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold m-0">طلبات التبرع المتاحة</h3>
-        <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill">إجمالي الطلبات: {{ blood_requests|length }}</span>
+<div class="ar-main" dir="rtl">
+
+  <!-- ═══ Django Messages ═══ -->
+  {% for msg in messages %}
+    <div class="{% if msg.tags == 'success' %}ar-msg-success{% else %}ar-msg-error{% endif %}">
+      <i class="fas {% if msg.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+      {{ msg }}
+    </div>
+  {% endfor %}
+
+  <!-- ═══ PAGE HEADER ═══ -->
+  <div class="ar-header hd-fade-in-up">
+    <div>
+      <div class="ar-header-title">طلبات التبرع المتاحة</div>
+      <div class="ar-header-sub">
+        <span>{{ blood_requests|length }} طلب متاح</span>
+        <span class="dot"></span>
+        <span>آخر تحديث: {% now "d M Y · h:i A" %}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ STATS ═══ -->
+  <div class="ar-stats hd-fade-in-up delay-1">
+
+    <div class="ar-stat">
+      <div class="ar-stat-top">
+        <div class="ar-stat-icon si-blue"><i class="fas fa-list-alt"></i></div>
+        <span class="ar-stat-badge badge-neu">الكل</span>
+      </div>
+      <div>
+        <div class="ar-stat-value">{{ blood_requests|length }}</div>
+        <div class="ar-stat-label">إجمالي الطلبات</div>
+      </div>
+      <div class="ar-stat-bar"><div class="ar-stat-bar-fill sbf-blue" style="width:100%"></div></div>
     </div>
 
-    <!-- رسائل النجاح أو التنبيه -->
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
-                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <!-- 1. شريط النداء العاجل -->
-    {% if urgent_requests_count > 0 %}
-    <div class="urgent-banner shadow-sm">
-        <div class="ms-3 fs-2 text-danger">
-            <i class="fas fa-heartbeat animate-pulse"></i>
+    <div class="ar-stat">
+      <div class="ar-stat-top">
+        <div class="ar-stat-icon si-red"><i class="fas fa-triangle-exclamation"></i></div>
+        <span class="ar-stat-badge badge-urgent">عاجل</span>
+      </div>
+      <div>
+        <div class="ar-stat-value">{{ urgent_requests_count }}</div>
+        <div class="ar-stat-label">طلب عاجل</div>
+      </div>
+      <div class="ar-stat-bar">
+        <div class="ar-stat-bar-fill sbf-red"
+             style="width:{% if blood_requests|length > 0 %}{% widthratio urgent_requests_count blood_requests|length 100 %}%{% else %}0%{% endif %}">
         </div>
-        <div>
-            <h5 class="fw-bold mb-1">حالات حرجة تحتاجك! 🩸</h5><p class="mb-0">هناك {{ urgent_requests_count }} طلب تبرع عاجل بانتظار استجابتك الفورية.</p>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- 2. قسم التصفية -->
-    <div class="filter-section border-0">
-        <form method="GET" class="filter-group">
-            <select name="city" class="filter-select">
-                <option value="">كل المدن 📍</option>
-                {% for city in cities %}
-                <option value="{{ city }}" {% if request.GET.city == city %}selected{% endif %}>{{ city }}</option>
-                {% endfor %}
-            </select>
-
-            <select name="blood_type" class="filter-select">
-                <option value="">فصيلة الدم 🩸</option>
-                {% for type in blood_types %}
-                <option value="{{ type }}" {% if request.GET.blood_type == type %}selected{% endif %}>{{ type }}</option>
-                {% endfor %}
-            </select>
-
-            <select name="urgency" class="filter-select">
-                <option value="">الحالة 📢</option>
-                <option value="urgent" {% if request.GET.urgency == 'urgent' %}selected{% endif %}>عاجل جداً</option>
-                <option value="normal" {% if request.GET.urgency == 'normal' %}selected{% endif %}>عادي</option>
-            </select>
-
-            <button type="submit" class="btn-filter-submit">
-                <i class="fas fa-search ms-1"></i> تصفية
-            </button>
-            
-            {% if request.GET.city or request.GET.blood_type or request.GET.urgency %}
-            <a href="{% url 'donor:available_requests' %}" class="btn btn-light rounded-pill px-3 ms-2 shadow-sm">
-                <i class="fas fa-redo-alt"></i>
-            </a>
-            {% endif %}
-        </form>
+      </div>
     </div>
 
-    <!-- 3. عرض الطلبات -->
-    <div class="row g-4">
-        {% for req in blood_requests %}
-        <div class="col-md-6 col-lg-4">
-            <div class="request-card shadow-sm h-100">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="blood-type-badge shadow-sm">
-                        {{ req.blood_type }}
-                    </div>
-                    <span class="badge {% if req.urgency == 'urgent' %}bg-danger{% else %}bg-primary{% endif %} rounded-pill px-3 py-2">
-                        {% if req.urgency == 'urgent' %}<i class="fas fa-bolt me-1"></i> عاجل{% else %}طلب تبرع{% endif %}
-                    </span>
-                </div>
-                
-                <div class="mb-4">
-                    <span class="card-label">المستشفى المطلوب:</span>
-                    <span class="card-value fs-5"><i class="fas fa-hospital-alt text-muted ms-2"></i>{{ req.hospital.user.get_full_name|default:req.hospital.user.username }}</span>
-                    
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <span class="card-label">المدينة:</span>
-                            <span class="card-value"><i class="fas fa-map-marker-alt text-danger ms-1"></i> {{ req.hospital.city }}</span>
-                        </div>
-                        <div class="col-6">
-                            <span class="card-label">الوحدات:</span>
-                            <span class="card-value"><i class="fas fa-tint text-primary ms-1"></i> {{ req.units_required }} وحدات</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="d-grid gap-2">
-                    <a href="{% url 'donor:apply_to_request' req.id %}" class="btn btn-danger btn-lg fw-bold rounded-pill shadow-sm">
-                        تطوع للتبرع الآن
-                    </a>
-                    <div class="text-center mt-2">
-                        <small class="text-muted"><i class="far fa-calendar-alt ms-1"></i> تاريخ النشر: {{ req.created_at|date:"Y/m/d" }}</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-12 text-center py-5"><div class="bg-white p-5 rounded-4 shadow-sm d-inline-block">
-                <i class="fas fa-search-minus fa-3x text-muted mb-3"></i>
-                <h5 class="text-dark fw-bold">لا توجد طلبات تبرع حالياً</h5>
-                <p class="text-muted mb-0">جرب تغيير خيارات التصفية أو عد لاحقاً.</p>
-            </div>
-        </div>
-        {% endfor %}
+    <div class="ar-stat">
+      <div class="ar-stat-top">
+        <div class="ar-stat-icon si-teal"><i class="fas fa-droplet"></i></div>
+        <span class="ar-stat-badge badge-neu">وحدات</span>
+      </div>
+      <div>
+        <div class="ar-stat-value">{{ total_units_requested|default:"—" }}</div>
+        <div class="ar-stat-label">إجمالي الوحدات المطلوبة</div>
+      </div>
+      <div class="ar-stat-bar"><div class="ar-stat-bar-fill sbf-teal" style="width:70%"></div></div>
     </div>
-</div>
 
-<!-- إضافة مكتبة FontAwesome للتأكد من ظهور الأيقونات -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <div class="ar-stat">
+      <div class="ar-stat-top">
+        <div class="ar-stat-icon si-amber"><i class="fas fa-hospital"></i></div>
+        <span class="ar-stat-badge badge-neu">مستشفيات</span>
+      </div>
+      <div>
+        <div class="ar-stat-value">{{ hospitals_count|default:"—" }}</div>
+        <div class="ar-stat-label">مستشفيات طالبة</div>
+      </div>
+      <div class="ar-stat-bar"><div class="ar-stat-bar-fill sbf-amber" style="width:60%"></div></div>
+    </div>
+
+  </div>
+
+  <!-- ═══ URGENT BANNER ═══ -->
+  {% if urgent_requests_count > 0 %}
+  <div class="ar-urgent-banner hd-fade-in-up delay-1">
+    <div class="ar-urgent-icon"><i class="fas fa-heartbeat"></i></div>
+    <div>
+      <div class="ar-urgent-title">حالات حرجة تحتاجك! 🩸</div>
+      <div class="ar-urgent-sub">
+        هناك <strong>{{ urgent_requests_count }}</strong> طلب تبرع عاجل بانتظار استجابتك الفورية.
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ═══ FILTER ═══ -->
+  <form method="GET" action="">
+    <div class="ar-filter hd-fade-in-up delay-2">
+      <div class="ar-filter-row">
+
+        <div class="ar-search">
+          <i class="fas fa-search"></i>
+          <input type="text" name="q" placeholder="ابحث بالمستشفى أو المدينة…"
+                 value="{{ request.GET.q }}" />
+        </div>
+
+        <select class="ar-select" name="city" onchange="this.form.submit()">
+          <option value="">كل المدن 📍</option>
+          {% for city in cities %}
+            <option value="{{ city }}" {% if request.GET.city == city %}selected{% endif %}>{{ city }}</option>
+          {% endfor %}
+        </select>
+
+        <select class="ar-select" name="blood_type" onchange="this.form.submit()">
+          <option value="">فصيلة الدم 🩸</option>
+          {% for type in blood_types %}
+            <option value="{{ type }}" {% if request.GET.blood_type == type %}selected{% endif %}>{{ type }}</option>
+          {% endfor %}
+        </select>
+
+        <select class="ar-select" name="urgency" onchange="this.form.submit()">
+          <option value="">الأولوية 📢</option>
+          <option value="high"   {% if request.GET.urgency == 'high'   %}selected{% endif %}>🔴 عاجل جداً</option>
+          <option value="medium" {% if request.GET.urgency == 'medium' %}selected{% endif %}>🟡 متوسط</option>
+          <option value="low"    {% if request.GET.urgency == 'low'    %}selected{% endif %}>🟢 عادي</option>
+        </select>
+
+        <button type="submit" class="hd-btn hd-btn-primary hd-btn-sm">
+          <i class="fas fa-search"></i> بحث
+        </button>
+
+        {% if request.GET.q or request.GET.city or request.GET.blood_type or request.GET.urgency %}
+          <a href="{% url 'donor:available_requests' %}" class="hd-btn hd-btn-ghost hd-btn-sm">
+            <i class="fas fa-xmark"></i> مسح
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </form>
+
+  <!-- ═══ REQUESTS GRID ═══ -->
+  <div class="ar-grid hd-fade-in-up delay-3">
+
+    {% for req in blood_requests %}
+    <div class="ar-card urg-{% if req.urgency == 'high' %}high{% elif req.urgency == 'medium' %}medium{% else %}low{% endif %}">
+
+      <!-- Card Head -->
+      <div class="ar-card-head">
+        <div class="ar-blood">{{ req.blood_type }}</div>
+
+        <div class="ar-card-title-wrap">
+          <div class="ar-card-title">{{ req.title|default:req.hospital.user.get_full_name|truncatechars:28 }}</div>
+          <div class="ar-card-id">
+            <i class="fas fa-hashtag" style="font-size:10px;"></i>
+            {{ req.request_id|default:req.id }}
+          </div>
+        </div>
+
+        {% if req.urgency == 'high' %}
+          <span class="ar-urgency urg-high-pill"><i class="fas fa-bolt"></i> عاجل</span>
+        {% elif req.urgency == 'medium' %}
+          <span class="ar-urgency urg-medium-pill"><i class="fas fa-clock"></i> متوسط</span>
+        {% else %}
+          <span class="ar-urgency urg-low-pill"><i class="fas fa-check-circle"></i> عادي</span>
+        {% endif %}
+      </div>
+
+      <!-- Card Body -->
+      <div class="ar-card-body">
+
+        <!-- Hospital -->
+        <div class="ar-info-row">
+          <span class="ar-info-label">
+            <i class="fas fa-hospital"></i> المستشفى
+          </span>
+          <span class="ar-info-value">
+            {{ req.hospital.user.get_full_name|default:req.hospital.user.username }}
+          </span>
+        </div>
+
+        <!-- City -->
+        <div class="ar-info-row">
+          <span class="ar-info-label">
+            <i class="fas fa-map-marker-alt"></i> المدينة
+          </span>
+          <span class="ar-info-value">{{ req.hospital.city|default:"—" }}</span>
+        </div>
+
+        <!-- Request Type -->
+        <div class="ar-info-row">
+          <span class="ar-info-label">
+            <i class="fas fa-tag"></i> نوع الطلب
+          </span>
+          <span class="ar-info-value">{{ req.get_request_type_display|default:"تبرع بالدم" }}</span>
+        </div>
+
+        <!-- Department -->
+        {% if req.department %}
+        <div class="ar-info-row">
+          <span class="ar-info-label">
+            <i class="fas fa-stethoscope"></i> القسم
+          </span>
+          <span class="ar-info-value">{{ req.department }}</span>
+        </div>
+        {% endif %}
+
+        <hr class="ar-divider" />
+
+        <!-- Units + Deadline row -->
+        <div class="ar-info-row">
+          <span class="ar-units-badge">
+            <i class="fas fa-tint"></i>
+            {{ req.units_required }} وحدة
+          </span>
+
+          {% if req.required_before %}
+            <span class="ar-deadline">
+              <i class="fas fa-calendar-alt"></i>
+              قبل {{ req.required_before|date:"d M Y" }}
+            </span>
+          {% endif %}
+        </div>
+
+        <!-- Status -->
+        <div class="ar-info-row">
+          <span class="ar-info-label">
+            <i class="fas fa-circle-dot"></i> الحالة
+          </span>
+          <span class="ar-status sp-{% if req.status == 'emergency' %}emergency{% elif req.status == 'active' %}active{% else %}pending{% endif %}">
+            {{ req.get_status_display|default:"نشط" }}
+          </span>
+        </div>
+
+        <!-- Responses count (if available) -->
+        {% if req.donor_responses_count is not None %}
+        <div class="ar-info-row">
+          <span class="ar-info-label">
+            <i class="fas fa-users"></i> المتطوعون
+          </span>
+          <span class="ar-info-value">{{ req.donor_responses_count }} متطوع</span>
+        </div>
+        {% endif %}
+
+      </div><!-- /ar-card-body -->
+
+      <!-- Card Footer -->
+      <div class="ar-card-foot">
+        <span class="ar-card-date">
+          <i class="fas fa-calendar"></i>
+          {{ req.created_at|date:"d M Y" }}
+        </span>
+        <a href="{% url 'donor:apply_to_request' req.id %}"
+           class="ar-btn-volunteer {% if req.urgency == 'high' %}danger{% endif %}">
+          <i class="fas fa-hand-holding-heart"></i>
+          تطوع الآن
+        </a>
+      </div>
+
+    </div><!-- /ar-card -->
+    {% empty %}
+
+    <div style="grid-column: 1/-1;">
+      <div class="ar-empty">
+        <div class="ar-empty-icon">🩸</div>
+        <div class="ar-empty-title">لا توجد طلبات تبرع حالياً</div>
+        <div class="ar-empty-sub">
+          {% if request.GET.q or request.GET.city or request.GET.blood_type or request.GET.urgency %}
+            لا توجد طلبات تطابق معايير البحث. جرّب مسح الفلاتر.
+          {% else %}
+            لا توجد طلبات تبرع متاحة في الوقت الحالي. تحقق مرة أخرى لاحقاً.
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div><!-- /ar-grid -->
+
+</div><!-- /.ar-main -->
+
 {% endblock %}

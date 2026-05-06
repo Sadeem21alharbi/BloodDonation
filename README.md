@@ -53,4 +53,5 @@ Our UI/UX design process and low/high-fidelity wireframes are documented here:
 1. **Clone the repository:**
    
 ```bash
-   git clone [https://github.com/yourusername/ehyaa-platform.git](https://github.com/yourusername/ehyaa-platform.git)
+   git clone
+

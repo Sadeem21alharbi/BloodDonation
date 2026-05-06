@@ -5,6 +5,12 @@
 الأسئلة الشائعة | منصة إحياء
 {% endblock %}
 
+<!-- أضفت هذا الجزء لتعريف الصفحة في الـ Breadcrumbs -->
+{% block breadcrumbs %}
+  <li class="breadcrumb-item active" aria-current="page">  </li>
+<li class="breadcrumb-item active" aria-current="page"> الأسئلة الشائعة </li>
+{% endblock %}
+
 {% block extra_css %}
 <style>
     :root {

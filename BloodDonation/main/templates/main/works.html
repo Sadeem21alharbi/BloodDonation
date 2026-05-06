@@ -5,6 +5,11 @@
 {% block title %}
 {% trans "كيف يعمل | منصة إحياء" %}
 {% endblock %}
+<!-- أضفت هذا الجزء لتعريف الصفحة في الـ Breadcrumbs -->
+{% block breadcrumbs %}
+  <li class="breadcrumb-item active" aria-current="page">  </li>
+<li class="breadcrumb-item active" aria-current="page"> كيف يعمل؟ </li>
+{% endblock %}
 
 {% block extra_css %}
 <style>

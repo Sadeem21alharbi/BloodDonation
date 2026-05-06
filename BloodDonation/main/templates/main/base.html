@@ -48,9 +48,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: relative;
     }
 
-    /* زر القائمة (الهامبرغر) - يظهر فقط في الجوال */
+    /* زر القائمة (الهامبرغر) */
     .menu-toggle {
       display: none;
       font-size: 24px;
@@ -59,19 +60,21 @@
       background: none;
       border: none;
       padding: 5px;
+      position: relative;
+      z-index: 3001; /* أعلى من الـ Navbar */
     }
 
-    /* القائمة الجانبية للجوال - تنسيق خاص */
+    /* القائمة الجانبية للجوال - تم رفع الـ z-index بشكل كبير */
     .mobile-nav {
       position: fixed;
       top: 0;
-      right: -100%; /* مخفية في البداية */
+      right: -100%; 
       width: 280px;
       height: 100%;
       background: #ffffff;
       box-shadow: -5px 0 25px rgba(0,0,0,0.15);
       transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 2000; /* لضمان ظهورها فوق كل شيء */
+      z-index: 9999 !important; /* أعلى قيمة لضمان الظهور فوق المحتوى الأزرق */
       display: flex;
       flex-direction: column;
       padding: 80px 25px;
@@ -79,7 +82,7 @@
     }
 
     .mobile-nav.active {
-      right: 0; /* تظهر عند إضافة كلاس active */
+      right: 0; 
     }
 
     /* روابط القائمة الجوال */
@@ -115,7 +118,7 @@
       border-radius: 50%;
     }
 
-    /* خلفية مظلمة خلف القائمة عند فتحها */
+    /* خلفية مظلمة خلف القائمة */
     .nav-overlay {
       position: fixed;
       top: 0;
@@ -123,7 +126,7 @@
       width: 100%;
       height: 100%;
       background: rgba(0,0,0,0.4);
-      z-index: 1500;
+      z-index: 9998 !important; /* خلف القائمة مباشرة */
       display: none;
     }
 
@@ -131,7 +134,47 @@
       display: block;
     }
 
-    /* إخفاء الروابط العلوية في الجوال وإظهار زر القائمة */
+    /* --- تنسيق مسار التنقل وزر العودة --- */
+    .page-navigation-bar {
+      background-color: #f8f9fa;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .nav-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .breadcrumb {
+      margin-bottom: 0 !important;
+      background: transparent;
+      padding: 0;
+    }
+
+    .breadcrumb-item a {
+      color: #1a56db !important;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #1a56db;
+      background: #fff;
+      border: 1px solid #1a56db;
+      padding: 5px 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .back-btn:hover {background: #1a56db;
+      color: #fff !important;
+    }
+
     @media (max-width: 991px) {
       .nav-links {
         display: none !important;
@@ -158,21 +201,18 @@
 
 <body class="lang-ar">
 
-<!-- Overlay for Mobile Menu -->
 <div class="nav-overlay" id="navOverlay" onclick="toggleMenu()"></div>
 
-<!-- NAVBAR -->
 <nav class="navbar" id="navbar">
   <div class="container nav-inner">
 
-    <!-- Logo -->
     <a href="{% url 'main:home' %}" class="nav-logo">
       <div class="logo-text-wrap">
-        <div class="logo-ar">إحياء</div><div class="logo-en">Ehyaa Platform</div>
+        <div class="logo-ar">إحياء</div>
+        <div class="logo-en">Ehyaa Platform</div>
       </div>
     </a>
 
-    <!-- Desktop Nav -->
     <ul class="nav-links">
       <li><a href="{% url 'main:home' %}" class="active">الرئيسية</a></li>
       <li><a href="{% url 'main:about' %}">عن المنصة</a></li>
@@ -181,7 +221,6 @@
       <li><a href="{% url 'main:home' %}#join">أنضم إلينا</a></li>
     </ul>
 
-    <!-- Hamburger Icon for Mobile -->
     <button class="menu-toggle" onclick="toggleMenu()">
       <i class="fas fa-bars"></i>
     </button>
@@ -189,8 +228,6 @@
   </div>
 </nav>
 
-
-  <!-- Mobile Nav -->
   <div class="mobile-nav" id="mobileNav">
     <div class="close-menu" onclick="toggleMenu()">
       <i class="fas fa-times"></i>
@@ -202,17 +239,31 @@
     <a href="{% url 'main:home' %}#join" onclick="toggleMenu()" style="background: #1a56db; color: white !important; text-align: center; margin-top: 10px;">أنضم إلينا</a>
   </div>
 
-  <!-- PAGE CONTENT -->
+<section class="page-navigation-bar">
+  <div class="container nav-controls">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'main:home' %}">الرئيسية</a></li>
+        {% block breadcrumbs %}
+        {% endblock %}
+      </ol>
+    </nav>
+
+    <a href="javascript:history.back()" class="back-btn">
+      <span>رجوع</span>
+      <i class="fas fa-arrow-left"></i>
+    </a>
+  </div>
+</section>
+
   <main>
     {% block content %}
     {% endblock %} 
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer" id="contact">
   <div class="container">
     <div class="footer-grid">
-      <!-- Brand -->
       <div class="footer-brand">
         <a href="#" class="nav-logo" style="margin-bottom:12px; display:inline-flex;">
           <div class="logo-icon">
@@ -223,97 +274,62 @@
             <div class="logo-en">Ehyaa Platform</div>
           </div>
         </a>
-        <p class="footer-desc" data-t="footer_desc">منصة إحياء تربط المتبرعين بالدم مع المستشفيات في المملكة العربية السعودية.</p>
+        <p class="footer-desc">منصة إحياء تربط المتبرعين بالدم مع المستشفيات في المملكة العربية السعودية.</p>
       </div>
 
-      <!-- Quick Links -->
       <div>
-        <h4 class="footer-col-title" data-t="quick_links">روابط سريعة</h4>
+        <h4 class="footer-col-title">روابط سريعة</h4>
         <nav class="footer-links">
-          <a href="{% url 'main:home' %}" data-t="nav_home">الرئيسية</a>
-          <a href="{% url 'main:about' %}" data-t="nav_about">عن المنصة</a>
-          <a href="{% url 'main:works' %}" data-t="nav_how">كيف يعمل</a>
-          <a href="{% url 'main:faq' %}" data-t="nav_faq">الأسئلة الشائعة</a>
+          <a href="{% url 'main:home' %}">الرئيسية</a>
+          <a href="{% url 'main:about' %}">عن المنصة</a>
+          <a href="{% url 'main:works' %}">كيف يعمل</a>
+          <a href="{% url 'main:faq' %}">الأسئلة الشائعة</a>
           <a href="{% url 'main:home' %}#join">أنضم إلينا</a>
         </nav>
       </div>
 
-      <!-- For Donors -->
       <div>
-        <h4 class="footer-col-title" data-t="for_donors">للمتبرعين</h4>
-        <nav class="footer-links">
-          <a href="{% url 'donor:register' %}" data-t="donor_register">تسجيل متبرع</a>
-          <a href="{% url 'main:guide' %}#guide" data-t="donor_guide">دليل التبرع</a>
-          <a href="{% url 'main:guide' %}#terms" data-t="eligibility">شروط التبرع</a>
-          <a href="{% url 'main:guide' %}#blood" data-t="blood_info">فصائل الدم</a>
+        <h4 class="footer-col-title">للمتبرعين</h4>
+        <nav class="footer-links"><a href="{% url 'donor:register' %}">تسجيل متبرع</a>
+          <a href="{% url 'main:guide' %}#guide">دليل التبرع</a>
+          <a href="{% url 'main:guide' %}#terms">شروط التبرع</a>
+          <a href="{% url 'main:guide' %}#blood">فصائل الدم</a> 
         </nav>
       </div>
 
-      <!-- Contact -->
       <div>
-        <h4 class="footer-col-title" data-t="contact_us">تواصل معنا</h4>
+        <h4 class="footer-col-title">تواصل معنا</h4>
         <div class="footer-contact">
-          <div class="contact-row">
-            <span class="ci">📍</span>
-            <span data-t="addr">الرياض، المملكة العربية السعودية</span>
-          </div>
-          <div class="contact-row">
-            <span class="ci">📞</span>
-            <span dir="ltr">+966 11 000 0000</span>
-          </div>
-          <div class="contact-row">
-            <span class="ci">✉️</span>
-            <span dir="ltr">info@ehyaa.sa</span>
-          </div><div class="contact-row">
-            <span class="ci">🕐</span>
-            <span>24/7</span>
-          </div>
+          <div class="contact-row"><span>📍</span><span>الرياض، المملكة العربية السعودية</span></div>
+          <div class="contact-row"><span>📞</span><span dir="ltr">+966 11 000 0000</span></div>
+          <div class="contact-row"><span>✉️</span><span dir="ltr">info@ehyaa.sa</span></div>
+          <div class="contact-row"><span>🕐</span><span>24/7</span></div>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <p class="footer-copy">
-        © 2025 إحياء | Ehyaa.<span data-t="rights">جميع الحقوق محفوظة</span>.
-        <a href="#" style="text-decoration:none;">Made with ❤️ in Saudi Arabia</a>
-      </p>
+      <p class="footer-copy">© 2025 إحياء | Ehyaa. جميع الحقوق محفوظة.</p>
       <div class="footer-bottom-links">
-        <a href="{% url 'main:privacy' %}" data-t="privacy">سياسة الخصوصية</a>
-        <a href="{% url 'main:terms' %}" data-t="terms">الشروط والأحكام</a>
+        <a href="{% url 'main:privacy' %}">سياسة الخصوصية</a>
+        <a href="{% url 'main:terms' %}">الشروط والأحكام</a>
       </div>
     </div>
   </div>
 </footer>
 
-  <!-- Scroll Top -->
   <button class="scroll-top" id="scrollTop">↑</button>
 
-  <!-- JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{% static 'js/script.js' %}"></script>
 
   <script>
-    // وظيفة فتح وإغلاق قائمة الجوال مع الخلفية المظلمة
     function toggleMenu() {
         const mobileNav = document.getElementById('mobileNav');
         const overlay = document.getElementById('navOverlay');
         mobileNav.classList.toggle('active');
         overlay.classList.toggle('active');
     }
-
-    // الرسالة الخاصة بالزوار عند الضغط على أيقونة الملف الشخصي
-    function guestProfileAlert() {
-      alert("لتعديل ملفك الشخصي انشئ حساب اوقم بتسجيل الدخول");
-    }
-
-    // إخفاء رسائل التنبيه (Alerts) تلقائياً بعد 5 ثوانٍ
-    setTimeout(function() {
-        let alerts = document.querySelectorAll('.alert');
-        alerts.forEach(function(alert) {
-            let bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        });
-    }, 5000);
   </script>
 
   {% block extra_js %}{% endblock %}

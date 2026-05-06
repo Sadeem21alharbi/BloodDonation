@@ -356,3 +356,6 @@ def analytics(request):
 # Settings view
 def hospital_settings(request):
     return render(request, 'hospital/hospital_settings.html')
+
+def notifications_view(request):
+    return render(request, 'hospital/notifications.html')

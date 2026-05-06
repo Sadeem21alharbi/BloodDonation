@@ -12,6 +12,7 @@ urlpatterns = [
     
     # Dashboard
    path('dashboard/', views.hospital_dashboard, name='dashboard'),
+   path('notifications/', views.notifications_view, name='notifications'), # تأكد من وجود name='notifications'
    
    # Profile management
     path('profile/', views.hospital_profile, name='profile'),

@@ -5,488 +5,209 @@
 
 {% block extra_css %}
 <style>
-/* ═══════════════════════════════════════════════════
-   DASHBOARD PAGE — using hd-* tokens from base CSS
-   Only page-specific extras live here.
-═══════════════════════════════════════════════════ */
+.db-main { display: flex; flex-direction: column; gap: 28px; }
 
-/* ── Layout ── */
-.db-main {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-/* ── Emergency alert ── */
-.db-alert {
-  background: linear-gradient(135deg, #fff1f2 0%, #fff 100%);
-  border: 1px solid #fecaca;
-  border-left: 5px solid var(--red);
-  border-radius: var(--radius-lg);
-  padding: 18px 22px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  box-shadow: 0 2px 14px rgba(225,29,72,.08);
-  flex-wrap: wrap;
-}
-
-[dir="rtl"] .db-alert {
-  border-left: 1px solid #fecaca;
-  border-right: 5px solid var(--red);
-}
-
-.db-alert-icon {
-  width: 48px; height: 48px;
-  border-radius: 14px;
-  background: #fee2e2;
-  color: #dc2626;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-
-.db-alert-icon i { font-size: 20px; }
-
-.db-alert-body { flex: 1; min-width: 200px; }
-.db-alert-body strong { display: block; font-size: 14px; font-weight: 700; color: #7f1d1d; margin-bottom: 3px; }
-.db-alert-body p { color: var(--text-muted); font-size: 13px; }
-
-.db-alert-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-/* ── Welcome banner ── */
+/* Welcome */
 .db-welcome {
   background: var(--primary-gradient);
-  border-radius: var(--radius-xl);
-  padding: 34px 36px;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  overflow: hidden;
-  position: relative;
+  border-radius: var(--radius-xl); padding: 34px 36px; color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; overflow: hidden; position: relative;
   box-shadow: 0 12px 32px rgba(26,86,219,.25);
 }
-
 .db-welcome::before {
-  content: '';
-  position: absolute;
-  top: -60px; right: -60px;
-  width: 280px; height: 280px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.07);
-  pointer-events: none;
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: rgba(255,255,255,.07); pointer-events: none;
 }
-
 [dir="rtl"] .db-welcome::before { right: auto; left: -60px; }
-
-.db-welcome::after {
-  content: '';
-  position: absolute;
-  bottom: -80px; right: 120px;
-  width: 200px; height: 200px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.05);
-  pointer-events: none;
-}
-
 .db-welcome-text { position: relative; z-index: 1; max-width: 600px; }
-
-.db-welcome-greeting {
-  font-size: 13.5px; font-weight: 500; opacity: .88;
-  margin-bottom: 8px;
-}
-
-.db-welcome-title {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 800; line-height: 1.2;
-  margin-bottom: 12px;
-}
-
-.db-welcome-desc {
-  font-size: 14px; line-height: 1.7; opacity: .90;
-}
-
-.db-welcome-actions {
-  margin-top: 22px;
-  display: flex; gap: 12px; flex-wrap: wrap;
-}
-
-.db-welcome-visual {
-  position: relative; z-index: 1;
-  flex-shrink: 0;
-}
-
+.db-welcome-greeting { font-size: 13.5px; font-weight: 500; opacity: .88; margin-bottom: 8px; }
+.db-welcome-title { font-size: clamp(1.5rem,3vw,2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+.db-welcome-desc  { font-size: 14px; line-height: 1.7; opacity: .90; }
+.db-welcome-actions { margin-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
+.db-welcome-visual { position: relative; z-index: 1; flex-shrink: 0; }
 .db-rings {
-  width: 160px; height: 160px;
-  border-radius: 50%;
+  width: 160px; height: 160px; border-radius: 50%;
   background: rgba(255,255,255,.10);
   display: flex; align-items: center; justify-content: center;
 }
-
 .db-rings-inner {
-  width: 115px; height: 115px;
-  border-radius: 50%;
+  width: 115px; height: 115px; border-radius: 50%;
   background: rgba(255,255,255,.16);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 48px;
+  display: flex; align-items: center; justify-content: center; font-size: 48px;
 }
 
-/* ── Section wrapper ── */
+/* Section */
 .db-section { display: flex; flex-direction: column; gap: 14px; }
-
-.db-section-header {
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  flex-wrap: wrap;
-}
-
+.db-section-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .db-section-meta { color: var(--text-muted); font-size: 12px; margin-top: 3px; }
 
-/* ── Stat cards ── */
-.db-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 18px;
-}
-
+/* Stats */
+.db-stats-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 18px; }
 .db-stat {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: 22px 20px;
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 22px 20px; border: 1px solid var(--border-card); box-shadow: var(--shadow-card);
   display: flex; flex-direction: column; gap: 16px;
   transition: transform var(--transition), box-shadow var(--transition);
 }
-
-.db-stat:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 28px rgba(26,86,219,.13);
-}
-
-.db-stat-top {
-  display: flex; align-items: center; justify-content: space-between;
-}
-
+.db-stat:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(26,86,219,.13); }
+.db-stat-top { display: flex; align-items: center; justify-content: space-between; }
 .db-stat-icon {
-  width: 50px; height: 50px;
-  border-radius: 14px;
+  width: 50px; height: 50px; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
-  color: #fff;
-  font-size: 20px;
-  flex-shrink: 0;
+  color: #fff; font-size: 20px; flex-shrink: 0;
 }
-
-.db-stat-icon.blue  { background: linear-gradient(135deg,#2563eb,#3b82f6); box-shadow: 0 4px 14px rgba(37,99,235,.30); }
-.db-stat-icon.gold  { background: linear-gradient(135deg,#f59e0b,#fbbf24); box-shadow: 0 4px 14px rgba(245,158,11,.30); }
-.db-stat-icon.green { background: linear-gradient(135deg,#10b981,#34d399); box-shadow: 0 4px 14px rgba(16,185,129,.30); }
-.db-stat-icon.red   { background: linear-gradient(135deg,#ef4444,#f87171); box-shadow: 0 4px 14px rgba(239,68,68,.30); }
-.db-stat-icon.teal  { background: linear-gradient(135deg,#14b8a6,#2dd4bf); box-shadow: 0 4px 14px rgba(20,184,166,.30); }
-.db-stat-icon.purple{ background: linear-gradient(135deg,#7c3aed,#a78bfa); box-shadow: 0 4px 14px rgba(124,58,237,.30); }
+.db-stat-icon.blue   { background: linear-gradient(135deg,#2563eb,#3b82f6); box-shadow: 0 4px 14px rgba(37,99,235,.30); }
+.db-stat-icon.gold   { background: linear-gradient(135deg,#f59e0b,#fbbf24); box-shadow: 0 4px 14px rgba(245,158,11,.30); }
+.db-stat-icon.green  { background: linear-gradient(135deg,#10b981,#34d399); box-shadow: 0 4px 14px rgba(16,185,129,.30); }
+.db-stat-icon.red    { background: linear-gradient(135deg,#ef4444,#f87171); box-shadow: 0 4px 14px rgba(239,68,68,.30); }
+.db-stat-icon.teal   { background: linear-gradient(135deg,#14b8a6,#2dd4bf); box-shadow: 0 4px 14px rgba(20,184,166,.30); }
+.db-stat-icon.purple { background: linear-gradient(135deg,#7c3aed,#a78bfa); box-shadow: 0 4px 14px rgba(124,58,237,.30); }
 
 .db-stat-trend {
   display: flex; align-items: center; gap: 4px;
-  font-size: 12px; font-weight: 700;
+  font-size: 11.5px; font-weight: 700;
   padding: 4px 9px; border-radius: var(--radius-pill);
 }
-
+.db-stat-trend i { font-size: 9px; }
 .db-stat-trend.up   { background: #dcfce7; color: #16a34a; }
 .db-stat-trend.down { background: #fee2e2; color: #dc2626; }
 .db-stat-trend.neu  { background: var(--bg); color: var(--text-muted); }
+.db-stat-value { font-size: 2rem; font-weight: 800; line-height: 1; color: var(--text); }
+.db-stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+.db-stat-bar { height: 6px; background: var(--border); border-radius: var(--radius-pill); overflow: hidden; }
+.db-stat-bar-fill { height: 100%; border-radius: var(--radius-pill); transition: width .6s ease; }
+.db-stat-bar-fill.blue   { background: linear-gradient(90deg,#2563eb,#3b82f6); }
+.db-stat-bar-fill.gold   { background: linear-gradient(90deg,#f59e0b,#fbbf24); }
+.db-stat-bar-fill.green  { background: linear-gradient(90deg,#10b981,#34d399); }
+.db-stat-bar-fill.red    { background: linear-gradient(90deg,#ef4444,#f87171); }
+.db-stat-bar-fill.teal   { background: linear-gradient(90deg,#14b8a6,#2dd4bf); }
+.db-stat-bar-fill.purple { background: linear-gradient(90deg,#7c3aed,#a78bfa); }
 
-.db-stat-value {
-  font-size: 2rem; font-weight: 800; line-height: 1; color: var(--text);
-}
+/* Content grid */
+.db-content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 22px; align-items: start; }
 
-.db-stat-label {
-  font-size: 13px; color: var(--text-muted); margin-top: 4px;
-}
-
-.db-stat-bar {
-  height: 6px;
-  background: var(--border);
-  border-radius: var(--radius-pill);
-  overflow: hidden;
-}
-
-.db-stat-bar-fill {
-  height: 100%; border-radius: var(--radius-pill);
-  transition: width .6s ease;
-}
-
-.db-stat-bar-fill.blue  { background: linear-gradient(90deg,#2563eb,#3b82f6); width: 78%; }
-.db-stat-bar-fill.gold  { background: linear-gradient(90deg,#f59e0b,#fbbf24); width: 45%; }
-.db-stat-bar-fill.green { background: linear-gradient(90deg,#10b981,#34d399); width: 66%; }
-.db-stat-bar-fill.red   { background: linear-gradient(90deg,#ef4444,#f87171); width: 82%; }
-.db-stat-bar-fill.teal  { background: linear-gradient(90deg,#14b8a6,#2dd4bf); width: 58%; }
-.db-stat-bar-fill.purple{ background: linear-gradient(90deg,#7c3aed,#a78bfa); width: 35%; }
-
-/* ── Two-col content grid ── */
-.db-content-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 22px;
-  align-items: start;
-}
-
-/* ── Card ── */
+/* Card */
 .db-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-  transition: box-shadow var(--transition);
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card); box-shadow: var(--shadow-card);
+  overflow: hidden; transition: box-shadow var(--transition);
 }
-
 .db-card:hover { box-shadow: 0 6px 24px rgba(26,86,219,.10); }
-
 .db-card-head {
   display: flex; align-items: center; justify-content: space-between; gap: 14px;
-  padding: 20px 22px 0;
+  padding: 20px 22px; border-bottom: 1px solid var(--border-card);
 }
-
 .db-card-title { font-size: 16px; font-weight: 700; color: var(--text); }
 .db-card-sub   { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.db-card-footer { padding: 14px 22px; border-top: 1px solid var(--border); background: var(--bg); }
 
-.db-card-body  { padding: 16px 22px 22px; }
-
-.db-card-footer {
-  padding: 14px 22px;
-  border-top: 1px solid var(--border);
-  background: var(--bg);
-}
-
-/* ── Filter bar ── */
-.db-filter-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 10px; flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-.db-filter-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-
-.db-chip {
-  padding: 7px 13px;
-  border-radius: var(--radius-pill);
-  font-size: 12px; font-weight: 600;
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all var(--transition);
-}
-
-.db-chip:hover  { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-.db-chip.active { background: var(--primary-gradient); color: #fff; border-color: transparent; box-shadow: 0 3px 10px rgba(26,86,219,.22); }
-
-.db-filter-selects { display: flex; gap: 8px; flex-wrap: wrap; }
-
-.db-select {
-  padding: 8px 12px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text);
-  font-size: 12.5px; font-family: inherit;
-  outline: none;
-  cursor: pointer;
-  transition: border-color var(--transition);
-}
-
-.db-select:focus { border-color: var(--primary); }
-
-/* ── Table ── */
+/* Table */
 .db-table-wrap { overflow-x: auto; }
-
-.db-table {
-  width: 100%; border-collapse: collapse;
-}
-
+.db-table { width: 100%; border-collapse: collapse; }
 .db-table th {
-  font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .05em;
-  color: var(--text-muted);
-  padding: 10px 14px;
-  border-bottom: 1.5px solid var(--border);
-  white-space: nowrap;
-  background: var(--bg);
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--text-light); padding: 10px 14px;
+  border-bottom: 1.5px solid var(--border); white-space: nowrap; background: var(--bg);
 }
-
 .db-table td {
-  padding: 13px 14px;
-  font-size: 13.5px; color: var(--text);
-  border-bottom: 1px solid var(--border-card);
-  vertical-align: middle;
+  padding: 13px 14px; font-size: 13.5px; color: var(--text);
+  border-bottom: 1px solid var(--border-card); vertical-align: middle;
 }
-
 .db-table tr:last-child td { border-bottom: none; }
 .db-table tbody tr:hover td { background: rgba(26,86,219,.025); }
 
-.db-req-id   { font-weight: 700; font-size: 13px; color: var(--text); }
+.db-req-id   { font-weight: 700; font-size: 13px; color: var(--primary); }
 .db-req-type { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
 
-/* Blood pill */
 .db-blood {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 5px 12px;
-  border-radius: var(--radius-pill);
-  font-size: 12px; font-weight: 800;
-  background: linear-gradient(135deg, var(--red), #be123c);
-  color: #fff;
-  letter-spacing: .02em;
-  box-shadow: 0 3px 8px rgba(225,29,72,.25);
-  white-space: nowrap;
+  padding: 5px 12px; border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg,var(--red),#be123c);
+  box-shadow: 0 3px 8px rgba(225,29,72,.25); white-space: nowrap;
 }
 
-/* Urgency labels */
-.db-urgency {
-  font-size: 12px; font-weight: 600;
-  display: inline-flex; align-items: center; gap: 4px;
-}
+.db-urgency { font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
 
-/* Response pill */
-.db-resp-pill {
+/* Status pills — lowercase model values */
+.db-status {
   display: inline-flex; align-items: center; gap: 5px;
-  font-size: 12.5px; font-weight: 600;
-  color: var(--text-muted);
+  padding: 5px 10px; border-radius: var(--radius-pill);
+  font-size: 11.5px; font-weight: 700; white-space: nowrap;
 }
+.db-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.ds-pending     { background: #fef3c7; color: #92400e; }   .ds-pending::before     { background: #f59e0b; }
+.ds-active      { background: #dbeafe; color: #1d4ed8; }   .ds-active::before      { background: #2563eb; }
+.ds-in_progress { background: #ede9fe; color: #6d28d9; }   .ds-in_progress::before { background: #8b5cf6; }
+.ds-completed   { background: #dcfce7; color: #065f46; }   .ds-completed::before   { background: #059669; }
+.ds-cancelled   { background: #f1f5f9; color: #475569; }   .ds-cancelled::before   { background: #94a3b8; }
+.ds-emergency   { background: #fee2e2; color: #991b1b; }   .ds-emergency::before   { background: #ef4444; }
+.ds-closed      { background: #f1f5f9; color: #475569; }   .ds-closed::before      { background: #94a3b8; }
 
+.db-resp-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; color: var(--text-muted); }
 .db-resp-pill i { font-size: 11px; }
 
-/* Action buttons */
-.db-actions { display: flex; align-items: center; gap: 6px; }
-
+.db-actions { display: flex; align-items: center; gap: 5px; }
 .db-act {
-  width: 32px; height: 32px;
-  border-radius: var(--radius-sm);
+  width: 30px; height: 30px; border-radius: var(--radius-sm);
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; color: var(--text-muted);
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  cursor: pointer;
-  transition: all var(--transition);
+  font-size: 12px; color: var(--text-muted);
+  background: var(--bg); border: 1.5px solid var(--border);
+  cursor: pointer; transition: all var(--transition); text-decoration: none;
 }
-
-.db-act:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+.db-act:hover        { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
 .db-act.danger:hover { background: var(--red-light); color: var(--red); border-color: var(--red); }
 
-/* ── Donor list ── */
-.db-donor-list { display: flex; flex-direction: column; gap: 14px; }
-
+/* Donor responses */
+.db-donor-list { display: flex; flex-direction: column; gap: 2px; }
 .db-donor-item {
   display: flex; align-items: center; gap: 12px;
-  padding: 10px 12px;
-  border-radius: var(--radius);
+  padding: 10px 12px; border-radius: var(--radius);
   transition: background var(--transition);
 }
-
 .db-donor-item:hover { background: var(--bg); }
-
 .db-donor-av {
-  width: 42px; height: 42px;
-  border-radius: 50%;
+  width: 40px; height: 40px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 13px; font-weight: 700;
-  flex-shrink: 0;
+  color: #fff; font-size: 13px; font-weight: 700; flex-shrink: 0;
 }
-
-.db-donor-av.a { background: linear-gradient(135deg,#2563eb,#60a5fa); }
-.db-donor-av.b { background: linear-gradient(135deg,#7c3aed,#a78bfa); }
-.db-donor-av.c { background: linear-gradient(135deg,#14b8a6,#5eead4); }
-.db-donor-av.d { background: linear-gradient(135deg,#f59e0b,#fcd34d); }
-.db-donor-av.e { background: linear-gradient(135deg,#ef4444,#f87171); }
-
+/* Avatar colors cycle */
+.dav-0 { background: linear-gradient(135deg,#2563eb,#60a5fa); }
+.dav-1 { background: linear-gradient(135deg,#7c3aed,#a78bfa); }
+.dav-2 { background: linear-gradient(135deg,#14b8a6,#5eead4); }
+.dav-3 { background: linear-gradient(135deg,#f59e0b,#fcd34d); }
+.dav-4 { background: linear-gradient(135deg,#ef4444,#f87171); }
 .db-donor-info { flex: 1; min-width: 0; }
-
-.db-donor-name { font-size: 13.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-.db-donor-meta {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 11.5px; color: var(--text-muted);
-  margin-top: 3px; flex-wrap: wrap;
-}
-
-.db-meta-dot {
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: var(--text-light);
-  flex-shrink: 0;
-}
-
+.db-donor-name { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.db-donor-meta { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+.db-meta-dot   { width: 3px; height: 3px; border-radius: 50%; background: var(--text-light); flex-shrink: 0; }
 .db-donor-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
 
-/* ── Notifications ── */
-.db-notif-list { display: flex; flex-direction: column; }
-
-.db-notif-item {
-  display: flex; gap: 13px;
-  padding: 15px 22px;
-  border-top: 1px solid var(--border-card);
-  transition: background var(--transition);
-}
-
-.db-notif-item:hover { background: var(--bg); }
-.db-notif-item.unread { background: rgba(26,86,219,.025); }
-.db-notif-item.unread:hover { background: rgba(26,86,219,.045); }
-
-.db-notif-icon {
-  width: 40px; height: 40px;
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
-  flex-shrink: 0;
-}
-
-.ni-red   { background: #fee2e2; color: #dc2626; }
-.ni-blue  { background: #dbeafe; color: #2563eb; }
-.ni-green { background: #dcfce7; color: #16a34a; }
-.ni-gold  { background: #fef3c7; color: #d97706; }
-
-.db-notif-body { flex: 1; min-width: 0; }
-.db-notif-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-.db-notif-text  { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
-.db-notif-time  { font-size: 11px; color: var(--text-light); margin-top: 5px; }
-
-.db-notif-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--primary);
-  flex-shrink: 0;
-  margin-top: 6px;
-}
-
-.db-notif-dot.read { background: var(--border); }
-
-/* ── Right column stack ── */
 .db-right-col { display: flex; flex-direction: column; gap: 20px; }
-
-/* ── Badge count ── */
 .db-count-badge {
-  background: var(--primary-gradient);
-  color: #fff;
-  font-size: 11px; font-weight: 700;
-  padding: 3px 9px;
-  border-radius: var(--radius-pill);
-  line-height: 1.4;
+  background: var(--primary-gradient); color: #fff;
+  font-size: 11px; font-weight: 700; padding: 3px 9px;
+  border-radius: var(--radius-pill); line-height: 1.4;
 }
 
-/* ── Responsive ── */
+.db-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+.db-empty i { font-size: 2rem; opacity: .3; display: block; margin-bottom: 10px; }
+.db-empty p { font-size: 13.5px; }
+
+/* Responsive */
 @media (max-width: 1100px) {
   .db-content-grid { grid-template-columns: 1fr; }
   .db-right-col { flex-direction: row; flex-wrap: wrap; }
   .db-right-col > * { flex: 1; min-width: 300px; }
 }
-
 @media (max-width: 768px) {
   .db-welcome { flex-direction: column; align-items: flex-start; padding: 24px; }
   .db-welcome-visual { display: none; }
-  .db-welcome-title { font-size: 1.4rem; }
-  .db-stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .db-alert { flex-direction: column; }
-  .db-filter-bar { flex-direction: column; align-items: flex-start; }
+  .db-welcome-title  { font-size: 1.4rem; }
+  .db-stats-grid     { grid-template-columns: repeat(2,1fr); }
 }
-
 @media (max-width: 480px) {
   .db-stats-grid { grid-template-columns: 1fr 1fr; }
   .db-welcome-actions { flex-direction: column; width: 100%; }
@@ -500,36 +221,25 @@
 {% block content %}
 <div class="db-main">
 
-  <!-- ═══════════════════════════════
-       EMERGENCY ALERT
-  ════════════════════════════════ -->
-  <div class="db-alert hd-fade-in-up">
-    <div class="db-alert-icon">
-      <i class="fas fa-triangle-exclamation"></i>
-    </div>
-    <div class="db-alert-body">
-      <strong>🚨 Emergency — 3 Critical Requests Need Immediate Donors</strong>
-      <p>Blood types O−, AB+ and B− are critically low. Urgent donor outreach required.</p>
-    </div>
-    <div class="db-alert-actions">
-      <a href="{% url 'hospital:requests' %}" class="hd-btn hd-btn-danger hd-btn-sm">View Emergency Requests</a>
-      <button class="hd-btn hd-btn-ghost hd-btn-sm">Dismiss</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════
-       WELCOME BANNER
-  ════════════════════════════════ -->
-  <div class="db-welcome hd-fade-in-up delay-1">
+  <!-- ═══════════ WELCOME ═══════════ -->
+  <div class="db-welcome hd-fade-in-up">
     <div class="db-welcome-text">
-      <div class="db-welcome-greeting">Good morning, {{ request.user.hospital_profile.name|default:"Hospital" }} 👋</div>
+      <div class="db-welcome-greeting">
+        Welcome back, {{ request.user.hospital_profile.name|default:request.user.username }} 👋
+      </div>
       <div class="db-welcome-title">Manage Your Blood Donation Platform</div>
-      <div class="db-welcome-desc">Monitor donation requests, track donor responses, and help save lives across the Kingdom.</div>
+      <div class="db-welcome-desc">
+        Monitor donation requests, track donor responses, and help save lives across the Kingdom.
+      </div>
       <div class="db-welcome-actions">
-        <a href="{% url 'hospital:requests' %}" class="hd-btn hd-btn-sm" style="background:#fff;color:var(--primary);font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.12);">
+        <a href="{% url 'hospital:request_create' %}"
+           class="hd-btn hd-btn-sm"
+           style="background:#fff;color:var(--primary);font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.12);">
           <i class="fas fa-plus"></i> Create New Request
         </a>
-        <a href="{% url 'hospital:requests' %}" class="hd-btn hd-btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.28);">
+        <a href="{% url 'hospital:requests' %}"
+           class="hd-btn hd-btn-sm"
+           style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.28);">
           View All Requests
         </a>
       </div>
@@ -541,450 +251,268 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════
-       OVERVIEW STATS
-  ════════════════════════════════ -->
-  <div class="db-section hd-fade-in-up delay-2">
-
+  <!-- ═══════════ STATS ═══════════ -->
+  <div class="db-section hd-fade-in-up delay-1">
     <div class="db-section-header">
       <div>
         <div class="hd-section-title">Overview Statistics</div>
-        <div class="db-section-meta">Updated just now · {% now "F Y" %}</div>
+        <div class="db-section-meta">{% now "F Y" %}</div>
       </div>
-      <button class="hd-btn hd-btn-ghost hd-btn-sm">
+      <button class="hd-btn hd-btn-ghost hd-btn-sm" onclick="location.reload()">
         <i class="fas fa-rotate-right"></i> Refresh
       </button>
     </div>
 
     <div class="db-stats-grid">
 
-      <!-- Total Requests -->
       <div class="db-stat">
         <div class="db-stat-top">
           <div class="db-stat-icon blue"><i class="fas fa-file-medical"></i></div>
-          <span class="db-stat-trend up"><i class="fas fa-arrow-up"></i> +12%</span>
+          <span class="db-stat-trend neu">All</span>
         </div>
         <div>
-          <div class="db-stat-value">84</div>
+          <div class="db-stat-value">{{ total_requests }}</div>
           <div class="db-stat-label">Total Requests</div>
         </div>
-        <div class="db-stat-bar"><div class="db-stat-bar-fill blue"></div></div>
+        <div class="db-stat-bar"><div class="db-stat-bar-fill blue" style="width:100%;"></div></div>
       </div>
 
-      <!-- Open -->
       <div class="db-stat">
         <div class="db-stat-top">
           <div class="db-stat-icon gold"><i class="fas fa-clock"></i></div>
-          <span class="db-stat-trend up"><i class="fas fa-arrow-up"></i> +4</span>
+          <span class="db-stat-trend neu">Pending</span>
         </div>
         <div>
-          <div class="db-stat-value">23</div>
-          <div class="db-stat-label">Open Requests</div>
+          <div class="db-stat-value">{{ pending_count }}</div>
+          <div class="db-stat-label">Pending Requests</div>
         </div>
-        <div class="db-stat-bar"><div class="db-stat-bar-fill gold"></div></div>
+        <div class="db-stat-bar">
+          <div class="db-stat-bar-fill gold"
+               style="width:{% widthratio pending_count total_requests|default:1 100 %}%;"></div>
+        </div>
       </div>
 
-      <!-- In Progress -->
       <div class="db-stat">
         <div class="db-stat-top">
-          <div class="db-stat-icon blue"><i class="fas fa-spinner"></i></div>
+          <div class="db-stat-icon purple"><i class="fas fa-spinner"></i></div>
           <span class="db-stat-trend neu">Active</span>
         </div>
         <div>
-          <div class="db-stat-value">18</div>
+          <div class="db-stat-value">{{ active_count }}</div>
           <div class="db-stat-label">In Progress</div>
         </div>
-        <div class="db-stat-bar"><div class="db-stat-bar-fill blue"></div></div>
+        <div class="db-stat-bar">
+          <div class="db-stat-bar-fill purple"
+               style="width:{% widthratio active_count total_requests|default:1 100 %}%;"></div>
+        </div>
       </div>
 
-      <!-- Completed -->
       <div class="db-stat">
         <div class="db-stat-top">
           <div class="db-stat-icon green"><i class="fas fa-circle-check"></i></div>
-          <span class="db-stat-trend up"><i class="fas fa-arrow-up"></i> +8%</span>
+          <span class="db-stat-trend up"><i class="fas fa-arrow-up"></i> Done</span>
         </div>
         <div>
-          <div class="db-stat-value">43</div>
+          <div class="db-stat-value">{{ completed_count }}</div>
           <div class="db-stat-label">Completed</div>
         </div>
-        <div class="db-stat-bar"><div class="db-stat-bar-fill green"></div></div>
+        <div class="db-stat-bar">
+          <div class="db-stat-bar-fill green"
+               style="width:{% widthratio completed_count total_requests|default:1 100 %}%;"></div>
+        </div>
       </div>
 
-      <!-- Total Donors -->
       <div class="db-stat">
         <div class="db-stat-top">
           <div class="db-stat-icon teal"><i class="fas fa-users"></i></div>
-          <span class="db-stat-trend up"><i class="fas fa-arrow-up"></i> +22</span>
+          <span class="db-stat-trend neu">Donors</span>
         </div>
         <div>
-          <div class="db-stat-value">317</div>
+          <div class="db-stat-value">{{ total_donors }}</div>
           <div class="db-stat-label">Total Donors</div>
         </div>
-        <div class="db-stat-bar"><div class="db-stat-bar-fill teal"></div></div>
+        <div class="db-stat-bar"><div class="db-stat-bar-fill teal" style="width:60%;"></div></div>
       </div>
 
-      <!-- Blood Units -->
       <div class="db-stat">
         <div class="db-stat-top">
-          <div class="db-stat-icon red"><i class="fas fa-droplet"></i></div>
-          <span class="db-stat-trend down"><i class="fas fa-arrow-down"></i> −5%</span>
+          <div class="db-stat-icon red"><i class="fas fa-triangle-exclamation"></i></div>
+          <span class="db-stat-trend {% if emergency_count > 0 %}down{% else %}neu{% endif %}">
+            {% if emergency_count > 0 %}<i class="fas fa-arrow-up"></i>{% endif %} Urgent
+          </span>
         </div>
         <div>
-          <div class="db-stat-value">1,248</div>
-          <div class="db-stat-label">Blood Units Received</div>
+          <div class="db-stat-value">{{ emergency_count }}</div>
+          <div class="db-stat-label">High Urgency</div>
         </div>
-        <div class="db-stat-bar"><div class="db-stat-bar-fill red"></div></div>
+        <div class="db-stat-bar">
+          <div class="db-stat-bar-fill red"
+               style="width:{% widthratio emergency_count total_requests|default:1 100 %}%;"></div>
+        </div>
       </div>
 
     </div>
   </div>
 
-  <!-- ═══════════════════════════════
-       MAIN CONTENT GRID
-  ════════════════════════════════ -->
-  <div class="db-content-grid hd-fade-in-up delay-3">
+  <!-- ═══════════ CONTENT GRID ═══════════ -->
+  <div class="db-content-grid hd-fade-in-up delay-2">
 
-    <!-- ── LEFT: Requests Table ── -->
+    <!-- ── Requests Table ── -->
     <div class="db-card">
       <div class="db-card-head">
         <div>
           <div class="db-card-title">Recent Donation Requests</div>
-          <div class="db-card-sub">Showing 5 of 84 total requests</div>
+          <div class="db-card-sub">
+            Latest {{ recent_requests|length }} of {{ total_requests }} total
+          </div>
         </div>
-        <a href="{% url 'hospital:requests' %}" class="hd-btn hd-btn-primary hd-btn-sm">
+        <a href="{% url 'hospital:request_create' %}" class="hd-btn hd-btn-primary hd-btn-sm">
           <i class="fas fa-plus"></i> New Request
         </a>
       </div>
 
-      <div class="db-card-body">
-
-        <!-- Filters -->
-        <div class="db-filter-bar">
-          <div class="db-filter-chips">
-            <button class="db-chip active">All (84)</button>
-            <button class="db-chip">Pending (23)</button>
-            <button class="db-chip">In Progress (18)</button>
-            <button class="db-chip">Completed (43)</button>
-          </div>
-          <div class="db-filter-selects">
-            <select class="db-select">
-              <option>All Blood Types</option>
-              <option>A+</option><option>A−</option>
-              <option>B+</option><option>B−</option>
-              <option>AB+</option><option>AB−</option>
-              <option>O+</option><option>O−</option>
-            </select>
-            <select class="db-select">
-              <option>All Urgency</option>
-              <option>High</option>
-              <option>Medium</option>
-              <option>Low</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Table -->
-        <div class="db-table-wrap">
-          <table class="db-table">
-            <thead>
-              <tr>
-                <th>Request</th>
-                <th>Blood</th>
-                <th>Urgency</th>
-                <th>Status</th>
-                <th>Responses</th>
-                <th>Units</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              <!-- Row 1 -->
-              <tr>
-                <td>
-                  <div class="db-req-id">#REQ-0841</div>
-                  <div class="db-req-type">Emergency Case</div>
-                </td>
-                <td><span class="db-blood">O−</span></td>
-                <td><span class="db-urgency"><span style="color:#ef4444">●</span> High</span></td>
-                <td><span class="hd-badge hd-badge-info">In Progress</span></td>
-                <td>
-                  <span class="db-resp-pill"><i class="fas fa-users"></i> 8</span>
-                </td>
-                <td><strong>4</strong></td>
-                <td style="color:var(--text-muted);font-size:12.5px;white-space:nowrap">May 1, 2025</td>
-                <td>
-                  <div class="db-actions">
-                    <button class="db-act" title="View"><i class="fas fa-eye"></i></button>
-                    <button class="db-act" title="Edit"><i class="fas fa-pen"></i></button>
-                    <button class="db-act danger" title="Delete"><i class="fas fa-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Row 2 -->
-              <tr>
-                <td>
-                  <div class="db-req-id">#REQ-0840</div>
-                  <div class="db-req-type">Blood Bank Refill</div>
-                </td>
-                <td><span class="db-blood" style="background:linear-gradient(135deg,#7c3aed,#5b21b6)">AB+</span></td>
-                <td><span class="db-urgency"><span style="color:#f59e0b">●</span> Medium</span></td>
-                <td><span class="hd-badge hd-badge-pending">Pending</span></td>
-                <td><span class="db-resp-pill"><i class="fas fa-users"></i> 3</span></td>
-                <td><strong>10</strong></td>
-                <td style="color:var(--text-muted);font-size:12.5px;white-space:nowrap">Apr 29, 2025</td>
-                <td>
-                  <div class="db-actions">
-                    <button class="db-act"><i class="fas fa-eye"></i></button>
-                    <button class="db-act"><i class="fas fa-pen"></i></button>
-                    <button class="db-act danger"><i class="fas fa-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Row 3 -->
-              <tr>
-                <td>
-                  <div class="db-req-id">#REQ-0839</div>
-                  <div class="db-req-type">Emergency Case</div>
-                </td>
-                <td><span class="db-blood" style="background:linear-gradient(135deg,#0dada8,#0a8885)">B−</span></td>
-                <td><span class="db-urgency"><span style="color:#ef4444">●</span> High</span></td>
-                <td><span class="hd-badge hd-badge-success">Accepted</span></td>
-                <td><span class="db-resp-pill"><i class="fas fa-users"></i> 12</span></td>
-                <td><strong>6</strong></td>
-                <td style="color:var(--text-muted);font-size:12.5px;white-space:nowrap">Apr 28, 2025</td>
-                <td>
-                  <div class="db-actions">
-                    <button class="db-act"><i class="fas fa-eye"></i></button>
-                    <button class="db-act"><i class="fas fa-pen"></i></button>
-                    <button class="db-act danger"><i class="fas fa-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Row 4 -->
-              <tr>
-                <td>
-                  <div class="db-req-id">#REQ-0838</div>
-                  <div class="db-req-type">Blood Bank Refill</div>
-                </td>
-                <td><span class="db-blood" style="background:linear-gradient(135deg,#f59e0b,#d97706)">A+</span></td>
-                <td><span class="db-urgency"><span style="color:#22c55e">●</span> Low</span></td>
-                <td><span class="hd-badge hd-badge-completed">Completed</span></td>
-                <td><span class="db-resp-pill"><i class="fas fa-users"></i> 21</span></td>
-                <td><strong>15</strong></td>
-                <td style="color:var(--text-muted);font-size:12.5px;white-space:nowrap">Apr 25, 2025</td>
-                <td>
-                  <div class="db-actions">
-                    <button class="db-act"><i class="fas fa-eye"></i></button>
-                    <button class="db-act"><i class="fas fa-pen"></i></button>
-                    <button class="db-act danger"><i class="fas fa-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Row 5 -->
-              <tr>
-                <td>
-                  <div class="db-req-id">#REQ-0837</div>
-                  <div class="db-req-type">Emergency Case</div>
-                </td>
-                <td><span class="db-blood">O+</span></td>
-                <td><span class="db-urgency"><span style="color:#f59e0b">●</span> Medium</span></td>
-                <td><span class="hd-badge hd-badge-urgent">Rejected</span></td>
-                <td><span class="db-resp-pill"><i class="fas fa-users"></i> 2</span></td>
-                <td><strong>8</strong></td>
-                <td style="color:var(--text-muted);font-size:12.5px;white-space:nowrap">Apr 22, 2025</td>
-                <td>
-                  <div class="db-actions">
-                    <button class="db-act"><i class="fas fa-eye"></i></button>
-                    <button class="db-act"><i class="fas fa-pen"></i></button>
-                    <button class="db-act danger"><i class="fas fa-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-
-            </tbody>
-          </table>
-        </div>
+      <div class="db-table-wrap">
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>Request</th>
+              <th>Blood</th>
+              <th>Urgency</th>
+              <th>Status</th>
+              <th>Responses</th>
+              <th>Units</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for req in recent_requests %}
+            <tr>
+              <td>
+                <div class="db-req-id">{{ req.request_id }}</div>
+                <div class="db-req-type">{{ req.get_request_type_display }}</div>
+              </td>
+              <td><span class="db-blood">{{ req.blood_type }}</span></td>
+              <td>
+                {% if req.urgency == 'high' %}
+                  <span class="db-urgency"><span style="color:#ef4444;">●</span> High</span>
+                {% elif req.urgency == 'medium' %}
+                  <span class="db-urgency"><span style="color:#f59e0b;">●</span> Medium</span>
+                {% else %}
+                  <span class="db-urgency"><span style="color:#22c55e;">●</span> Low</span>
+                {% endif %}
+              </td>
+              <td>
+                <span class="db-status ds-{{ req.status }}">{{ req.get_status_display }}</span>
+              </td>
+              <td>
+                <span class="db-resp-pill">
+                  <i class="fas fa-users"></i> {{ req.donor_responses_count }}
+                </span>
+              </td>
+              <td><strong>{{ req.required_units }}</strong></td>
+              <td style="color:var(--text-muted);font-size:12.5px;white-space:nowrap;">
+                {{ req.created_at|date:"M d, Y" }}
+              </td>
+              <td>
+                <div class="db-actions">
+                  <a href="{% url 'hospital:request_detail' request_id=req.id %}"
+                     class="db-act" title="View">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="{% url 'hospital:request_update' request_id=req.id %}"
+                     class="db-act" title="Edit">
+                    <i class="fas fa-pen"></i>
+                  </a>
+                  <a href="{% url 'hospital:request_delete' request_id=req.id %}"
+                     class="db-act danger" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="8">
+                <div class="db-empty">
+                  <i class="fas fa-droplet"></i>
+                  <p>No donation requests yet. <a href="{% url 'hospital:request_create' %}" style="color:var(--primary);font-weight:700;">Create one</a></p>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
 
       <div class="db-card-footer">
         <a href="{% url 'hospital:requests' %}" class="hd-btn hd-btn-outline hd-btn-sm">
-          View All 84 Requests <i class="fas fa-arrow-right" style="font-size:10px"></i>
+          View All {{ total_requests }} Requests
+          <i class="fas fa-arrow-right" style="font-size:10px;"></i>
         </a>
       </div>
     </div>
 
-    <!-- ── RIGHT COLUMN ── -->
+    <!-- ── Right Column: Responses ── -->
     <div class="db-right-col">
-
-      <!-- Donor Responses -->
       <div class="db-card">
         <div class="db-card-head">
           <div>
             <div class="db-card-title">Recent Donor Responses</div>
-            <div class="db-card-sub">5 new this week</div>
+            <div class="db-card-sub">Latest activity</div>
           </div>
-          <span class="db-count-badge">+5</span>
+          {% if total_responses > 0 %}
+            <span class="db-count-badge">{{ total_responses }}</span>
+          {% endif %}
         </div>
 
-        <div class="db-card-body">
+        <div style="padding: 12px 8px;">
           <div class="db-donor-list">
-
+            {% for resp in recent_responses %}
             <div class="db-donor-item">
-              <div class="db-donor-av a">AK</div>
+              <div class="db-donor-av dav-{{ forloop.counter0|divisibleby:5|yesno:'0,0' }}
+                   {% if forloop.counter0|divisibleby:5 %}dav-0
+                   {% elif forloop.counter0|add:'0'|divisibleby:1 %}
+                     {% cycle 'dav-0' 'dav-1' 'dav-2' 'dav-3' 'dav-4' %}
+                   {% endif %}">
+                {{ resp.donor.get_full_name|default:resp.donor.username|slice:":2"|upper }}
+              </div>
               <div class="db-donor-info">
-                <div class="db-donor-name">Ahmed Al-Khalidi</div>
+                <div class="db-donor-name">
+                  {{ resp.donor.get_full_name|default:resp.donor.username }}
+                </div>
                 <div class="db-donor-meta">
-                  <span>#REQ-0841</span>
+                  <span>{{ resp.request.request_id }}</span>
                   <span class="db-meta-dot"></span>
-                  <span>+966 50 123 4567</span>
+                  <span>{{ resp.responded_at|date:"M d" }}</span>
                 </div>
               </div>
               <div class="db-donor-right">
-                <span class="db-blood" style="padding:4px 10px;font-size:11px">O−</span>
-                <span class="hd-badge hd-badge-info" style="font-size:10.5px;padding:3px 8px">In Progress</span>
+                <span class="db-blood" style="padding:4px 10px;font-size:11px;">
+                  {{ resp.request.blood_type }}
+                </span>
+                <span class="db-status ds-{{ resp.status }}" style="font-size:10.5px;padding:3px 8px;">
+                  {{ resp.get_status_display }}
+                </span>
               </div>
             </div>
-
-            <div class="db-donor-item">
-              <div class="db-donor-av b">SM</div>
-              <div class="db-donor-info">
-                <div class="db-donor-name">Sara Al-Mutairi</div>
-                <div class="db-donor-meta">
-                  <span>#REQ-0840</span>
-                  <span class="db-meta-dot"></span>
-                  <span>+966 55 987 6543</span>
-                </div>
-              </div>
-              <div class="db-donor-right">
-                <span class="db-blood" style="padding:4px 10px;font-size:11px;background:linear-gradient(135deg,#7c3aed,#5b21b6)">AB+</span>
-                <span class="hd-badge hd-badge-pending" style="font-size:10.5px;padding:3px 8px">Pending</span>
-              </div>
+            {% empty %}
+            <div class="db-empty">
+              <i class="fas fa-users"></i>
+              <p>No responses yet.</p>
             </div>
-
-            <div class="db-donor-item">
-              <div class="db-donor-av c">FA</div>
-              <div class="db-donor-info">
-                <div class="db-donor-name">Fahad Al-Anazi</div>
-                <div class="db-donor-meta">
-                  <span>#REQ-0839</span>
-                  <span class="db-meta-dot"></span>
-                  <span>+966 54 321 0987</span>
-                </div>
-              </div>
-              <div class="db-donor-right">
-                <span class="db-blood" style="padding:4px 10px;font-size:11px;background:linear-gradient(135deg,#0dada8,#0a8885)">B−</span>
-                <span class="hd-badge hd-badge-success" style="font-size:10.5px;padding:3px 8px">Accepted</span>
-              </div>
-            </div>
-
-            <div class="db-donor-item">
-              <div class="db-donor-av d">NQ</div>
-              <div class="db-donor-info">
-                <div class="db-donor-name">Noura Al-Qahtani</div>
-                <div class="db-donor-meta">
-                  <span>#REQ-0838</span>
-                  <span class="db-meta-dot"></span>
-                  <span>+966 56 456 7890</span>
-                </div>
-              </div>
-              <div class="db-donor-right">
-                <span class="db-blood" style="padding:4px 10px;font-size:11px;background:linear-gradient(135deg,#f59e0b,#d97706)">A+</span>
-                <span class="hd-badge hd-badge-completed" style="font-size:10.5px;padding:3px 8px">Completed</span>
-              </div>
-            </div>
-
-            <div class="db-donor-item">
-              <div class="db-donor-av e">MZ</div>
-              <div class="db-donor-info">
-                <div class="db-donor-name">Mohammed Al-Zahrani</div>
-                <div class="db-donor-meta">
-                  <span>#REQ-0841</span>
-                  <span class="db-meta-dot"></span>
-                  <span>+966 58 654 3210</span>
-                </div>
-              </div>
-              <div class="db-donor-right">
-                <span class="db-blood" style="padding:4px 10px;font-size:11px">O+</span>
-                <span class="hd-badge hd-badge-urgent" style="font-size:10.5px;padding:3px 8px">Rejected</span>
-              </div>
-            </div>
-
+            {% endfor %}
           </div>
         </div>
 
         <div class="db-card-footer">
           <a href="{% url 'hospital:responses' %}" class="hd-btn hd-btn-outline hd-btn-sm">
-            View All Responses <i class="fas fa-arrow-right" style="font-size:10px"></i>
+            View All Responses
+            <i class="fas fa-arrow-right" style="font-size:10px;"></i>
           </a>
         </div>
       </div>
-
-      <!-- Notifications -->
-      <div class="db-card">
-        <div class="db-card-head">
-          <div>
-            <div class="db-card-title">Notifications</div>
-            <div class="db-card-sub">3 unread</div>
-          </div>
-          <button class="hd-btn hd-btn-ghost hd-btn-sm">Mark all read</button>
-        </div>
-
-        <div class="db-notif-list">
-
-          <div class="db-notif-item unread">
-            <div class="db-notif-icon ni-red"><i class="fas fa-triangle-exclamation"></i></div>
-            <div class="db-notif-body">
-              <div class="db-notif-title">🚨 Emergency Request Submitted</div>
-              <div class="db-notif-text">Request #REQ-0841 needs O− blood urgently (4 units)</div>
-              <div class="db-notif-time">2 minutes ago</div>
-            </div>
-            <div class="db-notif-dot"></div>
-          </div>
-
-          <div class="db-notif-item unread">
-            <div class="db-notif-icon ni-blue"><i class="fas fa-user-plus"></i></div>
-            <div class="db-notif-body">
-              <div class="db-notif-title">New Donor Response</div>
-              <div class="db-notif-text">Ahmed Al-Khalidi responded to request #REQ-0841</div>
-              <div class="db-notif-time">18 minutes ago</div>
-            </div>
-            <div class="db-notif-dot"></div>
-          </div>
-
-          <div class="db-notif-item unread">
-            <div class="db-notif-icon ni-green"><i class="fas fa-circle-check"></i></div>
-            <div class="db-notif-body">
-              <div class="db-notif-title">Request Completed ✓</div>
-              <div class="db-notif-text">Request #REQ-0838 fulfilled — 15 units received</div>
-              <div class="db-notif-time">1 hour ago</div>
-            </div>
-            <div class="db-notif-dot"></div>
-          </div>
-
-          <div class="db-notif-item">
-            <div class="db-notif-icon ni-blue"><i class="fas fa-circle-info"></i></div>
-            <div class="db-notif-body">
-              <div class="db-notif-title">Profile Updated</div>
-              <div class="db-notif-text">Hospital contact details were successfully updated</div>
-              <div class="db-notif-time">Yesterday, 4:35 PM</div>
-            </div>
-            <div class="db-notif-dot read"></div>
-          </div>
-
-        </div>
-
-        <div class="db-card-footer">
-          <button class="hd-btn hd-btn-outline hd-btn-sm">View All Notifications</button>
-        </div>
-      </div>
-
-    </div><!-- /.db-right-col -->
+    </div>
 
   </div><!-- /.db-content-grid -->
 

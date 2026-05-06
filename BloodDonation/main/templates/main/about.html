@@ -6,7 +6,8 @@
 <li class="breadcrumb-item active" aria-current="page"> عن المنصة</li>
 {% endblock %}
 
-{% block content %}
+  {% block extra_css %}
+
 <style>
     :root {
         --ihya-blue: #1a56db; /* اللون الأزرق للخطوط */
@@ -23,24 +24,42 @@
         overflow-x: hidden;
     }
 
+    .page-navigation-bar {
+        background-color: var(--sky-light) !important;
+        border-bottom: none !important;
+        position: relative;
+        z-index: 10;
+    }
+
+    .breadcrumb-item, .breadcrumb-item a, .back-btn {
+        background: transparent !important;
+    }
+
+    .back-btn{
+        background-color: #ffffff !important;
+    }
+    .back-btn :hover{
+        color: #1a56db !important;
+    }
+
     /* هيدر الصفحة - تم تعديله ليطابق صفحة works.html */
     .about-hero {
-        padding: 140px 0 100px;
-        background-color: var(--sky-light); /* اللون السماوي الفاتح */
-        color: var(--ihya-blue); /* الخط باللون الأزرق */
+        padding: 60px 0 100px; /* تقليل الحشو العلوي لأن شريط التنقل أخذ مساحة */
+        background-color: var(--sky-light);
+        color: var(--ihya-blue);
         text-align: center;
-        /* تصميم نصف دائرة من الأسفل */
         border-bottom-left-radius: 50% 20%;
         border-bottom-right-radius: 50% 20%;
         position: relative;
-        margin-top: -100px; /* لضمان التداخل مع النافبار */
+        /* هذا السطر يضمن عدم وجود فجوة بيضاء */
+        margin-top: -1px; 
     }
+
 
     .about-hero h1 {
         font-size: 4rem;
         font-weight: 900;
-        color: var(--ihya-blue); /* الخط باللون الأزرق */
-        letter-spacing: -1px;
+        color: var(--ihya-blue);
         margin-bottom: 20px;
     }
 
@@ -71,7 +90,7 @@
         transform: translateY(-15px);
         background: white;
         box-shadow: 0 35px 60px rgba(26, 115, 232, 0.15);
-    }
+    } 
 
     .icon-box {
         width: 80px; height: 80px;
@@ -192,7 +211,9 @@
         .team-grid { gap: 20px; }
     }
 </style>
+{% endblock %}
 
+{% block content %}
 <!-- Hero Section -->
 <section class="about-hero">
     <div class="container">

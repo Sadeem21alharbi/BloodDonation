@@ -37,6 +37,7 @@ https://lucid.app/lucidchart/65058564-48a6-4bab-8a95-c80acc245788/edit?viewport_
 
 ### 🎨 Design Blueprint (Wireframes)
 Our UI/UX design process and low/high-fidelity wireframes are documented here:
+https://canva.link/fpmelhrqaji61sq
 - 
 
 ---
